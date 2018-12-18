@@ -16,8 +16,7 @@ before_script:
 - git config --global user.name "hnbot"
 - git config --global user.email "nygrenh+hnbot@gmail.com"
 - export COMMIT_MESSAGE=Update:\ $(git log -1 --pretty=%s)
-- git clone -b gh-pages --single-branch https://github.com/materiaalit/ohjelmointi-s18.git
-  build
+- git clone -b gh-pages --single-branch https://github.com/materiaalit/qt-mooc build
 script:
 - bundle exec middleman build
 after_success:
@@ -26,5 +25,8 @@ after_success:
 - git checkout HEAD CNAME
 - git add --all
 - git commit -m "$COMMIT_MESSAGE"
-- git push "https://hnbot:$GITHUB_API_KEY@github.com/materiaalit/ohjelmointi-s18.git"
-  gh-pages:gh-pages 2>&1 | sed "s/$GITHUB_API_KEY/<confidential>/g"
+- git push "https://hnbot:$GITHUB_API_KEY@github.com/materiaalit/qt-mooc.git" gh-pages:gh-pages
+  2>&1 | sed "s/$GITHUB_API_KEY/<confidential>/g"
+env:
+  global:
+    secure: Jnc3r1dFZOGWbuVLkR8F0GnpXuzYUR5mXdXxChyEjUvth2+0WP3RIekVlJERllGCAHPiWDHklAU/PjhWKWgaCxudvG+FxgZOkGJOfT4uX6ER7ThBzOBH23at9th6vs6SGb6GRDbII28ZgRtu2/IB4HTo2MrMAfEoBSg+puAXACNIyN2rUiqBXFuHn8XlmvmOgoISRVvpMt0Usez3JUM2Wm3ZaY2PmdADdSwe28MNrVxmJvksLjSi//B739NyzQdWxN97VzRI6h9xQH04SXBJGjDwnj57f8I2Su436IYhIffGpneDvMcpphiVH1Nnw+wicqXfryVRA3JCeT4T397ZK2p3QgrO8uAcZ4q5RsG+AgruwJjzF7VbOvA3a4JbJmVpydu90slCpBFBMvTmk9lxgHLi3T8/rT9hcExrTYb9YVDETGRu4wW9qcyAimvhUUKpg+zzgZGd+WV/1IO5erGTaHmLdtxcCJ1kwdaxF/nwhHSv+DxHWQxrOzhWivTe8YNOmL5YNpI2bt/wJZq3uIFaDOzyoNhtQ3qBrvnfwI5U62rISI4dCiAaxYJgLekYUuJKyPIzHSLzPm7wEkblPJGdUrwjwE4nMWNryGoTpcLcwzjn2wj10ONkTiSrmDflNrWp5RtNQlx1KY+DHLOjW4QaLjjlgDEAJqrQTTg6wHmONhc=

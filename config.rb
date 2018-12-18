@@ -84,4 +84,4 @@ configure :build do
   end
 end
 
-set :github_url, 'https://github.com/materiaalit/ohjelmointi-s18'
+set :github_url, 'https://github.com/materiaalit/qt-mooc'
