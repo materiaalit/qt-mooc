@@ -1,0 +1,100 @@
+.navbar {
+  @include floating;
+
+  padding-top: 0rem;
+  padding-bottom: 0rem;
+
+  .navbar__buttons {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .navbar__mobile-nav-toggle {
+    &:after {
+      display: none;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    #mobile-nav-dropdown {
+      display: inline-block !important;
+    }
+  }
+
+  #mobile-nav-dropdown {
+    display: none;
+  }
+
+  position: relative;
+  padding-left: 6rem !important;
+
+  .nav-item {
+    position: relative;
+    margin: 0rem !important;
+
+    &.active {
+      .nav-link {
+        &:before {
+          content: '';
+          height: 2px;
+          background-color: $brand-mooc;
+          position: absolute;
+          bottom: 0px;
+          left: 0px;
+          width: 100%;
+        }
+      }
+    }
+
+    &:last-child {
+      .nav-link {
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .nav-link {
+    padding: 0.95rem 0.9rem;
+    position: relative;
+
+    &:hover {
+      background-color: $gray-lightest;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      background-color: $gray-lighter;
+      width: 1px;
+      height: 1.8rem;
+      right: 0px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .navbar-brand {
+    @include floating;
+
+    position: absolute;
+    top: 0px;
+    left: 1rem;
+    text-align: center;
+
+    color: white;
+    background-color: $brand-mooc;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    font-size: 3rem;
+    width: 4rem;
+    line-height: 4rem !important;
+    vertical-align: middle;
+    border-radius: 0px 0px $border-radius $border-radius;
+
+    &:hover, &:active {
+      color: white;
+    }
+  }
+}

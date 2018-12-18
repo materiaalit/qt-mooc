@@ -1,0 +1,86 @@
+---
+  title: User Guide
+  published: true
+---
+
+<% partial 'partials/material_heading' do %>
+    User Guide
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+    Setting up the working environment
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+    Linux
+<% end %>
+
+<ul>
+    <li>
+        Install development tools (g++, make, etc.) for your distribution.
+    <ul>
+        <li>
+            Ubuntu/Debian: <code>sudo apt install build-essential</code>
+        </li>
+    </ul>
+    </li>
+    <li>
+        To run graphical applications you need to install the development libraries for OpenGL.
+    <ul>
+        <li>
+            Ubuntu/Debian: <code>sudo apt install mesa-common-dev libgl1-mesa-dev</code>
+        </li>
+    </ul>
+    </li>
+    <li>
+        You need to download and install Qt 5.12 and Qt Creator 4.8.0 with the online installer from <a href="https://www.qt.io/download-qt-installer" title="qt.io" target="_blank">qt.io</a>
+    </li>
+    <li>
+        Download <a href="https://github.com/TestMyQt/Qt-CreatorTMC/releases/download/v2.0/qtcreator-tmc-linux-v2.0.zip" title="Qt Creator TMC plugin">qtcreator-tmc-linux-v2.0.zip</a>
+    </li>
+    <li>
+        Copy/move the <code>.so</code> file extracted from the qtcreator-tmc-linux-v2.0.zip to the following path: <code>$QT_INSTALL_DIRECTORY/Tools/QtCreator/lib/qtcreator/plugins/</code>
+    </li>
+    <li>
+        Now lauch Qt Creator to start the course
+    </li>
+    <li>
+        Optional but highly recommended: If you want to enable automatic syntax checking and linting, you need to enable the <code>ClangCodeModel</code> plugin with <code>Help - About Plugins - search for ClangCodeModel</code> and restart Qt Creator. You can change the settings in <code>Tools - Options - C++ - Code Model</code>.
+    </li>
+</ul>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+    Windows
+<% end %>
+
+<p>
+Windows support coming.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+    MacOS
+<% end %>
+
+<p>
+Mac support coming.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+    Getting Started
+<% end %>
+
+<p>
+    All the functionality related to the TMC plugin for Qt Creator can be found in the dropdown menu named <code>TestMyCode</code>.
+</p>
+
+<p>
+    Start by logging in. After that choose the organization <code>XXX</code> and course <code>YYY</code>, and set the <code>Project Directory</code> to a desirable location (this is where the exercises are going to be downloaded).
+</p>
+
+<p>
+    Choose which exercises to download from <code>Download/Update</code>. You can also launch the exercises from here. Remember that you need to configure the project in the <code>Projects</code> tab (left side) on the Qt Creator by choosing a kit to use.
+</p>
+
+<p>
+    Now it's just time to code. Once you're done you can test the project locally with <code>Test project</code>, and then <code>Submit</code> it to the TMC server for evaluation.
+</p>

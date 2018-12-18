@@ -1,0 +1,23 @@
+.footer {
+  background-color: $gray-lightest;
+  padding: 0rem $spacer-x * 3;
+  color: $gray-light;
+  text-align: center;
+  padding: 1rem;
+  line-height: 2rem;
+
+  &__github-link {
+    vertical-align: middle;
+    font-size: 2rem;
+    color: black;
+  }
+
+  .improvement {
+    line-height: 1rem;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-around;
+    width: 350px;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,771 @@
+---
+  title: Part 2
+  exercise_page: true
+  quiz_page: true
+  published: true
+---
+
+<% partial 'partials/material_heading' do %>
+Value Object and QObject
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+The Meta-Object system
+<% end %>
+
+<p>
+Qt's meta-object system provides the signals and slots mechanism for inter-object communication, run-time type information (RTTI), and the dynamic property system. Signals and slots is one of the most important concepts in Qt, and it will be discussed in the next chapter.
+</p>
+
+<p>
+The meta-object system is implemented with a three-part mechanism:
+</p>
+
+<ul>
+<li><code>QObject</code> is the base class that all objects in the meta-object system inherit from.</li>
+<li>The <code>Q_OBJECT</code> macro is used to enable meta-object features when declared within a class definition.</li>
+<li>The Meta-Object Compiler (<code>moc</code>) will read the class definitions with the declared <code>Q_OBJECT</code> macro and produce the meta-object code.</li>
+</ul>
+
+<% partial 'partials/material_sub_heading' do %>
+Value Type and Identity Type
+<% end %>
+
+<p>
+Value types can be copied and assigned. Many of the Qt value types, such as <code>QString</code> and Qt Containers, also use implicit sharing (copy-on-write). Implicitly shared classes are both safe and efficient when passed as arguments, because only a pointer to the data is passed around, and the data is copied only if and when a function writes to it. Custom value types can be made known to the meta-object system by using the <code>Q_DECLARE_METATYPE</code> macro, which makes them storable in <code>QVariant</code>. This is useful when, for example, reading properties. How this is done will be discussed later in the chapter, with the property system in general.
+</p>
+
+<p>
+Identity type in turn derives from <code>QObject</code>. It extends C++ with many dynamic features using a meta-object system. <code>QObject</code> has neither a copy constructor nor an assignment operator; this is by design. Actually, they are declared, but in a private section with the macro <code>Q_DISABLE_COPY()</code>. In fact, all Qt classes derived from <code>QObject</code> (direct or indirect) use this macro to declare their copy constructor and assignment operator to be private. The main consequence is that you should use pointers to <code>QObject</code> (or to your <code>QObject</code> subclass) where you might otherwise be tempted to use your <code>QObject</code> subclass as a value. For example, without a copy constructor, you can't use a subclass of <code>QObject</code> as the value to be stored in one of the container classes. You must store pointers.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+The Qt Object Model and the QObject class
+<% end %>
+
+<p>
+The <code>QObject</code> class is the base class of all Qt objects. It is the heart of the Qt Object Model. The central feature in this model is a very powerful mechanism for seamless object communication called signals and slots. The signals and slots system will be discussed at length in the next chapter. 
+</p>
+
+<p>
+<code>QObject</code>s organize themselves in object trees. When you create a <code>QObject</code> with another object as parent, the object will automatically add itself to the parent's <code>children()</code> list. The parent takes ownership of the object; i.e., it will automatically delete its children in its destructor. You can look for an object by name and optionally type using <code>findChild()</code> or <code>findChildren()</code>. The parent-child relationship will be discussed in chapter 2.03.
+</p>
+
+<p>
+Every object has an <code>objectName()</code> and its class name can be found via the corresponding <code>metaObject()</code> (see <code>QMetaObject::className()</code>). You can determine whether the object's class inherits another class in the <code>QObject</code> inheritance hierarchy by using the <code>inherits()</code> function.
+</p>
+
+<p>
+When an object is deleted, it emits a <code>destroyed()</code> signal. You can catch this signal to avoid dangling references to <code>QObject</code>s.
+</p>
+
+<p>
+Last but not least, <code>QObject</code> provides the basic timer support in Qt; see <code>QTimer</code> for high-level support for timers.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+The Q_OBJECT macro
+<% end %>
+
+<p>
+The <code>Q_OBJECT</code> macro must appear in the private section of a class definition that declares its own signals and slots or that uses other services provided by Qt's meta-object system.
+</p>
+
+<p>
+The <code>moc</code> tool reads a C++ header file. If it finds one or more class declarations that contain the <code>Q_OBJECT</code> macro, it produces a C++ source file containing the meta-object code for those classes. This meta-object code implements the underlying functionality needed for the runtime features. When using <code>qmake</code> you don't have to manually run the <code>moc</code> tool, it will be done automatically.
+</p>
+
+<p>
+Example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+#include <QObject>
+
+class Counter : public QObject
+{
+    Q_OBJECT
+
+public:
+    Counter() { m_value = 0; }
+    int value() const { return m_value; }
+
+public slots:
+    void setValue(int value);
+
+signals:
+    void valueChanged(int newValue);
+
+private:
+    int m_value;
+};
+<% end %>
+
+<p>
+This macro requires the class to be a subclass of <code>QObject</code>. You can use <code>Q_GADGET</code> instead of <code>Q_OBJECT</code> to enable the meta object system's support for enums in a class that is not a <code>QObject</code> subclass. The <code>Q_GADGET</code> macro is a lighter version of the <code>Q_OBJECT</code> macro for classes that do not inherit from <code>QObject</code> but still want to use some of the reflection capabilities offered by <code>QMetaObject</code>. Just like the <code>Q_OBJECT</code> macro, it must appear in the private section of a class definition.
+</p>
+
+<p>
+Notice that the <code>Q_OBJECT</code> macro is mandatory for any object that implements signals, slots or properties. We strongly recommend the use of this macro in all subclasses of <code>QObject</code> regardless of whether or not they actually use signals, slots and properties, since failure to do so may lead certain functions to exhibit strange behavior.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Internationalization (I18n)
+<% end %>
+
+<p>
+All <code>QObject</code> subclasses support Qt's translation features, making it possible to translate an application's user interface into different languages.
+</p>
+
+<p>
+To make user-visible text translatable, it must be wrapped in calls to the <code>tr()</code> function. This is explained in detail in the <a href="https://doc.qt.io/qt-5/i18n-source-translation.html" title="Writing Source Code for Translation">Writing Source Code for Translation</a> document. We won't be covering internationalization on this course, but it's good to know it's there.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+The Property System
+<% end %>
+
+<p>
+Qt provides a sophisticated <a href="http://doc.qt.io/qt-5/properties.html" title="property system">property system</a> similar to the ones supplied by some compiler vendors. However, as a compiler- and platform-independent library, Qt does not rely on non-standard compiler features like <code>__property</code> or <code>[property]</code>. The Qt solution works with any standard C++ compiler on every platform Qt supports. It is based on the Meta-Object System that also provides the signals and slots system.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Requirements for Declaring Properties
+<% end %>
+
+<p>
+To declare a property, use the <code>Q_PROPERTY()</code> macro in a class that inherits <code>QObject</code>. Here is an example showing how to export member variables as Qt properties using the <code>MEMBER</code> keyword. Note that a <code>NOTIFY</code> signal must be specified to allow QML property bindings. We will talk more about QML in Part 3!
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Q_PROPERTY(QColor color MEMBER m_color NOTIFY colorChanged)
+Q_PROPERTY(qreal spacing MEMBER m_spacing NOTIFY spacingChanged)
+Q_PROPERTY(QString text MEMBER m_text NOTIFY textChanged)
+
+...
+
+signals:
+    void colorChanged();
+    void spacingChanged();
+    void textChanged(const QString &amp;newText);
+
+private:
+    QColor  m_color;
+    qreal   m_spacing;
+    QString m_text;
+<% end %>
+
+<p>
+A property behaves like a class data member, but it has additional features accessible through the <a href="http://doc.qt.io/qt-5/metaobjects.html" title="Meta-Object System">Meta-Object System</a>
+</p>
+
+<p>
+The property declaration syntax has multiple keywords to specify the behaviour of the declared property. Here are the most relevant ones:
+</p>
+
+<ul>
+<li><code>READ</code> - For reading the property value. Ideally a const function is used for this purpose, and it must return either the property's type or a const reference to that type. eg., <code>QWidget::focus</code> is a read-only property with READ function, <code>QWidget::hasFocus()</code>. Required if no <code>MEMBER</code> variable was specified.</li>
+<li><code>WRITE</code> - For setting the property value. It must return void and must take exactly one argument, either of the property's type or a pointer or reference to that type. e.g., <code>QWidget::enabled</code> has the <code>WRITE</code> function <code>QWidget::setEnabled()</code>. Read-only properties do not need <code>WRITE</code> functions. e.g., <code>QWidget::focus</code> has no <code>WRITE</code> function.</li>
+<li><code>MEMBER</code> - Required if no <code>READ</code> accessor function is specified. This makes the given member variable readable and writable without the need of creating <code>READ</code> and <code>WRITE</code> accessor functions. It's still possible to use <code>READ</code> or <code>WRITE</code> accessor functions in addition to <code>MEMBER</code> variable association (but not both), if you need to control the variable access.</li>
+<li><code>RESET</code> - Optional. For setting the property back to its context specific default value. e.g., <code>QWidget::cursor</code> has the typical <code>READ</code> and <code>WRITE functions</code>, <code>QWidget::cursor()</code> and <code>QWidget::setCursor()</code>, and it also has a <code>RESET</code> function, <code>QWidget::unsetCursor()</code>, since no call to <code>QWidget::setCursor()</code> can mean reset to the context specific cursor. The <code>RESET</code> function must return void and take no parameters.</li>
+<li><code>NOTIFY</code> - Optional. If defined, it should specify one existing signal in that class that is emitted whenever the value of the property changes. <code>NOTIFY</code> signals for <code>MEMBER</code> variables must take zero or one parameter, which must be of the same type as the property. The parameter will take the new value of the property. The <code>NOTIFY</code> signal should only be emitted when the property has really been changed, to avoid bindings being unnecessarily re-evaluated in QML, for example. Qt emits automatically that signal when needed for <code>MEMBER</code> properties that do not have an explicit setter.</li>
+<li><code>USER</code> - Attribute indicates whether the property is designated as the user-facing or user-editable property for the class. Normally, there is only one <code>USER</code> property per class (default false). e.g., <code>QAbstractButton::checked</code> is the user editable property for (checkable) buttons.</li>
+</ul>
+
+<p>
+The property type can be any type supported by <code>QVariant</code>, or it can be a user-defined type. In this example, class <code>QDate</code> is considered to be a user-defined type.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Q_PROPERTY(QDate date READ getDate WRITE setDate)
+<% end %>
+
+<p>
+Because <code>QDate</code> is user-defined, you must include the <code>&lt;QDate&gt;</code> header file with the property declaration.
+</p>
+
+<p>
+For historical reasons, <code>QMap</code> and <code>QList</code> as property types are synonym of <code>QVariantMap</code> and <code>QVariantList</code>.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Reading and Writing Properties
+<% end %>
+
+<p>
+A property can be read and written using the generic functions <code>QObject::property()</code> and <code>QObject::setProperty()</code>, without knowing anything about the owning class except the property's name. In the code snippet below, the call to <code>QAbstractButton::setDown()</code> and the call to <code>QObject::setProperty()</code> both set property "down".
+</p>
+
+<% partial 'partials/code_highlight' do %>
+QPushButton *button = new QPushButton;
+QObject *object = button;
+button->setDown(true);
+object->setProperty("down", true);
+<% end %>
+
+<p>
+Accessing a property through its <code>WRITE</code> accessor is the better of the two, because it is faster and gives better diagnostics at compile time, but setting the property this way requires that you know about the class at compile time. Accessing properties by name lets you access classes you don't know about at compile time. You can discover a class's properties at run time by querying its <code>QObject</code>, <code>QMetaObject</code>, and <code>QMetaProperties</code>.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+QObject *object = ...
+const QMetaObject *metaobject = object->metaObject();
+int count = metaobject->propertyCount();
+for (int i = 0; i < count; ++i) {
+    QMetaProperty metaproperty = metaobject->property(i);
+    const char *name = metaproperty.name();
+    QVariant value = object->property(name);
+    ...
+}
+<% end %>
+
+<p>
+In the above snippet, <code>QMetaObject::property()</code> is used to get metadata about each property defined in some unknown class. The property name is fetched from the metadata and passed to <code>QObject::property()</code> to get the value of the property in the current object.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Example
+<% end %>
+
+<p>
+Suppose we have a class MyClass, which is derived from <code>QObject</code> and which uses the <code>Q_OBJECT</code> macro in its private section. We want to declare a property in MyClass to keep track of a priority value. The name of the property will be priority, and its type will be an enumeration type named <code>Priority</code>, which is defined in MyClass.
+</p>
+
+<p>
+We declare the property with the <code>Q_PROPERTY()</code> macro in the private section of the class. The required READ function is named priority, and we include a WRITE function named <code>setPriority</code>.
+</p>
+
+<p>
+The enumeration type must be registered with the Meta-Object System using the <code>Q_ENUM()</code> macro. The macro registers an enum type with the meta-object system. This will enable useful features; for example, if used in a <code>QVariant</code>, you can convert them to strings. Likewise, passing them to <code>QDebug</code> will print out their names. It must be placed after the enum declaration in a class that has the <code>Q_OBJECT</code> or the <code>Q_GADGET</code> macro.
+</p>
+
+<p>
+Registering an enumeration type makes the enumerator names available for use in calls to <code>QObject::setProperty()</code>. We must also provide our own declarations for the READ and WRITE functions.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+class MyClass : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(Priority priority READ priority WRITE setPriority NOTIFY priorityChanged)
+
+public:
+    MyClass(QObject *parent = 0);
+    ~MyClass();
+
+    enum Priority { High, Low, VeryHigh, VeryLow };
+    Q_ENUM(Priority)
+
+    void setPriority(Priority priority);
+    Priority priority() const;
+
+    signals:
+        void priorityChanged(Priority);
+    
+    private:
+        Priority m_priority;
+};
+<% end %>
+
+<p>
+Given a pointer to an instance of MyClass or a pointer to a <code>QObject</code> that is an instance of MyClass, we have two ways to set its priority property:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+MyClass *myinstance = new MyClass;
+QObject *object = myinstance;
+
+myinstance->setPriority(MyClass::VeryHigh);
+object->setProperty("priority", "VeryHigh");
+<% end %>
+
+<p>
+In the example, the enumeration type that is the property type is declared in MyClass and registered with the Meta-Object System using the <code>Q_ENUM()</code> macro. This makes the enumeration values available as strings for use as in the call to <code>setProperty()</code>. Had the enumeration type been declared in another class, its fully qualified name (i.e., <code>OtherClass::Priority</code>) would be required, and that other class would also have to inherit <code>QObject</code> and register the enumeration type there using the <code>Q_ENUM()</code> macro.
+</p>
+
+<p>
+A similar macro, <code>Q_FLAG()</code>, is also available. Like <code>Q_ENUM()</code>, it registers an enumeration type, but it marks the type as being a set of flags, i.e. values that can be OR'd together. An I/O class might have enumeration values <code>Read</code> and <code>Write</code> and then <code>QObject::setProperty()</code> could accept <code>Read | Write</code>. <code>Q_FLAG()</code> should be used to register this enumeration type.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Dynamic Properties
+<% end %>
+
+<p>
+<code>QObject::setProperty()</code> can also be used to add new properties to an instance of a class at runtime. When it is called with a name and a value, if a property with the given name exists in the <code>QObject</code>, and if the given value is compatible with the property's type, the value is stored in the property, and true is returned. If the value is not compatible with the property's type, the property is not changed, and false is returned. But if the property with the given name doesn't exist in the <code>QObject</code> (i.e., if it wasn't declared with <code>Q_PROPERTY()</code>), a new property with the given name and value is automatically added to the <code>QObject</code>, but false is still returned. This means that a return of false can't be used to determine whether a particular property was actually set, unless you know in advance that the property already exists in the <code>QObject</code>.
+</p>
+
+<p>
+Note that dynamic properties are added on a per instance basis, i.e., they are added to <code>QObject</code>, not <code>QMetaObject</code>. A property can be removed from an instance by passing the property name and an invalid <code>QVariant</code> value to <code>QObject::setProperty()</code>. The default constructor for <code>QVariant</code> constructs an invalid <code>QVariant</code>.
+</p>
+
+<p>
+Dynamic properties can be queried with <code>QObject::property()</code>, just like properties declared at compile time with <code>Q_PROPERTY()</code>.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Properties and Custom Types
+<% end %>
+
+<p>
+Custom value types used by properties need to be registered using the <code>Q_DECLARE_METATYPE()</code> macro so that their values can be stored in <code>QVariant</code> objects. This makes them suitable for use with both static properties declared using the <code>Q_PROPERTY()</code> macro in class definitions and dynamic properties created at run-time.
+</p>
+
+<p>
+The declaration is done by putting the <code>Q_DECLARE_METATYPE()</code> macro in the header file of your custom class. For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+#include <QMetaType>
+
+class YourCustomClass
+{
+public:
+    YourCustomClass();
+};
+
+Q_DECLARE_METATYPE(YourCustomClass)
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Adding Additional Information to a Class
+<% end %>
+
+<p>
+Connected to the property system is an additional macro, <code>Q_CLASSINFO()</code>, that can be used to attach additional name--value pairs to a class's meta-object, for example:
+</p>
+
+<p>
+<code>Q_CLASSINFO("Version", "3.0.0")</code>
+</p>
+
+<p>
+Like other meta-data, class information is accessible at run-time through the meta-object; see <code>QMetaObject::classInfo()</code> for details.
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'TimeToReflect' } do %>
+
+<p>
+In this exercise you'll get familiar with accessing QObject's properties. You'll find the instuctions in <code>reflection.cpp</code>.
+</p>
+
+<p>
+Hint: <code>QVariant</code> will be useful.
+</p>
+
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'CustomContainer' } do %>
+
+<p>
+This exercise is tad bit larger. You'll create a custom class <code>Student</code>, as well as implement the functionality for <code>StudentRegistry</code>. You'll find the instuctions in <code>studentregistry.cpp</code>.
+</p>
+
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Object Communicating: Signals and Slots
+<% end %>
+
+<p>
+Nearly all UI toolkits have a mechanism to detect a user action, and respond to this action. Some of them use callbacks, others use listeners, but basically, all of them are inspired by the observer pattern.
+</p>
+
+<p>
+Observer pattern is used when an observable object wants to notify other observers objects about a state change. Here are some concrete examples:
+</p>
+
+<ul>
+<li>A user has clicked on a button, and a menu should be displayed.</li>
+<li>A web page just finished loading, and a process should extract some information from this loaded page.</li>
+<li>An user is scrolling through a list of items (in an app store for example), and reached the end, so other items should be loaded.</li>
+</ul>
+
+<p>
+Observer pattern is used everywhere in GUI applications, and often leads to some boilerplate code. Qt was created with the idea of removing this boilerplate code and providing a nice and clean syntax, and the signal and slots mechanism is the answer.
+</p>
+
+<p>
+Signals and slots are the key of Qt and object communication within. They are in a sense comparable to callbacks, but the difference is that they are type-safe where as callbacks typically are not. One of the benefits we could mention before starting, is that signals and slots allow you to build many-to-many connections, where as typically virtual methods are one-to-one or one-to-many, if several virtual functions are used.
+</p>
+
+<p>
+We discussed the <code>Q_OBJECT</code> macro in the last chapter, and it will find some relevance throughout this topic as well.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Briefly about Events
+<% end %>
+
+<p>
+Before jumping into signals and slots, let's talk briefly about events. Events are executed in event loops. This is hardly specific to Qt, arguably most of the applications you use spend majority of their time in event loops which wait for input, let it be from user, network, or somewhere else. There can be multiple event loops, every thread will have one for example. Qt supports the use of <a href="http://doc.qt.io/qt-5/eventsandfilters.html#event-handlers" title="Event Handlers">Event Handlers</a> but in general you'll want to use the signal and slot system. Reason we are introducing events here is that you should understand the concept of event loops as it relates to signals and slots. In the course we'll be dealing with single-threaded applications, but when you <a href="http://doc.qt.io/qt-5/threads-qobject.html#signals-and-slots-across-threads" title="send signals across threads">send signals across threads</a> you should remember that the slot might not be executed immediately, and instead it might be placed in the receiving thread's event loop to wait until the control is given to that thread.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Performance
+<% end %>
+
+<p>
+Compared to callbacks, signals and slots are slightly slower because of the increased flexibility they provide, but the difference for real applications is insignificant. In general, emitting a signal that is connected to some slots, is approximately ten times slower than calling the receivers directly, with non-virtual function calls. This is the overhead required to locate the connection object, to safely iterate over all connections (i.e. checking that subsequent receivers have not been destroyed during the emission), and to marshall any parameters in a generic fashion.
+</p>
+
+<p>
+While ten non-virtual function calls may sound like a lot, it's much less overhead than any new or delete operation, for example. As soon as you perform a string, vector or list operation that behind the scene requires new or delete, the signals and slots overhead is only responsible for a very small proportion of the complete function call costs. The same is true whenever you do a system call in a slot; or indirectly call more than ten functions. The simplicity and flexibility of the signals and slots mechanism is well worth the overhead, which your users won't even notice.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Signals
+<% end %>
+
+<p>
+Signals are emitted by an object when its internal state has changed in some way that might be interesting to the object's client or owner. Signals are public access functions and can be emitted from anywhere, but we recommend to only emit them from the class that defines the signal and its subclasses.
+</p>
+
+<p>
+To define a signal, put it in the <code>signals:</code> block in the class definition:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+...
+signals:
+    void valueChanged(int newValue);
+...
+<% end %>
+
+<p>
+To emit a signal, you use the <code>emit</code> keyword. The keyword is purely syntactic, but it helps to differentiate it from normal function calls.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+void Counter::setValue(int value)
+{
+    if (value != m_value) {
+        m_value = value;
+        emit valueChanged(value);
+    }
+}
+<% end %>
+
+<p>
+When a signal is emitted, the slots connected to it are usually executed immediately, just like a normal function call. When this happens, the signals and slots mechanism is totally independent of any GUI event loop. Execution of the code following the <code>emit</code> statement will occur once all slots have returned. The situation is slightly different when using queued connections; in such a case, the code following the emit keyword will continue immediately, and the slots will be executed later.
+</p>
+
+<p>
+Here are some examples of signals from the <code>QPushButton</code> class:
+</p>
+
+<ul>
+<li>clicked</li>
+<li>pressed</li>
+<li>released</li>
+</ul>
+
+<p>
+As you can see, their names are quite explicit. These signals are sent when the user clicked (pressed then released), pressed or released the button.
+</p>
+
+<p>
+These signals are automatically generated by the moc (meta-object compiler) and must not be implemented in the .cpp file. They can never have return types (i.e. use void).
+</p>
+
+<p>
+Developer experience shows that signals and slots are more reusable if they do not use special types. If <code>QScrollBar::valueChanged()</code> were to use a special type such as the hypothetical <code>QScrollBar::Range</code>, it could only be connected to slots designed specifically for <code>QScrollBar</code>. Connecting different input widgets together would be impossible.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Slots
+<% end %>
+
+<p>
+A slot is called when a signal connected to it is emitted. Slots are normal C++ functions and can be called normally; their only special feature is that signals can be connected to them.
+</p>
+
+<p>
+Here are some slots, from different classes:
+</p>
+
+<ul>
+<li><code>QApplication::quit</code></li>
+<li><code>QWidget::setEnabled</code></li>
+<li><code>QPushButton::setText</code></li>
+</ul>
+
+<p>
+If several slots are connected to one signal, the slots will be executed one after the other, in the order they have been connected, when the signal is emitted.
+</p>
+
+<p>
+Since slots are normal member functions, they follow the normal C++ rules when called directly. However, as slots, they can be invoked by any component, regardless of its access level, via a signal-slot connection. This means that a signal emitted from an instance of an arbitrary class can cause a private slot to be invoked in an instance of an unrelated class.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Signal/Slot definition
+<% end %>
+
+<p>
+As mentioned in the previous chapter, all classes that use the signal/slot system need to have the <code>Q_OBJECT</code> macro in the private section of the classes definition. Here's an example of a header file for a class that implements both signals and slots.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+#include <QObject>
+
+class Counter : public QObject
+{
+    Q_OBJECT
+
+public:
+    Counter() { m_value = 0; }
+
+    int value() const { return m_value; }
+
+public slots:
+    void setValue(int value);
+
+signals:
+    void valueChanged(int newValue);
+
+private:
+    int m_value;
+};
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Connecting Signals and Slots
+<% end %>
+
+<p>
+To connect the signal to the slot, we use <code>QObject::connect()</code>. There are several ways to connect signal and slots. The first is to use function pointers:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+connect(sender, &amp;QObject::destroyed, this, &amp;MyObject::objectDestroyed);
+<% end %>
+
+<p>
+There are several advantages to using <code>QObject::connect()</code> with function pointers. First, it allows the compiler to check that the signal's arguments are compatible with the slot's arguments. Arguments can also be implicitly converted by the compiler, if needed.
+</p>
+
+<p>
+You can also connect to functors or C++11 lambdas:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+connect(sender, &amp;QObject::destroyed, [=](){ this->m_objects.remove(sender); });
+<% end %>
+
+<p>
+The traditional way to connect a signal to a slot is to use <code>QObject::connect()</code> and the <code>SIGNAL()</code> and <code>SLOT()</code> macros. It's presented here because it's still widely used, but in general, you should use one of the newer connection types presented before. The rule about whether to include arguments or not in the <code>SIGNAL()</code> and <code>SLOT()</code> macros, if the arguments have default values, is that the signature passed to the <code>SIGNAL()</code> macro must not have fewer arguments than the signature passed to the <code>SLOT()</code> macro.
+</p>
+
+<p>
+All of these would work:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+connect(sender, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(Qbject*)));
+connect(sender, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed()));
+<% end %>
+
+<p>
+But this one won't work:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed(QObject*)));
+<% end %>
+
+<p>
+...because the slot will be expecting a <code>QObject</code> that the signal will not send. This connection will report a runtime error. Note that signal and slot arguments are not checked by the compiler when using this <code>QObject::connect()</code> overload.
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'SingalsSlots' } do %>
+
+<p>
+In this exercise you'll create two classes to practise defining signals and slots. You'll find the exercise instructions in <code>main.cpp</code>.
+</p>
+
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+3rd Party libraries
+<% end %>
+
+<p>
+You might be familiar with other signals slot mechanisms, like the <a href="https://www.boost.org/doc/libs/1_63_0/doc/html/signals2.html" title="Boost.Signals2 library">Boost.Signals2 library</a> It is possible to use Qt with a 3rd party signal/slot mechanism or even use both mechanisms in the same project. Add the following definition to your projects (.pro) file.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+CONFIG += no_keywords
+<% end %>
+
+<p>
+It tells Qt not to define the moc keywords <code>signals</code>, <code>slots</code>, and <code>emit</code>, because these names will be used by a 3rd party library, e.g. Boost. Then to continue using Qt signals and slots with the <code>no_keywords</code> flag, simply replace all uses of the Qt moc keywords in your sources with the corresponding Qt macros <code>Q_SIGNALS</code> (or <code>Q_SIGNAL</code>), <code>Q_SLOTS</code> (or <code>Q_SLOT</code>), and <code>Q_EMIT</code>.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Further Reading
+<% end %>
+
+<p>
+For more detailed information about Signals and Slots, see the official <a href="https://doc.qt.io/qt-5/signalsandslots.html" title="Signal/Slot documentation">Signal/Slot documentation</a>.
+</p>
+
+<% partial 'partials/material_heading' do %>
+Parent-Child relationship
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+The Object Tree
+<% end %>
+
+<p>
+<code>QObject</code>s organize themselves in object trees. When you create a <code>QObject</code> with another object as parent, it's added to the parent's <code>children()</code> list, and is deleted when the parent is. It turns out that this approach fits the needs of GUI objects very well. For example, a <code>QShortcut</code> (keyboard shortcut) is a child of the relevant window, so when the user closes that window, the shortcut is deleted too.
+</p>
+
+<p>
+<code>QQuickItem</code>, the basic visual element of the Qt Quick module which we'll discuss in later parts of the course, inherits from <code>QObject</code>, but has a concept of the visual parent which differs from that of the <code>QObject</code> parent. An item's visual parent may not necessarily be the same as its object parent. See <a href="https://doc.qt.io/qt-5/qtquick-visualcanvas-visualparent.html" title="Concepts - Visual Parent in Qt Quick">Concepts - Visual Parent in Qt Quick</a> for more details.
+</p>
+
+<p>
+You can also delete child objects yourself, and they will remove themselves from their parents. For example, when the user removes a toolbar it may lead to the application deleting one of its <code>QToolBar</code> objects, in which case the toolbar's <code>QMainWindow</code> parent would detect the change and reconfigure its screen space accordingly.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Object and pointer permanence
+<% end %>
+
+<p>
+When <code>QObjects</code> are created on the heap (i.e., created with <code>new</code>), a tree can be constructed from them in any order, and later, the objects in the tree can be destroyed in any order. When any <code>QObject</code> in the tree is deleted, if the object has a parent, the destructor automatically removes the object from its parent. If the object has children, the destructor automatically deletes each child. No <code>QObject</code> is deleted twice, regardless of the order of destruction.
+</p>
+
+<p>
+When <code>QObjects</code> are created on the stack, the same behavior applies. Normally, the order of destruction still doesn't present a problem. Consider the following snippet:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+int main()
+{
+    QWidget window;
+    QPushButton quit("Quit", &amp;window);
+    ...
+}
+<% end %>
+
+<p>
+The parent (window), and the child (quit) are both <code>QObject</code>s because <code>QPushButton</code> inherits <code>QWidget</code>, and <code>QWidget</code> inherits <code>QObject</code>. This code is correct: the destructor of quit is not called twice because the C++ language standard (ISO/IEC 14882:2003) specifies that destructors of local objects are called in the reverse order of their constructors. Therefore, the destructor of the child, quit, is called first, and it removes itself from its parent, window, before the destructor of window is called.
+</p>
+
+<p>
+But now consider what happens if we swap the order of construction, as shown in this second snippet:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+int main()
+{
+    QPushButton quit("Quit");
+    QWidget window;
+
+    quit.setParent(&amp;window);
+    ...
+}
+<% end %>
+
+<p>
+In this case, the order of destruction causes a problem. The parent's destructor is called first because it was created last. It then calls the destructor of its child, quit, which is incorrect because quit is a local variable. When quit subsequently goes out of scope, its destructor is called again, this time correctly, but the damage has already been done.
+</p>
+
+<p>
+To summarize:
+</p>
+
+<ul>
+<li>Tree can be constructed in any order</li>
+<li>Tree can be destroyed in any order</li>
+<li>if object has parent: object first removed from parent </li>
+<li>if object has children: deletes each child first</li>
+<li>No object is deleted twice</li> 
+</ul>
+
+<p>
+Please note that Parent-child relationship is NOT the same things as inheritance.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+The Dangling Pointer Problem
+<% end %>
+
+<p>
+The object tree does not solve the dangling pointer problem, but <a href="http://doc.qt.io/qt-5/qpointer.html" title="QPointer">QPointer</a> provides a guarded pointer for <code>QObject</code>. When the referenced object is destroyed, it sets the pointer to 0. It's be easy to mix guarded and normal pointers. The guarded pointer is automatically cast to the pointer type.
+</p>
+
+<p>
+Qt objects may also notify observers just before their destruction.
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'BadParenting' } do %>
+
+<p>
+This exercise will be mostly for the student to play around with the concept of parents and children. It is not tested in TMC, and doesn't award points. You'll find instructions in <code>parenting.cpp</code>.
+</p>
+
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'Directory Browser' } do %>
+
+<p>
+Exercise for Part 2 - Directory Browser
+</p>
+
+<p>
+<a href="../data/DirManager.zip" title="Directory Manager" target="_blank">Directory Manger template</a>
+<p>
+
+<p>
+This exercise is the first that you'll do outside of TMC. Download the template from the above link, and complete it following the exercise instructions.
+</p>
+
+<p>
+After you're done, put your solution to GitHub, and submit it to be peer-reviewed. Please note that to get the points for this exercise, you're required to review another student's solution! You can download an example solution and do the peer-review after you've submitted your own solution.
+</p>
+
+<p>
+PEER REVIEW INCOMING SOON^TM
+</p>
+
+<p>
+Complete the implementation of a trivial directory browser. You are provided with a simple browser QML UI and your task is to complete the implementation. The UI shows a directory name and number of file entries and a list of all entries. If the grid at the top is clicked, the application should sort the files to descending or ascending order, depending on the current order. Clicking on the file will show the files in that folder or open a text editor, if the file is a text file.
+</p>
+
+<ul>
+<li>Create a new class <code>DirManager</code> by deriving <code>QObject</code> to implement the requested functionality.</li>
+<li>Instantiate and expose your object to the <strong>root context</strong> of the QML engine in <code>main.cpp</code> line 11.
+<li>When a program is started, read at least file names and sizes of a directory, e.g. home, into a container. Note that the container must be a string list, so concatenate the name and size to a single string.</li>
+</ul>
+
+<p>
+The QML UI expects the following API from your <code>QObject</code> sub-class.
+</p>
+
+<ul>
+<li>There must be two properties: <code>dirName</code> of type <code>String</code> and <code>filesInDir</code> of type int. The values should correspond the real values of the current directory.</li>
+<li>Provide the slot functions to be called from the UI.</li>
+<li><code>model()</code> returns the container.</li>
+<li><code>fileContent()</code> returns the content of a text file as String.</li>
+<li><code>sort()</code> will sort entries in ascending or descending order.</li>
+<li><code>entryChanged(QString)</code> is called from the UI. You should check, whether the entry is a directory or a file. In the former case, you should read new entries from the new directory and in the latter case, you should read content of the file and use <code>fileContent()</code> to return the content to the UI.</li>
+</ul>
+
+<p>
+The UI is heavily based on signals. 
+</p>
+
+<ul>
+<li><code>dirNameChanged()</code> indicates the directory name has changed, i.e. the user has clicked on the directory name on the UI.</li>
+<li>Similarly, <code>filesInDirChanged()</code> indicates that the <code>filesInDir</code> value has changed.</li>
+<li><code>fileContentChanged()</code> is similar, indicating the user has clicked on the file name in the UI and new data has been read from the file.</li>
+<li><code>dataChanged()</code> notifies the container content has changed.</li>
+<li><code>entryClicked(QString)</code> signal is emitted from the UI. You should handle this by checking the type of the entry and by reading either a directory content to the container or file content to the String, used in the UI.</li>
+</ul>
+
+<% end %>

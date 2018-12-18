@@ -1,0 +1,45 @@
+<div class="modal fade" id="tmc-login-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="tmc-login-form">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Login to mooc.fi</h4>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            Missing a mooc.fi account? <a href="https://tmc.mooc.fi/user/new" class="alert-link" target="_blank" rel="noopener">Register!</a>
+          </div>
+
+          <div class="alert alert-danger" id="tmc-login-error" style="display: none;"></div>
+
+          <div class="form-group">
+            <label>Username or email</label>
+            <input type="text" id="tmc-login-username" class="form-control" placeholder="Username or email"/>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="tmc-login-password" class="form-control" placeholder="Password"/>
+          </div>
+
+          <div class="form-group">
+            <label>Course</label>
+
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="tmcLoginCourse" value="qt-mooc-newyear">
+                Qt MOOC
+              </label>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

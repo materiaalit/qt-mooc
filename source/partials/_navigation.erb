@@ -1,0 +1,36 @@
+<nav class="navbar navbar-light bg-white">
+  <a class="navbar-brand" href="http://mooc.fi" alt="MOOC" target="_blank" rel="noopener">
+    <span class="icon-mooc"></span>
+  </a>
+
+  <ul class="nav navbar-nav hidden-md-down">
+    <% sitemap.resources.select{|resource| resource.data.title && resource.data.published != false }.sort_by {|resource| resource.data.title.split(/(\d+)/).map {|a| a =~ /\d+/ ? a.to_i : a }}.each do |resource| %>
+      <li class="nav-item <%= current_resource.destination_path == resource.destination_path ? 'active' : '' %>">
+        <%= nav_link_to resource.data.title, resource %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="float-xs-right navbar__buttons">
+    <div class="dropdown" id="mobile-nav-dropdown">
+      <button class="btn btn-secondary dropdown-toggle navbar__mobile-nav-toggle" data-toggle="dropdown">
+        <i class="fa fa-bars"></i>
+      </button>
+
+      <div class="dropdown-menu">
+      </div>
+    </div>
+
+    <a href="https://tmc.mooc.fi" target="_blank" rel="noopener" class="btn btn-secondary">
+      <span class="hidden-md-down">Submissions</span>
+      <i class="fa fa-arrow-circle-up hidden-lg-up"></i>
+    </a>
+
+    <button class="btn btn-secondary" id="table-of-contents-toggle">
+      <span class="hidden-md-down">Table of Contents</span>
+      <i class="fa fa-ellipsis-h hidden-lg-up"></i>
+    </button>
+
+    <button class="btn btn-primary" id="tmc-login-toggle">Login</button>
+  </div>
+</nav>

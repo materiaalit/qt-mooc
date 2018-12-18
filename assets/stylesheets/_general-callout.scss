@@ -1,0 +1,33 @@
+$color: #8e44ad;
+
+.general-callout {
+  @include floating;
+
+  border-left: 4px solid $color;
+  border-radius: $border-radius;
+  padding: $spacer-y $spacer-x;
+  margin-bottom: $spacer-y;
+
+  &__icon {
+    color: $color;
+    margin-right: $spacer-x;
+  }
+
+  &__header {
+    border-bottom: 1px solid $gray-lighter;
+    padding-bottom: $spacer-y;
+    font-size: 1.5rem;
+  }
+
+  &__body {
+    padding-top: $spacer-y;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0px;
+    }
+  }
+}

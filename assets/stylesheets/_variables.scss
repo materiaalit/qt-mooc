@@ -1,0 +1,23 @@
+$container-max-widths: (
+  sm: 540px,
+  md: 860px,
+  lg: 861px,
+  xl: 862px
+);
+
+$font-family-base: 'Roboto';
+
+$brand-primary: #528afc;
+$brand-mooc: #FFAB0E;
+$brand-warning: $brand-mooc;
+$brand-success: #57b181;
+$brand-danger: #d9534f;
+
+$brand-learning-objectives: $brand-success;
+
+$state-info-text: darken($brand-primary, 10%);
+$state-info-bg: lighten($brand-primary, 30%);
+$state-info-border: lighten($brand-primary, 20%);
+$state-danger-text: darken($brand-danger, 10%);
+$state-danger-bg: lighten($brand-danger, 35%);
+$state-danger-border: lighten($brand-danger, 25%);

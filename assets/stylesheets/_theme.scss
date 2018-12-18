@@ -1,0 +1,183 @@
+html {
+  font-size: 16px;
+}
+
+header > h1 {
+  border-bottom: 1px solid $gray-lighter;
+  padding-bottom: $spacer-y;
+}
+
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .content-wrapper {
+    flex: 1;
+    padding-bottom: $spacer-y * 3;
+  }
+}
+
+.material-heading {
+  margin: $spacer-y * 1.5 0rem;
+}
+
+.hljs {
+  border-radius: $border-radius;
+  padding: $spacer-y $spacer-x !important;
+  background-color: $gray-lightest !important;
+}
+
+.exercise-list {
+  @include floating;
+
+  border-radius: $border-radius;
+  padding: $spacer-y $spacer-x;
+  margin-bottom: $spacer-y;
+  border-left: 4px solid $brand-mooc;
+
+  &__header {
+    font-size: 1.5rem;
+    border-bottom: 1px solid $gray-lighter;
+    padding-bottom: $spacer-y;
+  }
+
+  &__quiznator {
+    padding-top: $spacer-y;
+  }
+
+  .quiznator-dashboard-opener, .quiznator-dashboard-window {
+    position: relative !important;
+    top: 0rem !important;
+    right: 0rem !important;
+  }
+
+  &__content {
+    padding-top: $spacer-y;
+  }
+
+  &__link {
+    padding: $spacer-y $spacer-x;
+    display: block;
+    border-radius: $border-radius;
+
+    &:hover {
+      background-color: $gray-lightest;
+    }
+  }
+}
+
+.browser-support-warning {
+  color: white;
+  background-color: $brand-danger;
+  padding: $spacer-y $spacer-x;
+  text-align: center;
+
+  a {
+    color: white !important;
+    text-decoration: underline !important;
+  }
+
+  &__close {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+#assignments-toc {
+  margin-bottom: $spacer-y !important;
+
+  li {
+    float: left;
+    width: 50%;
+
+    a {
+      border-radius: $border-radius;
+      display: block;
+      padding: $spacer-y $spacer-x;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+}
+
+.info {
+  @include floating;
+
+  border-left: 4px solid $brand-primary;
+  border-radius: $border-radius;
+  padding: $spacer-y $spacer-x;
+  margin-bottom: $spacer-y;
+
+  &__heading {
+    margin-top: 0rem;
+    border-bottom: 1px solid $gray-lighter;
+    padding-bottom: $spacer-y;
+    font-size: 1.5rem;
+  }
+}
+
+.assignment {
+  @include floating;
+
+  border-left: 4px solid $brand-success;
+  border-radius: $border-radius;
+  margin-bottom: $spacer-y;
+  padding: $spacer-y $spacer-x;
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  > header {
+    cursor: pointer;
+
+    h1 {
+      border: 0px none;
+      font-size: 1.5rem;
+      margin: 0rem;
+      padding: 0rem;
+
+      a {
+        display: block;
+        color: inherit !important;
+
+        &:after {
+          display: inline-block;
+          width: 0;
+          height: 0;
+          vertical-align: middle;
+          float: right;
+          content: "";
+          position: relative;
+          top: 0.5rem;
+          border-top: 0.5rem solid;
+          border-right: 0.5rem solid transparent;
+          border-left: 0.5rem solid transparent;
+          transition: 0.5s;
+          transform: rotate3d(1, 0, 0, 0deg);
+        }
+
+        i {
+          transition: 0.5s;
+        }
+
+        &[aria-expanded=true] {
+          padding-bottom: $spacer-y;
+
+          &:after {
+            transform: rotate3d(1, 0, 0, 180deg);
+            transition: 0.5s;
+          }
+        }
+      }
+    }
+  }
+}
+
+.material {
+  padding-top: $spacer-y * 3 !important;
+}

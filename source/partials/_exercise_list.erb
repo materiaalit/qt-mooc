@@ -1,0 +1,13 @@
+<div class="exercise-list">
+  <div class="exercise-list__header">
+    Exercises
+  </div>
+
+  <div class="exercise-list__content" id="exercise-list"></div>
+
+  <% if include_quizzes %>
+    <div class="exercise-list__quiznator">
+      <%= partial 'partials/quiznator_dashboard' %>
+    </div>
+  <% end %>
+</div>

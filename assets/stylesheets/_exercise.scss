@@ -1,0 +1,60 @@
+.exercise {
+  @include floating;
+
+  border-left: 4px solid $brand-mooc;
+  border-radius: $border-radius;
+  margin-bottom: $spacer-y;
+  padding: $spacer-y $spacer-x 0rem $spacer-x;
+
+  &__arrow {
+    transition: 0.5s;
+    transform: rotate3d(1, 0, 0, 0deg);
+    position: absolute;
+    right: $spacer-y;
+    top: 0.25rem;
+  }
+
+  &__icon {
+    color: $brand-mooc;
+    margin-right: $spacer-x;
+  }
+
+  &__header {
+    font-size: 1.5rem;
+    border-bottom: 1px solid $gray-lightest;
+    padding-bottom: $spacer-y;
+  }
+
+  &__heading {
+    font-size: 1.5rem;
+    display: inline-block;
+    margin: 0rem;
+  }
+
+  &__toggle {
+    color: inherit !important;
+    display: block;
+    text-decoration: none !important;
+    position: relative;
+    padding-right: 1.5rem + $spacer-y;
+
+    &[aria-expanded="true"] {
+      .exercise__arrow {
+        transition: 0.5s;
+        transform: rotate3d(1, 0, 0, 180deg);
+      }
+    }
+  }
+
+  &__body {
+    padding: $spacer-y 0rem;
+
+    p:last-child {
+      margin-bottom: 0rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+    }
+  }
+}

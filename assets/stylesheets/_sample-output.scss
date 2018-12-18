@@ -1,0 +1,26 @@
+pre.sample-output:before {
+    content: "Esimerkkitulostus";
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    font-size: 14px;
+}
+
+*:before, *:after {
+    box-sizing: border-box;
+}
+
+pre.sample-output {
+    color: #333;
+    padding: 10px;
+    background: #efefef;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    word-wrap: normal;
+    white-space: pre;
+    overflow: auto;
+    position: relative;
+    display: block;
+    margin: 1em 0px 1em 0px;
+    border-left: 3px solid #ccc;
+}

@@ -1,0 +1,23 @@
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading"><%= name %></h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      <%= yield %>
+
+      <% if defined? model_solution %>
+        <hr/>
+
+        There is a model solution in the <a href="https://tmc.mooc.fi/" target="_blank" rel="noopener">Test My Code</a> -system. You can use the example answer to help you learn, and it's viewable before you've completed the exercise. You can find it <a href="https://tmc.mooc.fi/exercises/<%= model_solution %>/solution" target="_blank" rel="noopener">here</a>. Please note that this is just one example, generally there are multiple ways to solve a problem.
+
+      <% end %>
+    </div>
+  </div>
+</div>

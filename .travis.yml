@@ -1,0 +1,30 @@
+language: ruby
+rvm: 2.3.3
+cache:
+  bundler: true
+  directories:
+  - node_modules
+branches:
+  only:
+  - master
+before_install:
+- nvm install 7.4.0
+install:
+- npm install
+- bundle install --jobs=3 --retry=3 --deployment --path=${BUNDLE_PATH:-vendor/bundle}
+before_script:
+- git config --global user.name "hnbot"
+- git config --global user.email "nygrenh+hnbot@gmail.com"
+- export COMMIT_MESSAGE=Update:\ $(git log -1 --pretty=%s)
+- git clone -b gh-pages --single-branch https://github.com/materiaalit/ohjelmointi-s18.git
+  build
+script:
+- bundle exec middleman build
+after_success:
+- cd build
+- git checkout HEAD README.md
+- git checkout HEAD CNAME
+- git add --all
+- git commit -m "$COMMIT_MESSAGE"
+- git push "https://hnbot:$GITHUB_API_KEY@github.com/materiaalit/ohjelmointi-s18.git"
+  gh-pages:gh-pages 2>&1 | sed "s/$GITHUB_API_KEY/<confidential>/g"

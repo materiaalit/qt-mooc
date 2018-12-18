@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Qt MOOC | <%= current_page.data.title %></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <%= stylesheet_link_tag 'styles' %>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/xcode.min.css">
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.1/cookieconsent.min.css" />
+
+    <link rel="stylesheet" href="https://materiaalit.github.io/code-states-visualizer-cdn/app.css" />
+    <link rel="stylesheet" href="https://materiaalit.github.io/typonator-cdn/app.css" />
+    <link rel="stylesheet" href="https://crowdsorcerer.testmycode.io/dist/app.css" />
+    <link rel="stylesheet" href="https://materiaalit.github.io/pdf-slideshow-cdn/app.css" />
+
+    <% if build? %>
+      <%= partial 'partials/analytics' %>
+    <% end %>
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <div class="header-wrapper">
+        <%= partial 'partials/browser_warning' %>
+
+        <%= partial 'partials/navigation' %>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="container material" id="material">
+          <% if current_page.data.exercise_page %>
+            <%= partial 'partials/exercise_list', locals: { include_quizzes: current_page.data.quiz_page } %>
+          <% end %>
+
+          <%= yield %>
+        </div>
+      </div>
+
+      <div class="footer-wrapper">
+        <%= partial 'partials/footer' %>
+      </div>
+    </div>
+
+    <%= partial 'partials/login_modal' %>
+
+    <%= partial 'partials/table_of_contents' %>
+
+    <%= partial 'partials/quiznator' %>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+	    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	    crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <%= javascript_include_tag 'scripts' %>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.1/cookieconsent.min.js"></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js'></script>
+
+    <script>window.cookieconsent.initialise({"palette":{"popup":{"background":"#000"},"button":{"background":"#f1d600"}}, "position": "bottom-left"});</script>
+
+    <script src='https://materiaalit.github.io/code-states-visualizer-cdn/app.js'></script>
+    <script src='https://materiaalit.github.io/typonator-cdn/app.js'></script>
+    <script src='https://crowdsorcerer.testmycode.io/dist/app.js'></script>
+    <script src='https://materiaalit.github.io/pdf-slideshow-cdn/app.js'></script>
+    <% if current_page.data.load_youtube %>
+      <script>
+        window.loadYoutube()
+      </script>
+    <% end %>
+    <script>
+      window.initPdfSlideshow('../pdf.worker.min.js');
+    </script>
+  </body>
+</html>

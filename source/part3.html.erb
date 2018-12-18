@@ -1,0 +1,2965 @@
+---
+  title: Part 3
+  exercise_page: true
+  quiz_page: true
+  published: true
+---
+
+<% partial 'partials/material_heading' do %>
+Introduction to QML
+<% end %>
+
+<p>
+In Parts 1 and 2 we mainly worked on Qt essentials, which can be found in almost any Qt application, no matter how trivial or complicated the application is. We were discussing about the application logic, the engine implemenating the application behaviour. In addition to logic, however, we usually want to create a user interface to interact with the engine as well. Preferably a flashy, cool looking, fluid user interface that shoots lasers and plays disco music when the user interacts with it. Who doesn't love lasers and disco music?!
+</p>
+
+<p>
+In Part 3 we are going to be talking about creating user interfaces using Qt Quick. The programming language we will be using is the declarative scripting language QML, which extends the JavaScript language. Although the application logic can be implemented in JavaScript, the preferred way is to use QML and JavaScript for declaring the UI components, layouts, and animations, while C++ should be used to implement the application logic. This is because performance will almost always be worse with logic implemented using JavaScript in comparison to C++.
+</p>
+
+<p>
+We will return to the topic of interconnecting application logic written in C++ with QML in Part 5. In this part, we cover QML language only.
+</p>
+
+<p>
+In Qt Creator, there exists a graphical UI design tool, called Qt Quick Designer. The UIs in the course can be composed by simply editing the QML code directly, but you can use Qt Quick Designer as well if you wish. Qt also provides Qt Design Studio, which is mainly targeted at designers. It allows UI designer to import graphic assets from Adobe Photoshop and further the SW developer to use the UI design, composed in Qt Design Studio. However, for the course exercises Qt Design Studio is little bit too overwhelming. 
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Qt Quick
+<% end %>
+
+<p>
+Qt Quick is a module, consisting of all the basic types and functionality for QML. It includes visual types, interactive types, animations, models and views, particle effects and shader effects. A QML application developer can get access to all of that functionality by importing the corresponding QML modules. The modules are plugins, providing types for the QML engine. A trivial module may be just a folder, consisting of QML text files. 
+</p>
+
+<p>
+The Qt Quick QML library is provided by the Qt Quick module. For in-depth information about the various QML types and other functionality provided by Qt Quick, please see the <a href="http://doc.qt.io/qt-5/qtquick-index.html" title="Qt Quick module">Qt Quick module</a> documentation.
+</p>
+
+<p>
+When using the Qt Quick module, you will need to know how to write QML applications using the QML language.
+</p>
+
+<p>
+Using the Qt Quick module, designers and developers can efficiently work with the same product development project, without long cycles, waiting designers to change or developers implement certain UI features. This can significantly reduce round-trip time between the designer and developer, reducing product time-to-market. 
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+QML
+<% end %>
+
+<p>
+QML stands for Qt Meta-Object Language, AKA Qt Modelling Language, and it's a user interface markup language. 
+</p>
+
+<p>
+The Qt QML module provides a framework for developing applications and libraries with the QML language. It defines and implements the language and engine infrastructure, and provides an API to enable application developers to extend the QML language with custom types and integrate QML code with JavaScript and C++. The Qt QML module provides both a QML API and a C++ API.
+</p>
+
+<p>
+You'll want to work on your application logic using C++. It will in most cases result in better performance than implementing logic using JavaScript. 
+</p>
+
+<img class="naytto" src="/img/part-3/qt_quick_workflow.png" />
+
+<p>
+QML is a declarative language that allows user interfaces to be described in terms of their visual components and how they interact and relate with one another. It is a highly readable language that was designed to enable components to be interconnected in a dynamic manner, and it allows components to be easily reused and customized within a user interface. Using the Qt Quick module, designers and developers can easily build fluid animated user interfaces in QML, and have the option of connecting these user interfaces to any back-end C++ libraries.
+</p>
+
+<p>
+With QML, UI components are declared with objects, object properties and property bindings, set to define the application behavior. It is possible to declare signals and signal/slot connections similarily to C++. Application behavior can be further scripted through JavaScript, which is a subset of the language. In addition, QML heavily uses Qt, which allows types and other Qt features to be accessible directly from QML applications. In fact, each JavaScript method in a QML type, also called as a component, is a public slot and can be connected to a signal. 
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+.qml -files and QML syntax
+<% end %>
+
+<p>
+QML is a multi-paradigm language that enables objects to be defined in terms of their attributes and how they relate and respond to changes in other objects. In contrast to purely imperative code, where changes in attributes and behavior are expressed through a series of statements that are processed step by step, QML's declarative syntax integrates attribute and behavioral changes directly into the definitions of individual objects. These attribute definitions can then include imperative code, in the case where complex custom application behavior is needed.
+</p>
+
+<p>
+QML source code is generally loaded by the engine through QML (.qml) documents, which are standalone documents of QML code. These can be used to define QML object types that can then be reused throughout an application. A QML document, defining a new type, is also called a component.
+</p>
+
+<p>
+Note that type names must begin with an uppercase letter in order to be declared as QML object types in a QML file.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Including QML in your projects
+<% end %>
+
+<p>
+To include QML in your projects, you need to complete these three steps:  
+</p>
+
+<p>
+1. To include the definitions of the module's classes, use the following directive:
+</p>
+
+    <% partial 'partials/code_highlight' do %>
+    #include &lt;QtQml&gt;
+    <% end %>
+
+<p>
+2. The QML types in Qt QML are available through the QtQML import. To use the types, add the following import statement to your .qml file:
+</p>
+
+    <% partial 'partials/code_highlight' do %>
+    import QtQml 2.0
+    <% end %>
+
+<p>
+3. To link against the module, add this line to your qmake .pro file:
+</p>
+
+    <% partial 'partials/code_highlight' do %>
+    QT += qml
+    <% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Imports
+<% end %>
+
+<p>
+A QML document may have one or more imports at the top of the file. An import can be any one of:
+</p>
+
+<ul>
+<li>a versioned namespace into which types have been registered (e.g., by a plugin)</li>
+<li>a relative directory which contains type-definitions as QML documents</li>
+<li>a JavaScript file</li>
+</ul>
+
+<p>
+JavaScript file imports must be qualified when imported, so that the properties and methods they provide can be accessed.  
+</p>
+
+<p>
+The generic form of the various imports are as follows:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import Namespace VersionMajor.VersionMinor
+import Namespace VersionMajor.VersionMinor as SingletonTypeIdentifier
+import "directory"
+import "file.js" as ScriptIdentifier
+<% end %>
+
+<p>
+Examples:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+import QtQuick.LocalStorage 2.0 as Database
+import "../privateComponents"
+import "somefile.js" as Script
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Prototyping with Quick UI projects and qmlscene
+<% end %>
+
+<p>
+To prototype user interfaces even more quickly, one can create a <a href="http://doc.qt.io/qtcreator/quick-projects.html" title="Qt Quick UI">Qt Quick UI</a> project. These projects do not contain any C++ code, resource <code>.qrc</code> or deployment code (<code>qmake</code> files). This way the potential designer can launch the application without compiling any code or developer can quickly share proof-of-concepts. For example in Qt Design Studio, it is possible to create Qt Quick UI projects only. The QML Scene can be executed also remotely in a mobile or embedded device and any change in UI editor will be reflected in the UI immediately. Qt Quick Designer does not have similar feature. 
+</p>
+
+<p>
+One can also enable a keyboard shortcut for the prototyping application <a href="https://doc.qt.io/qt-5/qtquick-qmlscene.html" title="qmlscene">qmlscene</a>, which renders any arbitary <code>.qml</code> files. <code>qmlscene</code> can be enabled in Qt Creator by going to <code>Options -> Environment -> Keyboard -> search for qmlscene -> assign shortcut</code>. When a <code>.qml</code> file is open in the Edit or Design mode, hit the shortcut to render the file.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Internationalization
+<% end %>
+
+<p>
+Qt Quick has extensive internationalization and localization support.
+</p>
+
+<p>
+Let's go through the basic process here:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Text {
+    id: txt1;
+    text: qsTr("Back");
+}
+<% end %> 
+
+<p>
+Use the function <code>qsTr()</code> to declare translatable strings inside the UI. This makes "Back" a key entry in the translation files.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Text {
+    id: txt1;
+    // This user interface string is used only here
+    //: The back of the object, not the front
+    //~ Context Not related to back-stepping
+    text: qsTr("Back", "not front");
+}
+<% end %>
+
+<p>
+You can add context for the translator by a comment line starting with <code>//:</code> and optionally <code>//~</code>. The former is the main comment for the translator, and the latter is optional extra information.
+</p>
+
+<p>
+Sometimes the same word has different meanings in different contexts. Differentiate between them by adding the second parameter to <code>qsTr()</code>, which then gives the word an unique id in the translation files.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Text {
+    text: qsTr("File %1 of %2").arg(counter).arg(total)
+}
+<% end %>
+
+<p>
+Since the sentence structure between languages varies, avoid concatenating words and data. Instead, use <code>%</code> to insert parameters into the strings. This way the translator can change the locations of the parameters in the sentences.
+</p>
+
+<p>
+You can include the <code>L</code> modifier when you specify a parameter, e.g. <code>%L1</code>, to localize a number according to the current regional settings. This would format the number 1337.42 as "1,337.42" in the US and "1.337,42" in German, for example. 
+</p>
+
+<p>
+For more thorough information about internationalization, check out the official documentation about <a href="https://doc.qt.io/qt-5/qtquick-internationalization.html" title="Internationalization and Localization with Qt Quick">Internationalization and Localization with Qt Quick</a> and <a href="https://doc.qt.io/qt-5/linguist-manager.html" title="Qt Linguist Manger">Qt Linguist Manger</a>
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'qmlHelloWorld' } do %>
+
+<p>
+Oh my, it's a second Hello World in the same course. This time things get graphical. We'll start off simple, just head to <code>HelloWorld.qml</code> and write some text inside a rectangle.
+</p>
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+QML Types and Properties
+<% end %>
+
+<p>
+In the beginning of this chapter we're taking a general look into QML Types and the structure of the code. After that, we'll discuss QML object attributes and properties.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+QML Types and Structure
+<% end %>
+
+<p>
+QML types are structures in the markup language, and they represent visual and non-visual parts. Non-visual QML types include functionality, such as states, transitions, models, paths, gradients and timers. 
+</p>
+
+<p>
+All visual items in Qt Quick inherit from <code>Item</code>, but it's not itself visual. Using <code>Item</code> as the top-level QML object (as the root item of your component) will not produce a visual result. If you wish your top-level QML object to produce a visual result, you can use another type such as <code>Rectangle</code> or <code>Image</code> instead.
+</p>
+
+<p>
+Note that even though <code>Item</code> is good as a root object for your own components, in the application's <code>main.qml</code> you'll usually want to use <code>Window</code> or one of its sub-types as the root. When creating a new QML project with the Qt Creator wizard, a <code>Window</code> object is created automatically to <code>main.qml</code>.
+</p>
+
+<p>
+Although an <code>Item</code> object has no visual appearance, it defines all the attributes that are common across visual items, such as x and y position, width and height, anchoring and key focus handling. It supports layering and is usually used to group visual types. Use the <code>Item</code> to create opacity effects, such as when creating an invisible container to hold other components.
+</p>
+
+<p>
+The <code>Item</code> type is useful for grouping several items under a single root visual item. For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Item {
+    id: root
+    Text {
+        text: "Hello There!"
+        color: black
+    }
+    Image {
+        id: imageOne
+        x: 80
+        width: 100
+        height: 100
+        source: "tile.png"
+    }
+    Image {
+        id: imageTwo
+        x: 190
+        width: 100
+        height: 100
+        fillMode: Image.Tile
+        source: "tile.png"
+    }
+}
+<% end %>  
+
+<p>
+Please note that we are only using "magic numbers" in the examples for clarity's sake. In general, you should try to bind x, y, width and height to the parent, or another item, such as the root item of the component. How to do this will be explained shortly.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+QML Object tree
+<% end %>
+
+<p>
+Syntactically, a block of QML code defines a tree of QML objects to be created. Objects are defined using object declarations that describe the type of object to be created as well as the attributes that are to be given to the object. Any object declaration can define child objects through nested object declarations. In this way, any object declaration implicitly declares an object tree that may contain any number of child objects.
+</p>
+
+<p>
+For example, the Rectangle object declaration below includes a Gradient object declaration, which in turn contains two GradientStop declarations:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Rectangle {
+    width: 100
+    height: 100
+
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "yellow" }
+        GradientStop { position: 1.0; color: "green" }
+    }
+}
+<% end %>
+
+<p>
+Note, however, that this is a parent-child relationship in the context of the QML object tree, not in the context of the visual scene. The concept of a parent-child relationship in a visual scene is provided by the <code>Item</code> type from the QtQuick module, which is the base type for most QML types, as most QML objects are intended to be visually rendered. We we will discuss visual parent-child relationship next. 
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Visual Parents and Children
+<% end %>
+
+<p>
+The <code>QObject</code> parent-child relationship was discussed in Part 2. Now we will be taking a look at visual parents and children, as it's important to understand how the concept differs. An item's visual parent may not necessarily be the same as its object parent. The concept of the visual parent in Qt Quick is separate from, but related to, the concept of the object parent within the <code>QObject</code> parent hierarchy.
+</p>
+
+<p>
+All QML objects have an object parent, which is determined by the object hierarchy in which the object is declared. When working with the <code>QtQuick</code> module, the <code>Item</code> type is the base type for all visual items provided by this module, and it provides the concept of an additional visual parent, as defined by an item's parent property. Every item has a visual parent; if an item's parent property value is <code>null</code>, the item will not be rendered in the scene.
+</p>
+
+<p>
+Any object assigned to an item's data property becomes a child of the item within its <code>QObject</code> hierarchy, for memory management purposes. Additionally, if an object added to the data property is of the <code>Item</code> type, it is also assigned to the <code>Item::children</code> property and becomes a child of the item within the visual scene hierarchy. (Most Qt Quick hierarchy crawling algorithms, especially the rendering algorithms, only consider the visual parent hierarchy.)
+</p>
+
+<p>
+For convenience, the <code>Item</code> data property is its default property. This means that any child item declared within an <code>Item</code> object without being assigned to a specific property is automatically assigned to the data property and becomes a child of the item as described above. So, the two code blocks below produce the same result, and you will almost always see the form shown below: 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Item {
+    width: 100; height: 100
+    
+    Rectangle { 
+        width: 50;
+        height: 50;
+        color: "red"
+    }
+}
+<% end %>
+
+<p>
+Rather than the explicit data assignment:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Item {
+    width: 100; height: 100
+
+    data: [
+        Rectangle {
+            width: 50;
+            height: 50;
+            color: "red"
+        }
+    ]
+}
+<% end %>
+
+<p>
+An item's visual parent can be changed at any time by setting its parent property. Thus, an item's visual parent may not necessarily be the same as its object parent.
+</p>
+
+<p>
+When an item becomes the child of another item:
+</p>
+
+<ul>
+<li>The child's parent refers to its parent item</li>
+<li>The parent's <code>children</code> and <code>childrenRect</code> properties take that child into account</li>
+</ul>
+
+<p>
+Declaring an item as a child of another does not automatically mean that the child item will be appropriately positioned or sized to fit within its parent. Some QML types may have in-built behaviors that affect the positioning of child items — for example, a <code>Row</code> object automatically re-positions its children into a horizontal formation — but these are behaviors enforced by the types' own specific implementations. Additionally, a parent item will not automatically clip its children to visually contain them within the parent's visual bounds, unless its <code>clip</code> property is set to true.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+QML Object Attributes and Properties
+<% end %>
+
+<p>
+Every QML object type has a defined set of attributes. Each instance of an object type is created with the set of attributes that have been defined for that object type.
+</p>
+
+<p>
+A property is an attribute of an object that can be assigned a static value or bound to a dynamic JavaScript expression or even a code block. A property's value can be read by other objects according to property visibility scope rules. Generally it can also be modified by another object, unless a particular QML type has explicitly disallowed this for a specific property.
+</p>
+
+<p>
+A property may be defined for a type in C++ by registering a <code>Q_PROPERTY</code> of a class which is then registered with the QML type system. We discussed these <code>QObject</code> properties in the last part. Alternatively, a custom or dynamic property of an object type may be defined in an object declaration in a QML document or component with the following syntax:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+[default] property &lt;propertyType&gt; &lt;propertyName&gt;
+<% end %>
+
+<p>
+In this way an object declaration may expose a particular value to outside objects or maintain some internal state more easily.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Grouped Properties
+<% end %>
+
+<p>
+In some cases properties contain a logical group of sub-property attributes. These sub-property attributes can be assigned to using either the dot notation or group notation.
+</p>
+
+<p>
+For example, the Text type has a font group property. Below, the first Text object initializes its font values using dot notation, while the second uses group notation:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Text {
+    //dot notation
+    font.pixelSize: 12
+    font.b: true
+}
+
+Text {
+    //group notation
+    font { pixelSize: 12; b: true }
+}
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+The id Property
+<% end %>
+
+<p>
+The <code>id</code> property is a special property used to identify QML objects. It is used to create relationships between objects. The <code>id</code> property of an object allows other objects refer to it in regard to:
+</p>
+
+<ul>
+<li>Relative realignment and positioning</li>
+<li>To use its properties</li>
+<li>To change its properties (e.g. for animation)</li>
+<li>For re-use of common types (e.g. gradients, images).</li>
+</ul>
+
+<p>
+For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Item { 
+    width: 300; height: 115 
+    Text { 
+        id: title 
+        x: 50; y: 25 
+        text: "Qt Quick" 
+        font { family: "Helvetica"; pointSize: parent.width * 0.1 } 
+    } 
+    
+    Rectangle { 
+        x: title.x; y: title.y + title.height - height; height: 5 
+        width: title.width 
+        color: "green" 
+    }
+} 
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Scope
+<% end %>
+
+<p>
+Each QML component defines a logical scope. Each document has at least one root component, but can have other inline sub-components. The component scope is the union of the object ids within the component and the component's root object's properties. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Item {
+    property string title
+
+    Text {
+        id: titletype
+        text: "&lt;b&gt;" + title + "&lt;/b&gt;"
+        font.pixelSize: 22
+        anchors.top: parent.top
+    }
+
+    Text {
+        text: titletype.text
+        font.pixelSize: 18
+        anchors.bottom: parent.bottom
+    }
+}
+<% end %>
+
+<p>
+The example above shows a simple QML component that displays a rich text title string at the top, and a smaller copy of the same text at the bottom. The first <code>Text</code> type directly accesses the component's <code>title</code> property when forming the text to display. This makes it easy to distribute data throughout the component. The second <code>Text</code> type uses an id to access the first's text directly.
+</p>
+
+<p>
+Component instances connect their component scopes together to form a scope hierarchy. Component instances can directly access the component scopes of their ancestors. This dynamic scoping allows us to do things like:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// TitlePage.qml
+import QtQuick 2.0
+Item {
+    property string title
+
+    TitleText {
+        size: 22
+        anchors.top: parent.top
+    }
+
+    TitleText {
+        size: 18
+        anchors.bottom: parent.bottom
+    }
+}
+
+// TitleText.qml
+import QtQuick 2.0
+Text {
+    property int size
+    text: "&lt;b&gt;" + title + "&lt;/b&gt;"
+    font.pixelSize: size
+}
+<% end %>
+
+<p>
+Where the <code>TitleText</code> has access to <code>TitlePage</code>'s <code>title</code> property when used from within the <code>TitlePage</code> even though they exist in different files. Used somewhere else, the <code>title</code> property could resolve differently.
+</p>
+
+<p>
+Some special attention needs to be given when considering the scope of attached properties. We'll talk about this with Attached Properties in general.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Signal Handlers
+<% end %>
+
+<p>
+Many QML types provide signals you can catch, for example <code>MouseArea</code> has signals <code>onPressed</code> and <code>onReleased</code>, among others.
+</p>
+
+<p>
+QML types also provide built-in property change signals that are emitted whenever a property value changes. These signals take the form <code>on<Property>Changed</code> where <Property> is the name of the property with the first letter capitalized. These documentation of the types usually don't have these signals listed, because they are implicitly available throught the fact that the type has a property.
+</p>
+
+<p>
+We'll talk about implementing your own custom signals in QML later in Part 3.
+</p>
+
+<p>
+Signal handlers are a special sort of method attribute, where the method implementation is invoked by the QML engine whenever teh associated signal is emitted. For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+TextInput {
+    text: "Change this!"
+    onTextChanged: console.log("Text has changed to:" text)
+}
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Attached Properties and Attached Signal Handlers
+<% end %>
+
+<p>
+Attached properties and attached signal handlers are mechanisms that enable objects to be annotated with extra properties or signal handlers that are otherwise unavailable to the object. In particular, they allow objects to access properties or signals that are specifically relevant to the individual object.
+</p>
+
+<p>
+References to attached properties and handlers take the following syntax form:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+&lt;AttachingType&gt;.&lt;propertyName&gt;
+&lt;AttachingType&gt;.on&lt;SignalName&gt;
+<% end %>
+
+<p>
+For example, the <code>ListView</code> type has an attached property <code>ListView.isCurrentItem</code> that is available to each delegate object in a <code>ListView</code>. This can be used by each individual delegate object to determine whether it is the currently selected item in the view:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+ListView {
+    width: 240; height: 320
+    model: 3
+    delegate: Rectangle {
+        width: 100; height: 30
+        color: ListView.isCurrentItem ? "red" : "yellow"
+    }
+}
+<% end %>
+
+<p>
+In this case, the name of the attaching type is <code>ListView</code> and the property in question is <code>isCurrentItem</code>, hence the attached property is referred to as <code>ListView.isCurrentItem</code>.
+</p>
+
+<p>
+An attached signal handler is referred to in the same way. For example, the <code>Component.onCompleted</code> attached signal handler is commonly used to execute some JavaScript code when a component's creation process has been completed. In the example below, once the <code>ListModel</code> has been fully created, its <code>Component.onCompleted</code> signal handler will automatically be invoked to populate the model:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+ListView {
+    width: 240; height: 320
+    model: ListModel {
+        id: listModel
+        Component.onCompleted: {
+            for (var i = 0; i &lt; 10; i++)
+                listModel.append({"Name": "Item " + i})
+        }
+    }
+    delegate: Text { text: index }
+}
+<% end %>
+
+<p>
+Since the name of the attaching type is <code>Component</code> and that type has a completed signal, the attached signal handler is referred to as <code>Component.onCompleted</code>.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+A Note About Scope
+<% end %>
+
+<p>
+A common error is to assume that attached properties and signal handlers are directly accessible from the children of the object to which these attributes have been attached. This is not the case. The instance of the <strong>attaching type</strong> is only attached to specific objects, not to the object and all of its children.
+</p>
+
+<p>
+For example, below is a modified version of the earlier example involving attached properties. This time, the delegate is an <code>Item</code> and the colored <code>Rectangle</code> is a child of that item:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+ListView {
+    width: 240; height: 320
+    model: 3
+    delegate: Item {
+        width: 100; height: 30
+
+        Rectangle {
+            width: 100; height: 30
+            color: ListView.isCurrentItem ? "red" : "yellow" // WRONG! This won't work.
+        }
+    }
+}
+<% end %>
+
+<p>
+This does not work as expected because <code>ListView.isCurrentItem</code> is attached only to the root delegate object, and not its children. Since the <code>Rectangle</code> is a child of the delegate, rather than being the delegate itself, it cannot access the <code>isCurrentItem</code> attached property as <code>ListView.isCurrentItem</code>. So instead, the rectangle should access <code>isCurrentItem</code> through the root delegate:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+ListView {
+    //....
+    delegate: Item {
+        id: delegateItem
+        width: 100; height: 30
+
+        Rectangle {
+            width: 100; height: 30
+            color: delegateItem.ListView.isCurrentItem ? "red" : "yellow"   // correct
+        }
+    }
+}
+<% end %>
+
+<p>
+Now <code>delegateItem.ListView.isCurrentItem</code> correctly refers to the <code>isCurrentItem</code> attached property of the delegate.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Property Bindings
+<% end %>
+
+<p>
+As we just mentioned, an object's property can be assigned a static value which stays constant until explicitly assigned a new value. However, to make the fullest use of QML and its built-in support for dynamic objecct behaviours, most QML objects use property bindings. Property bindings are a core feature of QML that lets developers specify relationships between different object properties. When property's dependencies change in value, the property is automatically updated according to the specified relationship.
+</p>
+
+<p>
+Behind the scenes, the QML engine monitors the property's dependencies (that is, the variables in the binding expression). When a change is detected, the QML engine re-evaluates the binding expression and applies the new result to the property.
+</p>
+
+<p>
+To create a property binding, a property is assigned a JavaScript expression that evaluates to the desired value. At its simplest, a binding may be a reference to another property. Take the following example, where the blue Rectangle's height is bound to the height of its parent:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    width: 200; height: 200
+
+    Rectangle {
+        width: 100
+        height: parent.height
+        color: "blue"
+    }
+}
+<% end %>
+
+<p>
+Whenever the height of the parent changes, the height of the rectangle automatically updates to the same value.
+</p>
+
+<p>
+A binding can contain any valid JavaScript expression or statement. Bindings can access object properties, call methods, and use built-in JavaScript objects such as <code>Date</code> or <code>Math</code>. A bit more complex example would bind an objects <code>color</code> to the length of a text in another object.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+color: myTextInput.text.length &lt;= 10 ? "red" : "blue"
+<% end %>
+
+<p>
+Here the object's color changes from blue to red when an other object's (with id <code>myTextInput</code>) text becomes longer than 10 characters.
+</p>
+
+<p>
+It is important to note that while a bound property's value updates automatically, the binding will be removed if it's later assigned a static value by the JavaScript statement. This is a common source for troubles, especially for beginners! For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Rectangle {
+    width: 100
+    height: width * 2
+
+    focus: true
+    Keys.onSpacePressed: {
+        height = width * 3
+    }
+}
+<% end %>
+
+<p>
+Here, the Rectangle initially ensures that its height is always twice its width. However, when the space key is pressed, the current value of width*3 will be assigned to height as a static value. After that, the height will remain fixed at this value, even if the width changes. The assignment of the static value removes the binding.
+</p>
+
+<p>
+This can be desirable behavious in many cases. If the intention is to give the rectangle a fixed height and stop automatic updates, the code does exactly that. However, if the intention is to establish a new relationship between width and height, then the new binding expression must be wrapped in the <code>Qt.binding()</code> function instead:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Rectangle {
+    width: 100
+    height: width * 2
+
+    focus: true
+    Keys.onSpacePressed: {
+        height = Qt.binding(function() { return width * 3 })
+    }
+}
+<% end %>
+Now, after the space key is pressed, the rectangle's height will continue auto-updating to always be three times its width.
+
+<% partial 'partials/exercise', locals: { name: 'PropertyBindings' } do %>
+
+<p>
+This chapter was really theory-heavy, since we cannot really do much yet, but it's going to be really useful to have an understanding about the property system later on.
+</p>
+
+<p>
+This exercise awards no points, but you are recommended to download and check it out anyway. <code>PropertyBinding.qml</code> showcases what happens when you don't use <code>Qt.binding()</code>. Run both scenarios to make sure you get the concept. We also recommend you use this template to test out other things mentioned in this chapter, it will be useful later on.
+</p>
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Basic QML Types
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Qt Object
+<% end %>
+
+<code>Qt</code> QML type provides a global object with useful enums and functions from Qt. It is not instantiable; to use it, call the members of the global <code>Qt</code> object directly. For example:
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Text {
+    color: Qt.rgba(1, 0, 0, 1)
+    text: Qt.md5("hello, world")
+}
+<% end %>
+
+<p>
+See the documentation for <a href="http://doc.qt.io/qt-5/qml-qtqml-qt.html" title="Qt QML Type">Qt QML Type</a> too see all the things it provides.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Rectangle
+<% end %>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qml-qtquick-rectangle.html" title="Rectangle">Rectangle</a> items are used to fill areas with solid color or gradients, and/or to provide a rectangular border.
+</p>
+
+<p>
+Each <code>Rectangle</code> item is painted using either a solid fill color, specified using the color property, or a gradient, defined using a <code>Gradient</code> type and set using the gradient property. If both a color and a gradient are specified, the gradient is used.
+</p>
+
+<p>
+You can add an optional border to a rectangle with its own color and thickness by setting the <code>border.color</code> and <code>border.width</code> properties. Set the color to "transparent" to paint a border without a fill color.
+</p>
+
+<p>
+You can also create rounded rectangles using the <code>radius</code> property. Since this introduces curved edges to the corners of a rectangle, it may be appropriate to set the <code>Item::antialiasing</code> property to improve its appearance.
+</p>
+
+<p>
+If you need random shapes instead of rectangles, look into the <code>Shape</code> type. We'll discuss <code>Shape</code> in chapter 3.11.
+</p>
+
+<p>
+For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Rectangle {
+    width: 100
+    height: 100
+    color: "red"
+    border.color: "black"
+    border.width: 5
+    radius: 10
+}
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Image
+<% end %>
+
+<p>
+<a href="https://doc.qt.io/qt-5/qml-qtquick-image.html" title="Image">Image</a> type displays an image from an URL specified in the <code>source</code> property. <code>Image</code> type can handle Qt supported URLs and image types (PNG, JPEG, SVG, ...).
+</p>
+
+<p>
+The source image can naturally be smaller or bigger than the <code>Image</code> item. With the <code>fillMode</code> property, you can choose the strategy used when painting the image inside the item.
+</p>
+
+<p>
+By default, images are loaded from network resources asynchronously in a separate thread. This way slow networks won't block the UI. Local files are loaded synchronously by default, and this can be overridden by setting the <a href="https://doc.qt.io/qt-5/qml-qtquick-image.html#asynchronous-prop" title="asynchronous">asynchronous</a> property to <code>true</code>. Asynchronous loading is beneficial if there are big files that are not needed be displayed right away in the UI.
+</p>
+
+<p>
+To monitor the state of an image, <code>Image</code> has <a href="https://doc.qt.io/qt-5/qml-qtquick-image.html#progress-prop" title="progress">progress</a> and <a href="https://doc.qt.io/qt-5/qml-qtquick-image.html#status-prop" title="status">status</a> properties. They can be bound to visualizations in the UI, for example.
+</p>
+
+<p>
+When using images with QML, they are often the greatest user of memory in the UI. To minimize memory usage of images that are not part of UI (like user provided resources), they should have their size bounded with the <a href="https://doc.qt.io/qt-5/qml-qtquick-image.html#sourceSize-prop" title="sourceSize">sourceSize</a> property. <code>sourceSize</code> dictates the actual width and height of the loaded image, while the <code>width</code> and <code>height</code> properties hold the dimensions where the image will be scaled to.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Image {
+    id: bigImage
+    anchors.fill: parent
+    asynchronous: true
+    onStatusChanged: {
+        if (bigImage.status == Image.Ready) console.log("Image loaded")
+    }
+    source: "bigImage.jpg"
+    sourceSize.width: 1024
+    sourceSize.height: 1024
+}
+<% end %>
+
+<p>
+Image data is cached and shared internally, so when using the same <code>source</code> the objects will use the same data.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+BorderImage
+<% end %>
+
+<p>
+The <a href="https://doc.qt.io/qt-5/qml-qtquick-borderimage.html" title="BorderImage">BorderImage</a> type is used to form a border out of parts of an image by scaling or tiling.
+</p>
+
+<code>BorderImage</code> divides the source image into 9 regions like this:
+
+<img class="naytto" src="/img/part-3/borderimage2.png" />
+
+<p>
+The regions are defined with the <code>border</code> property group. Regions formed from the source image are scaled or tiled to create the displayed border image in the following way:
+</p>
+
+<ul>
+<li>The corners (regions 1, 3, 7, and 9) are not scaled at all.</li>
+<li>Regions 2 and 8 are scaled according to <code>horizontalTileMode</code>.</li>
+<li>Regions 4 and 6 are scaled according to <code>verticalTileMode</code>.</li>
+<li>The middle (region 5) is scaled according to both <code>horizontalTileMode</code> and <code>verticalTileMode</code>.</li>
+</ul>
+
+<p>
+If the TileMode is set to <code>Stretch</code>, the parts of the image are stretched vertically/horizontally if needed. If it's set to <code>Repeat</code> the parts of the image are instead repeated. When the width/height of the border regions 2, 4, 6, 8 cannot be repeated in exact multiples of the target width/height, the tilemode <a href="https://doc.qt.io/qt-5/qml-qtquick-borderimage.html#horizontalTileMode-prop" title="BorderImage.Round">BorderImage.Round</a> can be used to scale the regions to fit in the target.
+</p>
+
+Example usage:
+<% partial 'partials/code_highlight' do %>
+BorderImage {
+    width: 180; height: 180
+    border { left: 30; top: 30; right: 30; bottom: 30 }
+    horizontalTileMode: BorderImage.Repeat
+    verticalTileMode: BorderImage.Repeat
+    source: "pics/borderframe.png"
+}
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Text
+<% end %>
+
+<a href="https://doc.qt.io/qt-5/qml-qtquick-text.html" title="Text">Text</a> type can display plain or rich text (using <a href="https://doc.qt.io/qt-5/richtext-html-subset.html" title="HTML markup">HTML markup</a>).
+To have user editable text you can use <a href="https://doc.qt.io/qt-5/qml-qtquick-textedit.html" title="TextEdit">TextEdit</a>), which is very similar to <code>Text</code> type. 
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Text {
+    text: "Hello &lt;b&gt;World&lt;/b&gt;!"
+    font.family: "Helvetica"
+    font.pointSize: 24
+    color: "red"
+}
+<% end %>
+
+<p>
+If the <code>height</code> and <code>width</code> are not explicitly set, <code>Text</code> will try to accomodate the dimensions to the text. Generally explicitly setting the size is suboptimal because it causes a layout recalculcation, so set it only if you need to.
+</p>
+
+<p>
+To enable text wrapping, <a href="https://doc.qt.io/qt-5/qml-qtquick-text.html#wrapMode-prop" title="wrapMode">wrapMode</a> needs to be set, otherwise the text will laid on one line.
+</p>
+
+<p>
+To customize the font, the properties in group <code>font</code> can be changed:
+</p>
+
+<ul>
+<li><a href="https://doc.qt.io/qt-5/qml-qtquick-textedit.html#font.family-prop" title="font.family">font.family</a> choose the family of the font</li>
+<li><a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#font.pointSize-prop" title="font.pointSize">font.pointSize</a> sets the font size in device independent points</li>
+<li><a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#font.pixelSize-prop" title="font.pixelSize">font.pixelSize</a> sets the font size pixels</li>
+</ul>
+
+<p>
+To style the text, the property <a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#style-prop" title="style">style</a> can be used to change the style to either <code>Raised</code>, <code>Outline</code> or <code>Sunken</code>. Use <a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#styleColor-prop" title="styleColor">styleColor</a> to change the color of the added styling
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Row {
+    Text { font.pointSize: 24; text: "Normal" }
+    Text { font.pointSize: 24; text: "Raised"; style: Text.Raised; styleColor: "#AAAAAA" }
+    Text { font.pointSize: 24; text: "Outline";style: Text.Outline; styleColor: "green" }
+    Text { font.pointSize: 24; text: "Sunken"; style: Text.Sunken; styleColor: "#AAAAAA" }
+}
+<% end %>
+
+<p>
+To scale text with other items, you can:
+</p>
+<ul>
+<li>bind the <a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#font.pixelSize-prop" title="<code>font.pixelSize</code>"><code>font.pixelSize</code></a> property to any item geometry</li>
+<li>set the <a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop" title="<code>fontSizeMode</code>"><code>fontSizeMode</code></a> to scale the text size</li>
+</ul>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle { 
+    width: 400
+    height: 400
+    color: "lightblue" 
+    
+    
+    Text { 
+        x: parent.width * 0.25
+        y: parent.height * 0.25 
+        
+        text: "Qt Quick"
+        font {
+            family: "Sans"
+            pixelSize: parent.width * 0.1
+        } 
+    } 
+}
+<% end %>
+
+<p>
+You can also use <a href="https://doc.qt.io/qt-5/qml-qtquick-fontmetrics.html" title="FontMetrics">FontMetrics</a> to get the geometry of a certain font:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+
+    FontMetrics {
+        id: metrics
+        font.pointSize: 20
+        font.family: "Courier"
+    }
+
+    width: 200
+    height: metrics.height * 10
+    
+}
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'PictureFrame' } do %>
+
+<p>
+In this exercise you will modify the file <code>PictureFrame.qml</code> to create a nice frame for a cute cat. Exercise instructions are in the same file.
+</p>
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Text Input and Key Handling
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Focus
+<% end %>
+
+<p>
+In order for an object to receive keyboard events, it needs to have active focus. In this chapter we're focusing on text input, but any item can have focus and thus respond to input, let it be from the keyboard or somewhere else. 
+</p>
+
+<p>
+In the most simple case, where we only have one Item in need of focus, this can be done by simply setting the <code>focus</code> property to true. For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    color: "lightsteelblue"; width: 240; height: 25
+    Text { id: myText }
+    Item {
+        id: keyHandler
+        focus: true
+        Keys.onPressed: {
+            if (event.key == Qt.Key_A)
+                myText.text = 'Key A was pressed'
+            else
+                myText.text = 'Key other than A was pressed'
+        }
+    }
+}
+<% end %>
+
+<p>
+However, setting the <code>focus</code> property doesn't itself quarantee that the object will have active focus, but that it can receive it. When the application grows, there will most certainly be multiple objects wanting active focus, and just setting the <code>focus</code> property is no longer enough. If there are multiple objects requesting focus it will be granted to the last one created.
+</p>
+
+<p>
+There are a few ways to solve this probelm. In the case of <code>TextInput</code>, for example, the property <code>activeFocusOnPress</code> is set to true by default, which allows it to receive active focus when it's clicked. (Note that if <code>TextInput</code> has no text, there's no way to click it, unless it has a width or by using anchors.)
+</p>
+
+<p>
+Another way to get focus would be to explicitly pass it between objects. In this example the <code>nameField</code> item defines <code>KeyNavigation.tab</code>, which results to pressing Tab moving the focus to the <code>addressField</code> item
+</p>
+
+<% partial 'partials/code_highlight' do %>
+TextInput { 
+    id: nameField
+    focus: true 
+    KeyNavigation.tab: addressField 
+}
+<% end %>
+
+<p>
+And the <code>addressField</code> item defines <code>KeyNavigation.backtab</code>, which results to pressing Shift+Tab moving focus to the <code>nameField</code> item.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+TextInput { 
+    id: addressField
+    KeyNavigation.backtab: nameField 
+}
+<% end %>
+
+<p>
+Third way is by using a special type called <code>FocusScope</code>.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+FocusScope
+<% end %>
+
+<p>
+Focus scopes assist in keyboard focus handling when building reusable QML components.
+</p>
+
+<p>
+Within each focus scope one object may have <code>Item::focus</code> set to true. If more than one Item has the focus property set, the last type to set the focus will have the focus and the others are unset, similar to when there are no focus scopes. When a focus scope receives active focus, the contained type with focus set (if any) also gets the active focus.
+</p>
+
+<p>
+Let's look at an example. The code creates two MyClickableWidget instances:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    id: window
+
+    color: "white"; width: 240; height: 150
+
+    Column {
+        anchors.centerIn: parent; spacing: 15
+
+        MyClickableWidget {
+            focus: true  // Initial focus here
+            color: "lightblue"
+        }
+        MyClickableWidget {
+            color: "palegreen"
+        }
+    }
+
+}
+<% end %>
+The inital focus is set to the first <code>MyClickableWidget</code> created. If <code>MyClickableObject</code> was created without <code>FocusScope</code>, this initial focus would not be granted, because the <code>Rectangle</code> within <code>MyClickableWidget</code> sets its focus to true, and eventually the focus would go to the last object created, in this case the second instance of <code>MyClickableWidget</code>.
+
+<% partial 'partials/code_highlight' do %>
+// MyClickableWidget
+FocusScope {
+
+    id: scope
+
+    // FocusScope needs to bind to visual properties of the children
+    property alias color: rectangle.color
+    x: rectangle.x; y: rectangle.y
+    width: rectangle.width; height: rectangle.height
+
+    Rectangle {
+        id: rectangle
+        anchors.centerIn: parent
+        color: "lightsteelblue"; width: 175; height: 25; radius: 10; antialiasing: true
+        Text { id: label; anchors.centerIn: parent }
+        focus: true
+        Keys.onPressed: {
+            if (event.key == Qt.Key_A)
+                label.text = 'Key A was pressed'
+            else if (event.key == Qt.Key_B)
+                label.text = 'Key B was pressed'
+            else if (event.key == Qt.Key_C)
+                label.text = 'Key C was pressed'
+        }
+    }
+    MouseArea { anchors.fill: parent; onClicked: { scope.focus = true } }
+}
+<% end %>
+
+<p>
+The <code>Rectangle</code> is created inside the <code>FocusScope</code>, and a <code>MouseArea</code> (discussed in next chapter) is created to give focus to the last rectangle clicked.
+</p>
+
+<p>
+Note that, since the <code>FocusScope</code> type is not a visual type, the properties of its children need to be exposed to the parent item of the <code>FocusScope</code>. Layouts and positioning types will use these visual and styling properties to create the layout. In our example, the <code>Column</code> type cannot display the two widgets properly because the <code>FocusScope</code> lacks visual properties of its own. The <code>MyClickableWidget</code> component directly binds to the rectangle properties to allow the <code>Column</code> type to create the layout containing the children of the <code>FocusScope</code>.
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'FocusBoundary' } do %>
+
+<p>
+Your company hired an UX consultant who informs you that the "important" text input here should be focused by default. Your task is to edit <code>LineInput.qml</code> to make this possible. See <code>main.qml</code> for more information.
+</p>
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Text Input
+<% end %>
+
+<p>
+In QML, there are two types that display text input <code>TextEdit</code> and <code>TextInput</code>. <code>TextEdit</code> displays multiple lines of input, where as <code>TextInput</code> displays a single line of text input.
+</p>
+
+<p>
+In addition Qt Quick Controls provide similar <code>TextField</code> and <code>TextArea</code> so there's no need to create each and every component from scratch.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+TextInput
+<% end %>
+
+<p>
+The <code>TextInput</code> type displays a single line of editable plain text.
+</p>
+
+<code>TextInput</code> is used to accept a line of text input. Input constraints can be placed on a <code>TextInput</code> item (for example, through a validator or inputMask), and setting <code>echoMode</code> to an appropriate value enables <code>TextInput</code> to be used for a password input field.
+
+<p>
+For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+TextInput {
+    id: hexNumber
+    validator: RegExpValidator { regExp: /[0-9A-F]+/ }
+}
+<% end %>
+A regular expression validator is set to only allow inputs that are hexadecimal (0-9, A-F).
+
+<% partial 'partials/code_highlight' do %>
+TextInput {
+    id: ipAddress
+    inputMask: "000.000.000.000"
+}
+<% end %>
+Input mask is set to allow IPv4 addresses.
+
+<% partial 'partials/material_sub_sub_heading' do %>
+TextEdit
+<% end %>
+
+<p>
+The <code>TextEdit</code> item displays a block of editable, formatted text.
+</p>
+
+<p>
+It can display both plain and rich text. For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+TextEdit {
+    width: 240
+    text: "&lt;b&gt;Hello&lt;/b&gt; &lt;i&gt;World!&lt;/i&gt;"
+    font.family: "Helvetica"
+    font.pointSize: 20
+    color: "blue"
+    focus: true
+}
+<% end %>
+
+<p>
+Note that the <code>TextEdit</code> does not implement scrolling, following the cursor, or other behaviors specific to a look-and-feel. For example, to add flickable scrolling that follows the cursor:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Flickable {
+    id: flick
+
+    width: 300; height: 200;
+    contentWidth: edit.paintedWidth
+    contentHeight: edit.paintedHeight
+    clip: true
+    
+    function ensureVisible(r) {
+        if (contentX &gt;= r.x)
+            contentX = r.x;
+        else if (contentX+width &lt;= r.x+r.width)
+            contentX = r.x+r.width-width;
+        if (contentY &gt;= r.y)
+            contentY = r.y;
+        else if (contentY+height &lt;= r.y+r.height)
+            contentY = r.y+r.height-height;
+    }
+
+    TextEdit {
+        id: edit
+        width: flick.width
+        focus: true
+        wrapMode: TextEdit.Wrap
+        onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+    }
+}
+<% end %>
+
+<p>
+A particular look-and-feel might use smooth scrolling (eg. using <code>SmoothedAnimation</code>), might have a visible scrollbar, or a scrollbar that fades in to show location, etc.
+</p>
+
+<p>
+Clipboard support is provided by the <code>cut()</code>, <code>copy()</code>, and <code>paste()</code> functions, and the selection can be handled in a traditional "mouse" mechanism by setting <code>selectByMouse</code>, or handled completely from QML by manipulating <code>selectionStart</code> and <code>selectionEnd</code>, or using <code>selectAll()</code> or <code>selectWord()</code>.
+</p>
+
+<p>
+You can translate between cursor positions (characters from the start of the document) and pixel points using <code>positionAt()</code> and <code>positionToRectangle()</code>.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Keys
+<% end %>
+
+<p>
+All visual primitives support key handling via the <code>Keys</code> attached property. Keys can be handled via the <code>onPressed</code> and <code>onReleased</code> signal properties.
+</p>
+
+<p>
+The signal properties have a <code>KeyEvent</code> parameter, a named event which contains details of the event. For example, you can access the key pressed from <code>event.key</code> and modifier pressed from <code>event.modifiers</code>.
+</p>
+
+<p>
+If a key is handled <code>event.accepted</code> should be set to <code>true</code> to prevent the event from propagating up the item hierarchy.
+</p>
+
+<p>
+The <code>Keys</code> attached property can be configured to handle key events before or after the item it is attached to. This makes it possible to intercept events in order to override an item's default behavior, or act as a fallback for keys not handled by the item.
+</p>
+
+<p>
+In the following example we use the general <code>onPressed</code> handler to test if a 'Y' key is being pressed with Ctrl modifier:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Item {
+    anchors.fill: parent
+    focus: true
+    Keys.onPressed: {
+        if ((event.key == Qt.Key_Y) &amp;&amp; (event.modifiers &amp;Qt.ControlModifier)) {
+            console.log("Y pressed with Ctrl");
+            event.accepted = true;
+        }
+    }
+}
+<% end %>
+
+<p>
+Some keys may alternatively be handled via specific signal properties, for example <code>onSelectPressed</code>. These handlers automatically set <code>event.accepted</code> to <code>true</code>.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Item {
+    anchors.fill: parent
+    focus: true
+    Keys.onLeftPressed: console.log("move left")
+}
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Key handling priorities
+<% end %>
+
+<p>
+The default priority is <code>Keys.BeforeItem</code>, where the order of key event processing is:
+</p>
+
+<ul>
+<li>Items specified in <code>forwardTo</code></li>
+<li>specific key handlers, e.g. <code>onReturnPressed</code></li>
+<li><code>onPressed</code>, <code>onReleased</code> handlers</li>
+<li>Item specific key handling, e.g. <code>TextInput</code> key handling</li>
+<li>parent item</li>
+</ul>
+
+<p>
+If priority is <code>Keys.AfterItem</code> the order of key event processing is:
+</p>
+
+<ul>
+<li>Item specific key handling, e.g. <code>TextInput</code> key handling</li>
+<li>Items specified in <code>forwardTo</code></li>
+<li>specific key handlers, e.g. <code>onReturnPressed</code></li>
+<li><code>onPressed</code>, <code>onReleased</code> handlers</li>
+<li>parent item</li>
+</ul>
+
+<p>
+If the event is accepted during any of the above steps, key propagation stops.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Key Handling Overview
+<% end %>
+
+<p>
+When the user presses or releases a key, the following occurs:
+</p>
+
+<ul>
+<li>Qt receives the key action and generates a key event.</li>
+<li>If a <code>QQuickWindow</code> is the active window, the key event is delivered to it.</li>
+<li>The key event is delivered by the scene to the <code>Item</code> with active focus. If no item has active focus, the key event is ignored.</li>
+<li>If the <code>QQuickItem</code> with active focus accepts the key event, propagation stops. Otherwise the event is sent to the Item's parent until the event is accepted, or the root item is reached.</li>
+</ul>
+
+<p>
+In some cases you might even want to catch these events in Qt, before they get delivered to the QML engine. However, we won't go into C++ and QML integration yet in this part of the course.
+</p>
+
+<p>
+If the <code>Rectangle</code> type in the following example has active focus and the A key is pressed, the event will not be propagated further. Upon pressing the B key, the event will propagate to the root item and thus be ignored.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    width: 100; height: 100
+    focus: true
+    Keys.onPressed: {
+        if (event.key == Qt.Key_A) {
+            console.log('Key A was pressed');
+             event.accepted = true;
+        }
+    }
+}
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'HocusFocus' } do %>
+
+<p>
+In this exercise you'll be passing focus between items. File you need to edit is <code>FocusGrid.qml</code>, where you'll also find the exercise instructions.
+</p>
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'KeyHandling' } do %>
+
+<p>
+In this exercise we move a box with arrow keys and change its color with the tab-key. File you need to edit is <code>MovableBox.qml</code>, and again you'll find the exercise instructions there.
+</p>
+
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Mouse Handling
+<% end %>
+
+<p>
+Qt can handle input form different input devices, such as touch screen, mouse, and so on. There are basically two different ways to handle input events. Area types, which handle input and Input Handlers, which can handle input from any number of devices. On this chapter we'll look at mouse handling with the <code>MouseArea</code> type. Next chapter will talk about Input Handlers in general.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+MouseArea
+<% end %>
+
+<p>
+To enable mouse interaction with elements, <code>MouseArea</code> can be used. It's an invisible rectangular item that can capture mouse events and can be nested into an element like so:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    width: 100; height: 100
+    color: "green"
+     
+    MouseArea {
+        anchors.fill: parent
+        onClicked: parent.color = 'red'
+    }
+}
+<% end %>
+
+<p>
+Now the logic of mouse handling is contained within the <code>MouseArea</code> item. This distinction is an important aspect of Qt Quick UIs, as this separates the input handling from visual presentations. This enables the visual items to be what ever the size they may be, but the input is only accepted within constraints defined in the input elements.
+</p>
+
+<p>
+If multiple <code>MouseArea</code>s overlap, only the topmost in the visual hierarchy will receive the event by default. You can set <code>propagateComposedEvents</code> to <code>true</code> to allow the event to propagate further down the visual stacking order. See <a href="http://doc.qt.io/qt-5/qml-qtquick-mousearea.html#propagateComposedEvents-prop" title="documentation">documentation</a> for further information and an example. In the next chapter we'll talk about <code>Input Handler</code>'s which arguably make overlaping areas more simple than <code>MouseArea</code>.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Generic mouse events using the left mouse button
+<% end %>
+
+<p>
+By default <code>MouseArea</code> reacts to the left mouse button and signals <code>onClicked</code>. To set <code>MouseArea</code> react to other types of buttons, set the <code>acceptedButtons</code> property with desired <a href="http://doc.qt.io/qt-5/qt.html#MouseButton-enum" title="Qt::MouseButton">Qt::MouseButton</a> flag. Multiple flags can be combined with the <code>|</code> (or) operator. To access the currently pressed buttons, the <code>&amp;</code> (and) operator can be used with the property <code>pressedButtons</code>.
+</p>
+
+<p>
+In addition to the convenient <code>onClicked</code> handler, there are other handlers such as <code>onPressed</code>, <code>onWheel</code> or <code>onPositionChanged</code> that make it possible to handle more specific mouse events.
+</p>
+
+<p>
+When emitted, many <code>MouseArea</code> signals pass in a <code>mouse</code> parameter that contains information about the mouse event, such as the position, button type and any key modifiers.
+</p>
+
+<p>
+In this example we enable the left and right button of the mouse, and change the <code>Rectangle</code> color accordingly:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    width: 100; height: 100
+    color: "green"
+     
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: {
+            if (mouse.button == Qt.RightButton) {
+                parent.color = 'blue';
+            } else {
+                parent.color = 'red';
+            }
+        }
+    }
+}
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Visualizing the mouse hover
+<% end %>
+
+<p>
+By default, <code>MouseArea</code> has handled mouse events when it has been clicked or buttons are held down, but it can also handle events when the mouse is currently hovering inside the area.
+</p>
+
+<p>
+To enable hover event handling, the property <code>hoverEnabled</code> must be set to <code>true</code>. This affects the handlers <code>onEntered</code>, <code>onExited</code> and <code>onPositionChanged</code>. Handlers <code>onEntered</code> and <code>onExited</code> are signaled when the mouse enters or exits the area, and can be used to highlight or activate items. The <code>onPositionChanged</code> handler is signaled whenever the mouse moves inside the area. 
+</p>
+
+<p>
+This example demonstrates text following the mouse pointer whenever the mouse enters the <code>MouseArea</code>:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Text {
+    id: movingText
+    text: "hover"
+}
+     
+MouseArea {
+    anchors.fill: parent
+    hoverEnabled: true
+    onPositionChanged: {
+        movingText.x = mouse.x
+        movingText.y = mouse.y
+    } 
+}
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Dragging items
+<% end %>
+
+<p>
+In some UIs, it is beneficial to make some elements draggable, like volume sliders or images. <code>MouseArea</code> contains property <code>drag</code> that makes this possible.
+</p>
+
+<p>
+<code>drag</code> itself has properties that are used to specify how the dragging is done.
+</p>
+
+<ul>
+<li><code>drag.target</code> specifies the id of the item to drag.</li>
+<li><code>drag.active</code> specifies if the target item is currently being dragged.</li>
+<li><code>drag.axis</code> specifies whether dragging can be done horizontally (<code>Drag.XAxis</code>), vertically (<code>Drag.YAxis</code>), or both (<code>Drag.XAndYAxis</code>)</li>
+<li><code>drag.minimum</code> and <code>drag.maximum</code>: how far the target can be dragged along the specified axes.</li>
+</ul>
+
+<% partial 'partials/exercise', locals: { name: 'MouseHandling' } do %>
+
+<p>
+Simple exercise where we change the size of the text by clicking. File you need to edit is <code>MouseHandling.qml</code>.
+</p>
+
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'ImageViewer' } do %>
+
+<p>
+In this exercise we create a mouse area to scale and drag an image. File you need to edit is <code>ImageViewer.qml</code>.
+</p>
+
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Input Handlers
+<% end %>
+
+<p>
+Qt Quick has multiple types that can handle touch events, for example the <code>MouseArea</code> we used in the last chapter, <code>PinchArea</code>, <code>MultiPointTouchArea</code>, and <code>Flickable</code>.
+</p>
+
+<p>
+These items have some issues. For example, with <code>MouseArea</code> Qt assumes there is only one mouse, "core pointer" and <code>QMouseEvent</code> and <code>QTouchEvents</code> are considered the same events inside Qt Quick. The result is that you cannot interact with two <code>MouseArea</code>s or <code>Flickable</code>s at the same time. With our previous <code>MouseArea</code> usecases this means that you cannot press two <code>Button</code>s at the same time or drag two <code>Slider</code>s a the same time, for example. This also means that you cannot use <code>PinchArea</code> and <code>MouseArea</code> together, as when <code>PinchArea</code> is active it wont pass the events to the <code>MouseArea</code>.
+</p>
+
+<p>
+To fix these issues, Qt introduced the new <strong>Input Handler</strong> types. Input Handlers can be declared inside any <code>Item</code> type and they can handle events from any pointing devices on behalf of the <code>parent</code>. They are very lightweight types, they are intended to be declared as a handler for each interaction type there might exist. Each <code>Item</code> can have unlimited <code>Handler</code> types, so you wont run out of them.
+</p>
+
+<p>
+You can declare constraints on what kind of interaction the handler is going to react on, whether it is a touch event, mouse button or a modifier key is active. This is done with the properties <code>acceptedButtons</code> and <code>acceptedDevices</code> where one can select the accepted <a href="http://doc.qt.io/qt-5/qt.html#MouseButton-enum" title="Qt::MouseButton">Qt::MouseButton</a>s or the accepted pointer devices like <code>PointerDevice.Mouse</code>, <code>PointerDevice.Stylus</code> or <code>PointerDevice.TouchScreen</code>.
+</p>
+
+<p>
+Now, let's go through some of the Input Handlers with examples.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+TapHandler
+<% end %>
+
+<code>TapHandler</code> is comparable to <code>MouseArea</code> with a few key differences:
+
+<% partial 'partials/code_highlight' do %>
+import Qt.labs.handlers 1.0
+
+Item {
+    TapHandler {
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.Stylus
+        onTapped: console.log("left clicked")
+    }
+    
+    TapHandler {
+        acceptedDevices: PointerDevice.TouchScreen
+        onTapped: console.log("tapped")
+    }
+    
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+        onTapped: console.log("right clicked")
+    }
+}
+<% end %>
+We can now accept events from specific devices and react accordingly. We can also have multiple <code>TapHandlers</code> active inside the same item without issues like with multiple <code>MouseArea</code>s.
+
+<% partial 'partials/material_sub_heading' do %>
+DragHandler
+<% end %>
+
+<code>DragHandler</code> is similar to the <code>MouseArea</code>'s <code>drag</code> property, but more straightforward to use. It has the similar <code>xAxis</code> and <code>yAxis</code> <a href="http://doc-snapshots.qt.io/qt5-5.10/qml-qt-labs-handlers-draghandler.html#xAxis-prop" title="property groups">property groups</a> as the <code>MouseArea</code>: 
+
+<% partial 'partials/code_highlight' do %>
+import Qt.labs.handlers 1.0
+
+Rectangle {
+    width: 50
+    height: 50
+    color: "green"
+    
+    DragHandler {
+        yAxis.enabled: false
+    }
+}
+<% end %>
+In the example, the <code>Rectangle</code> can be dragger, but only along the X-axis, since we disabled the Y-axis.
+
+<% partial 'partials/material_sub_heading' do %>
+PointHandler
+<% end %>
+
+<p>
+There is also a <code>PointHandler</code> which can be used to track a touch point:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import Qt.labs.handlers 1.0
+
+Item {
+    id: root
+
+    PointHandler {
+        id: handler
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.Stylus
+        target: Rectangle {
+            parent: root
+            color: "blue"
+            visible: handler.active
+            x: handler.point.position.x - width / 2
+            y: handler.point.position.y - height / 2
+            width: 20
+            height: width
+            radius: width / 2
+        }
+    }
+
+}
+
+<% end %>
+
+<p>
+When a press event occurs, the handler will choose a point that has not been bound to any other handlers. It will check if the constraints given (<code>acceptedDevices</code> etc.) are satisfied and it is eligible for the point. It will then track the point with the property <code>active</code> as <code>true</code> until release. Like other handlers, it has the <code>target</code> property where we have placed an <code>Rectangle</code> and bound the handler properties.
+</p>
+
+<% partial 'partials/material_heading' do %>
+Positioners
+<% end %>
+
+<p>
+Positioner items are container items that manage the positions of items in a declarative user interface. Positioners make it easier to work with many items when they need to be arranged in a regular layout.
+</p>
+
+<p>
+Qt Quick Layouts can also be used to arrange Qt Quick items in a user interface. They manage both the positions and the sizes of items on a declarative user interface, and are well suited for resizable user interfaces.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Row, Column, Grid, and Flow
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Row
+<% end %>
+
+<ul>
+<li>Positions its children in a row</li>
+</ul>
+
+<p>
+<code>Row</code> items are used to horizontally arrange items. The following example uses a <code>Row</code> item to arrange three rounded <code>Rectangle</code> items in an area defined by an outer colored <code>Rectangle</code>. The spacing property is set to include a small amount of space between the rectangles.
+</p>
+
+<p>
+We ensure that the parent <code>Rectangle</code> is large enough so that there is some space left around the edges of the horizontally centered <code>Row</code> item.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Rectangle {
+    width: 320; height: 110
+    color: "#c0c0c0"
+
+    Row {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        spacing: 5
+
+        Rectangle { width: 100; height: 100; radius: 20.0
+                             color: "#024c1c" }
+        Rectangle { width: 100; height: 100; radius: 20.0
+                             color: "#42a51c" }
+        Rectangle { width: 100; height: 100; radius: 20.0
+                             color: "white" }
+    }
+}
+<% end %>
+
+<img class="naytto" src="/img/part-3/row.png" />
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Column
+<% end %>
+
+<ul>
+<li>Positions its children in a column</li>
+</ul>
+
+<p>
+<code>Column</code> items are used to vertically arrange items. The following example uses a <code>Column</code> item to arrange three <code>Rectangle</code> items in an area defined by an outer <code>Item</code>. The spacing property is set to include a small amount of space between the rectangles.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Item {
+    width: 310; height: 170
+    
+    Column {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        spacing: 5
+
+        Rectangle {
+            color: "lightblue"; radius: 10.0
+            width: 300; height: 50
+            Text {
+                anchors.centerIn: parent
+                font.pointSize: 24; text: "Books"
+            }
+        }
+        Rectangle {
+            color: "gold"; radius: 10.0
+            width: 300; height: 50
+            Text {
+                anchors.centerIn: parent
+                font.pointSize: 24; text: "Music"
+            }
+        }
+        Rectangle {
+            color: "lightgreen"; radius: 10.0
+            width: 300; height: 50
+            Text {
+                anchors.centerIn: parent
+                font.pointSize: 24; text: "Movies"
+            }
+        }
+    }
+}
+<% end %>
+<img class="naytto" src="/img/part-3/column.png" />
+
+<p>
+Note that, since <code>Column</code> inherits directly from <code>Item</code>, any background color must be added to a parent <code>Rectangle</code>, if desired.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Grid
+<% end %>
+
+<ul>
+<li>Positions its children in grid formation</li>
+</ul>
+
+<p>
+<code>Grid</code> items are used to place items in a grid or table arrangement. The following example uses a <code>Grid</code> item to place four <code>Rectangle</code> items in a 2-by-2 grid. As with the other positioners, the spacing between items can be specified using the spacing property.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Rectangle {
+    width: 112; height: 112
+    color: "#303030"
+
+    Grid {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        columns: 2
+        spacing: 6
+  
+        Rectangle { color: "#aa6666"; width: 50; height: 50 }
+        Rectangle { color: "#aaaa66"; width: 50; height: 50 }
+        Rectangle { color: "#9999aa"; width: 50; height: 50 }
+        Rectangle { color: "#6666aa"; width: 50; height: 50 }
+    }
+}
+<% end %>
+<img class="naytto" src="/img/part-3/grid.png" />
+
+<p>
+There is no difference between horizontal and vertical spacing inserted between items, so any additional space must be added within the items themselves.
+</p>
+
+<p>
+Any empty cells in the grid must be created by defining placeholder items at the appropriate places in the <code>Grid</code> definition.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Flow
+<% end %>
+
+<ul>
+<li>Positions its children side by side, wrapping as necessary</li>
+</ul>
+
+<p>
+<code>Flow</code> items are used to place items like words on a page, with rows or columns of non-overlapping items.
+</p>
+
+<p>
+<code>Flow</code> items arrange items in a similar way to <code>Grid</code> items, with items arranged in lines along one axis (the minor axis), and lines of items placed next to each other along another axis (the major axis). The direction of flow, as well as the spacing between items, are controlled by the flow and spacing properties.
+</p>
+
+<p>
+The following example shows a <code>Flow</code> item containing a number of <code>Text</code> child items. These are arranged in a similar way to those shown in the screenshots.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Rectangle {
+    color: "lightblue"
+    width: 300; height: 200
+
+    Flow {
+        anchors.fill: parent
+        anchors.margins: 4
+        spacing: 10
+
+        Text { text: "Text"; font.pixelSize: 40 }
+        Text { text: "items"; font.pixelSize: 40 }
+        Text { text: "flowing"; font.pixelSize: 40 }
+        Text { text: "inside"; font.pixelSize: 40 }
+        Text { text: "a"; font.pixelSize: 40 }
+        Text { text: "Flow"; font.pixelSize: 40 }
+        Text { text: "item"; font.pixelSize: 40 }
+    }
+}
+<% end %>
+
+<img class="naytto" src="/img/part-3/flow.png" />
+
+<p>
+The main differences between the <code>Grid</code> and <code>Flow</code> positioners are that items inside a <code>Flow</code> will wrap when they run out of space on the minor axis, and items on one line may not be aligned with items on another line if the items do not have uniform sizes. As with <code>Grid</code> items, there is no independent control of spacing between items and between lines of items.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+childrenRect
+<% end %>
+
+<p>
+This read-only property holds the collective position and size of the item's children.
+</p>
+
+<p>
+This property is useful if you need to access the collective geometry of an item's children in order to correctly size the item.
+</p>
+
+<% partial 'partials/material_heading' do %>
+Anchors
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Anchors
+<% end %>
+
+<p>
+In addition to the more traditional <code>Grid</code>, <code>Row</code>, and <code>Column</code>, Qt Quick also provides a way to layout items using the concept of anchors. Each item can be thought of as having a set of 7 invisible "anchor lines": left, horizontalCenter, right, top, verticalCenter, baseline, and bottom.
+</p>
+
+<img class="naytto" src="/img/part-3/QML_anchors.png" />
+
+<p>
+The baseline (not pictured above) corresponds to the imaginary line on which text would sit. For items with no text it is the same as top.
+</p>
+
+<p>
+The Qt Quick anchoring system allows you to define relationships between the anchor lines of different items. For example, you can write:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle { id: rect1; ... }
+Rectangle { id: rect2; anchors.left: rect1.right; ... }
+<% end %>
+
+<p>
+In this case, the left edge of <code>rect2</code> is bound to the right edge of <code>rect1</code>, producing the following:
+</p>
+
+<img class="naytto" src="/img/part-3/anchors_1.png" />
+
+<p>
+You can specify multiple anchors. For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle { id: rect1; ... }
+Rectangle { id: rect2; anchors.left: rect1.right; anchors.top: rect1.bottom; ... }
+<% end %>
+
+<img class="naytto" src="/img/part-3/anchors_2.png" />
+
+<p>
+By specifying multiple horizontal or vertical anchors you can control the size of an item. Below, <code>rect2</code> is anchored to the right of <code>rect1</code> and the left of <code>rect3</code>. If either of the blue rectangles are moved, <code>rect2</code> will stretch and shrink as necessary:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle { id: rect1; x: 0; ... }
+Rectangle { id: rect2; anchors.left: rect1.right; anchors.right: rect3.left; ... }
+Rectangle { id: rect3; x: 150; ... }
+<% end %>
+
+<img class="naytto" src="/img/part-3/anchors_3.png" />
+
+<p>
+There are also some convenience anchors. <code>anchors.fill</code> is a convenience that is the same as setting the left, right, top, and bottom anchors to the left,right,top and, bottom of the target item. <code>anchors.centerIn</code> is another convenience anchor, and is the same as setting the <code>verticalCenter</code> and <code>horizontalCenter</code> anchors to the <code>verticalCenter</code> and <code>horizontalCenter</code> of the target item.
+</p>
+
+<p>
+For performance reasons, you can only anchor an item to its siblings and direct parent. For example, the following anchor is invalid and would produce a warning:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// bad code
+Item {
+    id: group1
+    Rectangle { id: rect1; ... }
+}
+Item {
+    id: group2
+    Rectangle { id: rect2; anchors.left: rect1.right; ... } // invalid anchor!
+}
+<% end %>
+
+<p>
+Also, anchor-based layouts <strong>cannot</strong> be mixed with absolute positioning. If an item specifies its <code>x</code> position and also sets <code>anchors.left</code>, or anchors its left and right edges but additionally sets a width, the result is undefined, as it would not be clear whether the item should use anchoring or absolute positioning. The same can be said for setting an item's <code>y</code> and height with <code>anchors.top</code> and <code>anchors.bottom</code>, or setting <code>anchors.fill</code> as well as width or height. The same applies when using positioners such as <code>Row</code> and <code>Grid</code>, which may set the item's <code>x</code> and <code>y</code> properties. If you wish to change from using anchor-based to absolute positioning, you can clear an anchor value by setting it to undefined.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Margins
+<% end %>
+
+<p>
+The anchoring system also allows margins and offsets to be specified for an item's anchors. Margins specify the amount of empty space to leave to the outside of an item's anchor, while offsets allow positioning to be manipulated using the center anchor lines. An item can specify its anchor margins individually through <code>leftMargin</code>, <code>rightMargin</code>, <code>topMargin</code> and <code>bottomMargin</code>, or use <code>anchors.margins</code> to specify the same margin value for all four edges. Anchor offsets are specified using <code>horizontalCenterOffset</code>, <code>verticalCenterOffset</code> and <code>baselineOffset</code>.
+</p>
+
+<img class="naytto" src="/img/part-3/QML_margins.png" />
+
+<p>
+The following example specifies a left margin:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle { id: rect1; ... }
+Rectangle { id: rect2; anchors.left: rect1.right; anchors.leftMargin: 5; ... }
+<% end %>
+
+<p>
+In this case, a margin of 5 pixels is reserved to the left of <code>rect2</code>, producing the following:
+</p>
+
+<img class="naytto" src="/img/part-3/margins_1.png" />
+
+<p>
+Note: Anchor margins only apply to anchors; they are not a generic means of applying margins to an <code>Item</code>. If an anchor margin is specified for an edge but the item is not anchored to any item on that edge, the margin is not applied.
+</p>
+
+
+<% partial 'partials/exercise', locals: { name: 'AnchoringShips' } do %>
+
+<p>
+The file you're editing is <code>WheelAnchors.qml</code>.
+</p>
+
+<p>
+You have two nautical themed types available: Wheel and Anchor in their own files <code>Wheel.qml</code> and <code>Anchor.qml</code>
+</p>
+
+<p>
+1. Add a Wheel and make it centered, horizontally and vertically in this parent 'root' container.
+</p>
+
+<p>
+2. Make the Wheel half the width and half the height of the parent 'root' container.
+</p>
+
+<p>
+3. Create Anchors for the Wheel and set them up like this:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+⚓ ⚓ ⚓
+⚓ ☸️ ⚓
+⚓ ⚓ ⚓
+<% end %>
+
+<p>
+Where <code>☸️</code> is the Wheel item and <code>⚓</code> are the Anchor items.
+</p>
+
+<p>
+This means you will need a Wheel item and 8 Anchor items in total.
+</p>
+
+<p>
+The Wheel should be the <a href="https://doc.qt.io/qt-5/qtquick-visualcanvas-visualparent.html" title="visual parent">visual parent</a> of the Anchor items, any transform or rotation to the Wheel should apply to the Anchors as well
+</p>
+
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Qt Quick Controls
+<% end %>
+
+<p>
+Qt Quick Controls provide ready-made UI controls, which allows you to work faster because you don't have to make everything from scratch. For example, <code>ApplicationWindow</code> provides a <code>QQuickWindow</code> with header, footer, menu bar, and popups. Window can contain a layout of views, containers, and controls.
+</p>
+
+<p>
+Note that when we talk about Qt Quick Controls on this course, we are always referring to Qt Quick Controls 2. If you browse the Qt documentation, you might find out about Qt Quick Controls 1 as well. They are going to be deprecated in the future, and you should avoid using them.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Getting Started
+<% end %>
+
+<p>
+To use Qt Quick Controls you need to import <code>QtQuick.Controls</code> in your .qml file. For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// main.qml
+import QtQuick 2.6
+import QtQuick.Controls 2.4
+
+ApplicationWindow {
+    title: "My Application"
+    width: 640
+    height: 480
+    visible: true
+
+    Button {
+        text: "Push Me"
+        anchors.centerIn: parent
+    }
+}
+<% end %>
+
+<p>
+You should use <code>ApplicationWindow</code> as the root item in your application and launch it by using <code>QQmlApplicationEngine</code> in C++. This ensures that you can control top level window properties from QML. For example: 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// main.cpp
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+
+int main(int argc, char *argv[])
+{
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication app(argc, argv);
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    return app.exec();
+}
+<% end %>
+
+<p>
+Note that if you built Qt from source, make sure Qt Graphical Effects module is also built, as Qt Quick Controls 2 requires it.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Application Window
+<% end %>
+
+<p>
+<code>ApplicationWindow</code> is a <code>Window</code> which makes it convenient to add a menu bar, header and footer item to the window. As we already stated, you should usually use <code>ApplicationWindow</code> as the root item in your application. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.11
+import QtQuick.Controls 2.4
+
+ApplicationWindow {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Application Window")
+    minimumHeight: 300
+    minimumWidth: 330
+
+    menuBar: MenuBar {
+        Menu {
+            title: qsTr("File")
+            MenuItem { text: qsTr("Open") }
+            MenuItem { text: qsTr("Close") }
+        }
+    }
+
+    header: Label {
+        horizontalAlignment: Text.AlignHCenter
+        height: 40
+        font.pixelSize: 70
+        minimumPixelSize: 8
+        fontSizeMode: Text.Fit
+        text: qsTr("Header")
+        background: Rectangle {
+            anchors.fill: parent
+            border { width: 2; color: "black" }
+            color: "lightgreen"
+        }
+    }
+
+    footer:
+        Label {
+            horizontalAlignment: Text.AlignHCenter
+            text: qsTr("Footer")
+            font.pixelSize: 24
+        }
+}
+<% end %>
+
+<img class="naytto" src="/img/part-3/application_window.png" />
+
+<p>
+&nbsp;
+</p>
+
+<p>
+In this short example we define a menu bar, a header, and a footer. As you can see this can be done very easily by using Qt Quick Controls. We suggest you copy the example to a fresh QML project in the Qt Creator and run it. Try to play around with some of the parameters to see what happens. 
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Views
+<% end %>
+
+<p>
+With Quick Controls making fluid UI's is easy. It provides several different views, like <code>ScrollView</code>, <code>SwipeView</code>, and <code>StackView</code>. We'll take a look at <code>StackView</code> little bit more closely here. Feel free to browse the documentation and play around with the other views to see how they behave.
+</p>
+
+<p>
+<code>StackView</code> can be used with a set of inter-linked information pages. Views are pushed onto the stack when going forward, and popped out when going back.
+</p>
+
+<p>
+The following example demonstrates a simple use case, where the mainView is pushed onto and popped out of the stack on relevant button click:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.11
+import QtQuick.Controls 2.4
+
+ApplicationWindow {
+    title: qsTr("StackView")
+    width: 400
+    height: 280
+    visible: true
+
+    StackView {
+        id: stack
+        initialItem: mainView
+        anchors.fill: parent
+    }
+
+    Component {
+        id: mainView
+
+        Column {
+            spacing: 10
+
+            Button {
+                text: "Push"
+                onClicked: stack.push(mainView)
+            }
+            Button {
+                text: "Pop"
+                enabled: stack.depth > 1
+                onClicked: stack.pop()
+
+            }
+            Text {
+                font.pixelSize: 30
+                text: stack.depth
+            }
+        }
+    }
+}
+<% end %>
+
+<p>
+Using <code>StackView</code> in an application is as simple as adding it as a child to a Window. The stack is usually anchored to the edges of the window, except at the top or bottom where it might be anchored to a status bar, or some other similar UI component. The stack can then be used by invoking its navigation methods. The first item to show in the <code>StackView</code> is the one that was assigned to <code>initialItem</code>, or the topmost item if <code>initialItem</code> is not set.
+</p>
+
+<p>
+<code>StackView</code> supports three primary navigation operations: <code>push()</code>, <code>pop()</code>, and <code>replace()</code>. These correspond to classic stack operations where "push" adds an item to the top of a stack, "pop" removes the top item from the stack, and "replace" is like a pop followed by a push, which replaces the topmost item with the new item. The topmost item in the stack corresponds to the one that is currently visible on screen.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Transitions
+<% end %>
+
+<p>
+For each push or pop operation, different transition animations are applied to entering and exiting items. These animations define how the entering item should animate in, and the exiting item should animate out. The animations can be customized by assigning different Transitions for the <code>pushEnter</code>, <code>pushExit</code>, <code>popEnter</code>, <code>popExit</code>, <code>replaceEnter</code>, and <code>replaceExit</code> properties of <code>StackView</code>.
+</p>
+
+<p>
+Note that the transition animations affect each others' transitional behavior. Customizing the animation for one and leaving the other may give unexpected results.
+</p>
+
+<p>
+The following example defines a simple fade transition for push and pop operations:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+StackView {
+    id: stackview
+    anchors.fill: parent
+
+    pushEnter: Transition {
+        PropertyAnimation {
+            property: "opacity"
+            from: 0
+            to:1
+            duration: 200
+        }
+    }
+    pushExit: Transition {
+        PropertyAnimation {
+            property: "opacity"
+            from: 1
+            to:0
+            duration: 200
+        }
+    }
+    popEnter: Transition {
+        PropertyAnimation {
+            property: "opacity"
+            from: 0
+            to:1
+            duration: 200
+        }
+    }
+    popExit: Transition {
+        PropertyAnimation {
+            property: "opacity"
+            from: 1
+            to:0
+            duration: 200
+        }
+    }
+}
+<% end %>
+
+<p>
+Note: Using anchors on the items added to a <code>StackView</code> is not supported. Typically push, pop, and replace transitions animate the position, which is not possible when anchors are applied. Notice that this only applies to the root of the item. Using anchors for its children works as expected.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Controls
+<% end %>
+
+<p>
+Qt Quick Controls offers a large selection of controls that can be used to build complete interfaces in Qt Quick. These include different button-like controls like <code>Button</code> and <code>Switch</code>, input controls like <code>TextArea</code> and <code>Slider</code>, and variety of others. 
+</p>
+
+<p>
+Simple controls like <code>Button</code>, <code>Slider</code>, etc. are rather trivial to use, for example you'd define a slider from 0 to 100 with:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Slider {
+    id: percentage
+    from: 0
+    to: 100
+    value: 20
+}
+<% end %>
+
+<img class="naytto" src="/img/part-3/slider.png" />
+
+<p>
+Little bit more complex controls like <code>Drawer</code> and <code>ComboBox</code> are also reasonably simple to use. We're not giving an example on <code>Drawer</code> here, since most of you are doing the course on PC's without the ability to swipe, but check out the documentation if you're interested. For <code>ComboBox</code>, here are a couple examples:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+ComboBox {
+    textRole: "key"
+    model: ListModel {
+        ListElement { key: "First"; value: 123 }
+        ListElement { key: "Second"; value: 456 }
+        ListElement { key: "Third"; value: 789 }
+    }
+}
+<% end %>
+
+<img class="naytto" src="/img/part-3/combobox.png" />
+
+<p>
+&nbsp;
+</p>
+
+<p>
+Here the noteworthy point is that when using a model that has multiple named roles, <code>ComboBox</code> must be configured to use a specific <code>textRole</code> for its display text.
+</p>
+
+<p>
+You can also make a <code>ComboBox</code> editable, like so:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+ComboBox {
+    editable: true
+    model: ListModel {
+        id: model
+        ListElement { text: "Banana" }
+        ListElement { text: "Apple" }
+        ListElement { text: "Coconut" }
+    }
+    onAccepted: {
+        if (find(editText) === -1)
+            model.append({text: editText})
+    }
+}
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Container Controls
+<% end %>
+
+<code>Container</code> type supports adding, inserting, moving, and removing items. You can use a ready visual implementation of <code>Container</code> like <code>SwipeView</code>. To implement a custom container, the most important part of the API is <code>contentModel</code> which provides the contained items in a way that it can be used as a delegate model for item views and repeaters. For example:
+
+<% partial 'partials/code_highlight' do %>
+Container {
+    id: container
+
+    contentItem: ListView {
+        model: container.contentModel
+        snapMode: ListView.SnapOneItem
+        orientation: ListView.Horizontal
+    }
+
+    Text {
+        text: "Page 1"
+        width: container.width
+        height: container.height
+    }
+
+    Text {
+        text: "Page 2"
+        width: container.width
+        height: container.height
+    }
+}
+<% end %>
+
+<p>
+We'll discuss data models for visualizing data in Part 4. 
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Styling
+<% end %>
+
+<p>
+Qt Quick Controls come with with a selection of styles. Beyond the default style there is Fusion, Material, Imagine, and Universal styles. You can see them here in <a href="https://doc.qt.io/qt-5/qtquickcontrols2-styles.html" title="the documentation">the documentation</a>.
+</p>
+
+<p>
+In order to run an application with a specific style, either configure the style using <code>QQuickStyle</code> in C++, pass a command line argument, or set an environment variable. Alternatively, the preferred style and style-specific attributes can be specified in a configuration file.
+</p>
+
+<p>
+The priority of these approaches follows the order they are listed above, from highest to lowest. That is, using <code>QQuickStyle</code> to set the style will always take priority over using the command line argument, for example.
+</p>
+
+<ul>
+<li>In C++ you set <code>QQuickStyle</code> with <code>QQuickStyle::setStyle("Material");</code></li>
+<li>Passing a <code>-style</code> command line argument is the convenient way to test different styles. <code>./app -style material</code></li>
+<li>Setting the <code>QT_QUICK_CONTROLS_STYLE</code> environment variable can be used to set a system-wide style preference. <code>QT_QUICK_CONTROLS_STYLE=universal ./app</code></li>
+<li>Configuration file: Qt Quick Controls 2 support a special configuration file, <code>:/qtquickcontrols2.conf</code>, that is built into an application's resources. The configuration file can specify the preferred style (may be overridden by either of the methods described earlier) and certain style-specific attributes.</li>
+</ul>
+
+<% partial 'partials/code_highlight' do %>
+[Controls]
+Style=Material
+<% end %>
+
+<p>
+The configuration file can be used to define certain other things too, see <a href="https://doc.qt.io/qt-5/qtquickcontrols2-configuration.html" title="the documentation">the documentation</a> for further details.
+</p>
+
+<% partial 'partials/material_heading' do %>
+Custom Components
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+A Bit More About Properties
+<% end %>
+
+<p>
+Before getting into the actual subject of this chapter, Custom Components, let's expand a bit on the QML Property system that we introduced in chapter 3.02.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Keyword default
+<% end %>
+
+<p>
+When we introduced properties you saw the syntax 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+[default] property &lt;propertyType&gt; &lt;propertyName&gt;
+<% end %>
+
+<p>
+that's used to define a property in QML. However, in chapter 3.02 we didn't explain what the optional keyword <code>default</code> is used for. Let's talk about that now.
+</p>
+
+<p>
+An object definition can have a single <code>default</code> property. A <code>default</code> property is the property to which a value is assigned if an object is declared within another object's definition without declaring it as a value for a particular property.
+</p>
+
+<p>
+For example, say there is a file <code>MyLabel.qml</code> with a default property <code>someText</code>:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// MyLabel.qml
+import QtQuick 2.0
+
+Text {
+    default property var someText
+
+    text: "Hello, " + someText.text
+}
+<% end %>
+
+<p>
+The <code>someText</code> value could be assigned to in a <code>MyLabel</code> object definition, like this:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+MyLabel {
+    Text { text: "world!" }
+}
+<% end %>
+
+<p>
+This has exactly the same effect as the following:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+MyLabel {
+    someText: Text { text: "world!" }
+}
+<% end %>
+
+<p>
+However, since the someText property has been marked as the default property, it is not necessary to explicitly assign the <code>Text</code> object to this property.
+</p>
+
+<p>
+You might have noticed that child objects can be added to any Item-based type without explicitly adding them to the children property. This is because the <code>default</code> property of <code>Item</code> is its data property, and any items added to this list for an <code>Item</code> are automatically added to its list of children.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Keyword readonly
+<% end %>
+
+<p>
+An object declaration may define a read-only property using the <code>readonly</code> keyword, with the following syntax:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+readonly property &lt;propertyType&gt; &lt;propertyName&gt; : &lt;initialValue&gt;
+<% end %>
+
+<p>
+Read-only properties must be assigned a value on initialization. After a read-only property is initialized, it no longer possible to give it a value, whether from imperative code or otherwise.
+</p>
+
+<p>
+Note that a read-only property cannot also be a default property.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Defining a Custom Signal
+<% end %>
+
+<p>
+We talked about signal handlers in QML in chapter 3.02. What if we want to define our own signals? This can be done in C++, or as is more relevant to our current topic, in QML. 
+</p>
+
+<p>
+The syntax for declaring a singal in QML is as follows: <code>signal &lt;signalName&gt;[([&lt;type&gt; &lt;parameter name&gt;[, ...]])]</code>
+</p>
+
+<p>
+Attempting to declare two signals or methods with the same name in the same type block is an error. However, a new signal may reuse the name of an existing signal on the type. (This should be done with caution, as the existing signal may be hidden and become inaccessible.)
+</p>
+
+<p>
+Here are three examples of signal declarations:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.0
+
+Item {
+    signal clicked
+    signal hovered()
+    signal actionPerformed(string action, var actionResult)
+}
+<% end %>
+
+<p>
+If the signal has no parameters, the "()" brackets are optional. If parameters are used, the parameter types must be declared, as for the string and var arguments for the <code>actionPerformed</code> signal above. The allowed parameter types are the same as those allowed in properties in general.
+</p>
+
+<p>
+To emit a signal, invoke it as a method. Any relevant signal handlers will be invoked when the signal is emitted, and handlers can use the defined signal argument names to access the respective arguments.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Connections Type
+<% end %>
+
+<p>
+As we already saw in chapter 3.02, when connecting to signals in QML, the usual way is to create an <code>on<Signal></code> handler that reacts when a signal is received.
+</p>
+
+<p>
+However, it is not possible to connect to a signal in this way in some cases, such as when:
+</p>
+
+<ul>
+<li>Multiple connections to the same signal are required</li>
+<li>Creating connections outside the scope of the signal sender</li>
+<li>Connecting to targets not defined in QML</li>
+</ul>
+
+<p>
+When any of these are needed, the <code>Connections</code> type can be used instead.
+</p>
+
+<p>
+For example, the <code>Connections</code> object can be a child of some object other than the sender of the signal:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+MouseArea {
+    id: area
+}
+// ...
+Connections {
+    target: area
+    onClicked: foo(parameters)
+}
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Property Aliases
+<% end %>
+
+<p>
+Property aliases are properties which hold a reference to another property. Unlike an ordinary property definition, which allocates a new, unique storage space for the property, a property alias connects the newly declared property (called the aliasing property) as a direct reference to an existing property (the aliased property).
+</p>
+
+<p>
+A property alias declaration looks like an ordinary property definition, except that it requires the alias keyword instead of a property type, and the right-hand-side of the property declaration must be a valid alias reference:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+[default] property alias &lt;name&gt;: &lt;alias reference&gt;
+<% end %>
+
+<p>
+Unlike an ordinary property, an alias has the following restrictions:
+</p>
+
+<ul>
+<li>It can only refer to an object, or the property of an object, that is within the scope of the type within which the alias is declared.</li>
+<li>It cannot contain arbitrary JavaScript expressions</li>
+<li>It cannot refer to objects declared outside of the scope of its type.</li>
+<li>The alias reference is not optional, unlike the optional default value for an ordinary property; the alias reference must be provided when the alias is first declared.</li>
+<li>It cannot refer to grouped properties; the following code will not work:</li>
+</ul>
+
+<% partial 'partials/code_highlight' do %>
+property alias color: rectangle.border.color
+
+Rectangle {
+    id: rectangle
+}
+<% end %>
+
+<p>
+However, aliases to value type properties do work:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+property alias rectX: object.rectProperty.x
+
+Item {
+    id: object
+    property rect rectProperty
+}
+<% end %>
+
+
+<% partial 'partials/material_sub_heading' do %>
+QML Components
+<% end %>
+
+<p>
+We have been previously using components in the material and exercises, but have not gone through how and why components are used in general. The definition of a component is it is an instantiable QML definition, a QML type. It is typically contained inside its own <code>.qml</code> file. For example, a <code>Button</code> component is defined in a file <code>Button.qml</code>. We can instantiate this <code>Button</code> component to create <code>Button</code> objects. A component may also be defined inside a <code>Component</code> item.
+</p>
+
+<p>
+The <code>Button</code> definition may contain other components. The <code>Button</code> component could use a <code>Text</code> element, a <code>MouseArea</code> and other elements to implement the internal functions. This compounding of different components to form new components (and effectively new interfaces) is key in good, reusable UI components.
+</p>
+
+<p>
+Let's walk through an example of a color picker for choosing the color of a text element. Our picker is currently made of four cells with different colors. A very naive approach is to write multiple <code>Item</code>s with <code>Rectangle</code> and <code>MouseArea</code> items inside the main application.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    id: page
+    width: 500
+    height: 200
+    color: "black"
+
+    Text {
+        id: helloText
+        text: "Hello world!"
+        y: 30
+        anchors.horizontalCenter: page.horizontalCenter
+    }
+
+    Grid {
+        id: colorPicker
+        x: 4; anchors.bottom: page.bottom; anchors.bottomMargin: 4
+        rows: 2; columns: 3; spacing: 3
+
+        Item {
+            width: 40
+            height: 25
+
+            Rectangle {
+                id: rectangle
+                color: "red"
+                anchors.fill: parent
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: helloText.color = "red"
+            }
+        }          
+        // Imagine more duplicate lines of Items with different color values defined...
+    }
+}
+<% end %>
+
+<p>
+You might notice that we have lots of duplicate code here! Additionally, to add more colors, we need to define more elements with just the color values changed. To avoid writing the same code over and over again for each color, we can extract a <code>Cell</code> <strong>component</strong> from the duplicate code to <code>Cell.qml</code>.
+</p>
+
+<p>
+Here is our component definition with <code>Rectangle</code> and <code>MouseArea</code> items extracted:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Item {
+    id: container
+    width: 40; height: 25
+
+    Rectangle {
+        id: rectangle
+        color: "red"
+        anchors.fill: parent
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: console.log("clicked?")
+    }
+}
+<% end %>
+
+<p>
+Usually components are defined with the <code>Item</code> type as the root item. Now we have insatiable component, but currently it is a component without outside effects and it has a hardcoded color value. This is not very reusable, is it? How to make it reusable and interact with other items?
+</p>
+
+<p>
+We cannot access the <code>text</code> property of our <code>Text</code> item <code>helloText</code> inside our component and we cannot access the <code>rectangle.color</code> property outside of the <code>Cell</code> component.
+</p>
+
+<p>
+To do this, we need to expose an <strong>interface</strong> for other components to use. We can use the <code>property</code> keyword <code>alias</code> and the attribute <code>signal</code> to expose functionality.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Item {
+    id: container
+     
+    property alias cellColor: rectangle.color
+    signal clicked(color cellColor)
+     
+    width: 40; height: 25
+
+    Rectangle {
+        id: rectangle
+        anchors.fill: parent
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: container.clicked(container.cellColor)
+    }
+}
+<% end %>
+
+<p>
+Now we can write to the <code>rectangle.color</code> property outside from the component with the property <code>cellColor</code>, and we can install a <strong>signal handler</strong> for the <code>clicked</code> signal with the <code>onClicked</code> property:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Cell {
+    cellColor: "red"
+    onClicked: helloText.color = cellColor
+}
+<% end %>
+
+<p>
+Now we can easily add more colors with just the <code>Cell</code> definition:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    id: page
+    width: 500
+    height: 200
+    color: "black"
+
+    Text {
+        id: helloText
+        text: "Hello world!"
+        y: 30
+        anchors.horizontalCenter: page.horizontalCenter
+    }
+
+    Grid {
+        id: colorPicker
+        x: 4; anchors.bottom: page.bottom; anchors.bottomMargin: 4
+        rows: 2; columns: 2; spacing: 3
+
+        Cell { cellColor: "red"; onClicked: helloText.color = cellColor }
+        Cell { cellColor: "green"; onClicked: helloText.color = cellColor }
+        Cell { cellColor: "blue"; onClicked: helloText.color = cellColor }
+        Cell { cellColor: "yellow"; onClicked: helloText.color = cellColor }
+    }
+}
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Re-usable Components
+<% end %>
+
+<p>
+To this point, we have been making standalone components, but now we are going to see how to integrate them in to a user facing application with navigation, layout and styling.
+</p>
+
+<p>
+Components are typically added to a root <a href="https://doc.qt.io/qt-5/qml-qtquick-window-window.html" title="Window">Window</a> which acts as the top-level interface for user. But as we saw in the previous chapter, there also exists an extended <a href="https://doc.qt.io/qt-5/qml-qtquick-controls2-applicationwindow.html" title="ApplicationWindow">ApplicationWindow</a> which contains convenient methods to add frequently used UI items to the window. It also provides an interface to control the the window's properties, appearance and layout from within QML.
+</p>
+
+<p>
+As previously discussed with making generic <code>Component</code>s, it is not preferable to reference the id of the application root item as this creates dependencies to other items. <code>ApplicationWindow</code> provides these generic properties to create an interface to itself without creating a dependency to a certain window id.
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'CustomSignals' } do %>
+
+<p>
+You'll be editing <code>CustomCheckbox.qml</code>.
+</p>
+
+<p>
+Your task is to implement a simple checkbox component with a couple of signals and some logic. The type you will be working with is in <code>CustomCheckbox.qml</code>
+</p>
+
+<p>
+Make some sort of visual change when checking/unchecking the checkbox, change picture or text
+</p>
+
+<p>
+Create custom signal 'checked' that will emit:
+</p>
+<ul>
+<li>true when the checkbox is checked</li>
+<li>false when unchecked</li>
+</ul>
+
+<p>
+Expose property 'checkMax' that will be used as the inclusive upper bound of the number checks
+</p>
+
+<ul>
+<li>Disable the checkbox after it has been checked the defined number of times, meaning that the checkbox should not allow any further input from the user</li>
+<li>If checkCount is not defined, allow infinite checks</li>
+</ul>
+
+<p>
+Create a signal named 'disabled' that will emit after the checkbox has been disabled
+</p>
+
+<ul>
+<li>Use the 'state' property of the parent 'checkBox'</li>
+<li>The states are 'checked', 'unchecked' and "disabled"</li>
+</ul>
+
+<p>
+Optional extra: you can use these states to animate the visual change of the checkbox!
+</p>
+
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Shape
+<% end %>
+
+<p>
+As the final subject of Part 3, let's look at the <code>Shape</code> type, which is used to render arbitary shapes (as opposed to types like <code>Rectangle</code> that we already saw). <code>Shape</code> renders a path either by generating geometry via <code>QPainterPath</code> and manual triangulation or by using a GPU vendor extension.
+</p>
+
+<p>
+This approach is different from rendering shapes via <code>QQuickPaintedItem</code> or the 2D Canvas because the path never gets rasterized in software. Therefore <code>Shape</code> is suitable for creating shapes spreading over larger areas of the screen, avoiding the performance penalty for texture uploads or framebuffer blits. In addition, the declarative API allows manipulating, binding to, and even animating the path element properties like starting and ending position, the control points, and so on.
+</p>
+
+<p>
+Variety of different paths are supported, e.g. line, ellipse, arc, quadratic curve, etc. See <a href="https://doc.qt.io/qt-5.11/qml-qtquick-path.html" title="Path">Path</a> documentation for a list of all available path elements. 
+</p>
+
+<p>
+Like <code>Item</code>, <code>Shape</code> also allows any visual or non-visual objects to be declared as children. <code>ShapePath</code> objects are handled specially. This is useful since it allows adding visual items, like <code>Rectangle</code> or <code>Image</code>, and non-visual objects, like <code>Timer</code> directly as children of <code>Shape</code>.
+</p>
+
+<p>
+When using <code>Shape</code>, it is important to be aware of potential performance implications (you don't need to memorize or even fully understand this list, but it's nice to know):
+</p>
+
+<ul>
+<li>When the application is running with the generic, triangulation-based <code>Shape</code> implementation, the geometry generation happens entirely on the CPU. This is potentially expensive. Changing the set of path elements, changing the properties of these elements, or changing certain properties of the <code>Shape</code> itself all lead to retriangulation of the affected paths on every change. Therefore, applying animation to such properties can affect performance on less powerful systems.</li>
+<li>However, the data-driven, declarative nature of the <code>Shape</code> API often means better cacheability for the underlying CPU and GPU resources. A property change in one <code>ShapePath</code> will only lead to reprocessing the affected <code>ShapePath</code>, leaving other parts of the <code>Shape</code> unchanged. Therefore, a frequently changing property can still result in a lower overall system load than with imperative painting approaches (for example, <code>QPainter</code>).</li>
+<li>If animating properties other than stroke and fill colors is a must, it is recommended to target systems providing <code>GL_NV_path_rendering</code> where the cost of property changes is smaller.</li>
+<li>At the same time, attention must be paid to the number of <code>Shape</code> elements in the scene, in particular when using this special accelerated approach for <code>GL_NV_path_rendering</code>. The way such a <code>Shape</code> item is represented in the scene graph is different from an ordinary geometry-based item, and incurs a certain cost when it comes to OpenGL state changes.</li>
+<li>As a general rule, scenes should avoid using separate <code>Shape</code> items when it is not absolutely necessary. Prefer using one <code>Shape</code> item with multiple <code>ShapePath</code> elements over multiple <code>Shape</code> items. Scenes that cannot avoid using a large number of individual <code>Shape</code> items should consider setting <code>Shape.vendorExtensionsEnabled</code> to false.</li>
+</ul>
+
+<p>
+Now, let's look at an example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.9
+import QtQuick.Window 2.2
+import QtQuick.Shapes 1.0
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Shapes")
+
+    Shape {
+        id: shape
+        anchors.fill: parent
+        ShapePath {
+            strokeWidth: 10
+            strokeColor: "black"
+            fillGradient: RadialGradient {
+                centerX: shape.width / 2; centerY: shape.height / 2
+                centerRadius: shape.width * 0.1
+                focalX: centerX; focalY: centerY
+                spread: ShapeGradient.RepeatSpread
+                GradientStop { position: 0; color: "yellow" }
+                GradientStop { position: 1; color: "blue" }
+            }
+            strokeStyle: ShapePath.SolidLine
+            startX: shape.width * 0.3; startY: shape.height * 0.1
+            PathLine { x: shape.width * 0.7; y: shape.height * 0.1 }
+            PathLine { x: shape.width * 0.9; y: shape.height * 0.3 }
+            PathLine { x: shape.width * 0.9; y: shape.height * 0.7 }
+            PathLine { x: shape.width * 0.7; y: shape.height * 0.9 }
+            PathLine { x: shape.width * 0.3; y: shape.height * 0.9 }
+            PathLine { x: shape.width * 0.1; y: shape.height * 0.7 }
+            PathLine { x: shape.width * 0.1; y: shape.height * 0.3 }
+            PathLine { x: shape.width * 0.3; y: shape.height * 0.1 }
+        }
+    }
+}
+
+<% end %>
+
+<img class="naytto" src="/img/part-3/shape.png" />
+
+<p>
+&nbsp;
+</p>
+
+<p>
+What's happening here is that in <code>ShapePath</code> we've defined the shape with straight lines, and fill it with a radial gradient that repeats. If you have trouble following the code (and even if you don't), go ahead and play around with it a bit! Try commenting out some of the <code>PathLine</code>s and see what happens. Change the gradient's <code>spread</code> property to <code>ShapeGradient.ReflectSpread</code> and to see what that looks like.
+</p>
+
