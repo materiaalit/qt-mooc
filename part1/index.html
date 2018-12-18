@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Qt MOOC | Part 1</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <link href="../stylesheets/styles-9fe27d3a.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/xcode.min.css">
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.1/cookieconsent.min.css" />
+
+    <link rel="stylesheet" href="https://materiaalit.github.io/code-states-visualizer-cdn/app.css" />
+    <link rel="stylesheet" href="https://materiaalit.github.io/typonator-cdn/app.css" />
+    <link rel="stylesheet" href="https://crowdsorcerer.testmycode.io/dist/app.css" />
+    <link rel="stylesheet" href="https://materiaalit.github.io/pdf-slideshow-cdn/app.css" />
+
+      <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-47575342-8', 'auto');
+  ga('set', 'anonymizeIp', true);
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <div class="header-wrapper">
+        <div class="browser-support-warning" id="browser-support-warning" style="display: none;">
+  All parts of this material don't necessarily support your current browser. Could you consider switching to <a href="https://www.google.com/chrome/browser/desktop/" target="_blank" rel="noopener">Chrome</a> or <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank" rel="noopener">Firefox</a>?
+  <span class="browser-support-warning__close">Okay!</span>
+</div>
+
+
+        <nav class="navbar navbar-light bg-white">
+  <a class="navbar-brand" href="http://mooc.fi" alt="MOOC" target="_blank" rel="noopener">
+    <span class="icon-mooc"></span>
+  </a>
+
+  <ul class="nav navbar-nav hidden-md-down">
+      <li class="nav-item ">
+        <a href="../" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=index.html&gt;')">Introduction</a>
+      </li>
+      <li class="nav-item active">
+        <a href="./" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=part1.html&gt;')">Part 1</a>
+      </li>
+      <li class="nav-item ">
+        <a href="../part2/" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=part2.html&gt;')">Part 2</a>
+      </li>
+      <li class="nav-item ">
+        <a href="../part3/" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=part3.html&gt;')">Part 3</a>
+      </li>
+      <li class="nav-item ">
+        <a href="../userguide/" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=userguide.html&gt;')">User Guide</a>
+      </li>
+  </ul>
+
+  <div class="float-xs-right navbar__buttons">
+    <div class="dropdown" id="mobile-nav-dropdown">
+      <button class="btn btn-secondary dropdown-toggle navbar__mobile-nav-toggle" data-toggle="dropdown">
+        <i class="fa fa-bars"></i>
+      </button>
+
+      <div class="dropdown-menu">
+      </div>
+    </div>
+
+    <a href="https://tmc.mooc.fi" target="_blank" rel="noopener" class="btn btn-secondary">
+      <span class="hidden-md-down">Submissions</span>
+      <i class="fa fa-arrow-circle-up hidden-lg-up"></i>
+    </a>
+
+    <button class="btn btn-secondary" id="table-of-contents-toggle">
+      <span class="hidden-md-down">Table of Contents</span>
+      <i class="fa fa-ellipsis-h hidden-lg-up"></i>
+    </button>
+
+    <button class="btn btn-primary" id="tmc-login-toggle">Login</button>
+  </div>
+</nav>
+
+      </div>
+
+      <div class="content-wrapper">
+        <div class="container material" id="material">
+            <div class="exercise-list">
+  <div class="exercise-list__header">
+    Exercises
+  </div>
+
+  <div class="exercise-list__content" id="exercise-list"></div>
+
+    <div class="exercise-list__quiznator">
+      <div class="quiznator-dashboard"></div>
+
+    </div>
+</div>
+
+
+          <h1 class="material-heading">
+  Creating and debugging Qt projects
+
+</h1>
+
+<p>
+Hello! Welcome aboard the Qt MOOC!
+</p>
+
+<p>
+This topic will cover most of the basic things you should need when working on this course. We will discuss Qt projects in general, and from the perspective of this course in the form of our exercises. We will run trough some of the key concepts that will help you understand the fundamentals of Qt. It should also let you get familiar with the official Qt documentation, that we will be using as a study aide alongside the course material. We will also discuss some aspects of builds, qmake, and debugging messages.
+</p>
+
+<p>
+If all of this is familiar to you, you may proceed to completing the exercise and moving on to the more specific topics. We won't hold it against you if you come back to read about the basics when you have no idea what's going on after completing yet another Hello World!
+</p>
+
+<p>
+Before we start with the heavy lifting, we are going to introduce some basic concepts to help you get started. These are global declarations, modules and namespaces in Qt.
+</p>
+
+<h2 class="material-heading">
+  Global Declarations and Macros
+
+</h2>
+
+<p>
+Let's talk about the global declarations in Qt. You can find an exhaustive list of global declarations at the <a href="http://doc.qt.io/qt-5/qtglobal.html" title="Qt documentation">Qt documentation</a>.
+</p>
+
+<p>
+The global declarations include types, functions and macros. You absolutely do not have to memorize this list before proceeding into the next chapter, but it is important that you know what it is and what you can use it for, as you may find it useful on various occasions while working on this course. In the end of this topic we will discuss some useful debugging functions found in the global declaration.
+</p>
+
+<p>
+The type definitions are partly convenience definitions for basic types (some of which guarantee certain bit-sizes on all platforms supported by Qt), partly types related to Qt message handling. The functions are related to generating messages, Qt version handling, and comparing and adjusting object values. And finally, some of the declared macros enable programmers to add compiler or platform specific code to their applications, while others are convenience macros for larger operations.
+</p>
+
+<p>
+We will explicitly refer you to the global declarations list in assignments or learning topics where we feel it is necessary.
+</p>
+
+<h2 class="material-heading">
+  Qt Modules and Namespaces
+
+</h2>
+
+<p>
+Next, let's talk about the modules in Qt. <a href="http://doc.qt.io/qt-5/qtmodules.html" title="Here is a list of the modules in Qt">Here is a list of the modules in Qt</a>.
+</p>
+
+<p>
+To include modules into your project you need to include them in your projects' <code>.pro</code> file. If you are using qmake, the Core and GUI modules will be included by default. If you aren't using the GUI module in your project (which we for the most parts won't during the beginning, anyway), simply disable it by writing <code>QT -= GUI</code> in your projects <code>.pro</code> file. All of the other Qt modules rely on the Qt Core module.
+</p>
+
+<p>
+Next, it's time to take a look at some essentials regarding namespaces and their use in Qt. <a href="https://doc.qt.io/qt-5.10/namespaces.html" title="Here is a list of the main namespaces in Qt">Here is a list of the main namespaces in Qt</a>. Naturally we will not be using all of these namespaces during the course, but before getting our hands dirty, we feel that you will have some benefit of having been introduced to this list beforehand.
+</p>
+
+<p>
+Let's have an example of including namespaces! Say you want to include the <code>QtConcurrent</code> namespace in your code. Let's take a closer look at the documentation page for <code>QtConcurrent</code>:
+</p>
+
+<img class="naytto" src="../img/part-1/QtConcurrentNamespace-3b53fc17.png" />
+
+<p>
+To include the <code>QtConcurrent</code> namespace, you will need to make a specific mention of it in two places: the header of the relevant file (<code>#include <QtConcurrent></code>),
+</p>
+
+<img class="naytto" src="../img/part-1/QtConcurrentWorks-d0a37e77.png" />
+
+<p>
+ 
+</p>
+<p>
+and the project <code>.pro</code> file (<code>QT += concurrent</code>).
+</p>
+
+<img class="naytto" src="../img/part-1/QtConcurrentInProFile-b9e59a78.png" />
+
+<h2 class="material-heading">
+  Qt Namespace
+
+</h2>
+
+<p>
+In the <a href="http://doc.qt.io/qt-5/qt.html" title="Qt Namespace">Qt Namespace</a> you can find miscellaneous identifiers used throughout the Qt library. This is the list we are expecting you to memorize before proceeding to the next chapter of this topic.
+</p>
+
+<p>
+Just kidding! We're just letting you know it's there if you happen to need to use it as reference material for anything.
+</p>
+
+<h2 class="material-heading">
+  Structure of the TMC exercises
+
+</h2>
+
+<p>
+Having finished covering the basics, it's time to take a look at the structural composition of the TMC exercises.
+</p>
+
+<p>
+Each exercise is located in its own subdirectory in the main exercise directory of each week. The exercise consists of a <code>.pro</code> file at the root level, in addition to a couple of directories.  
+</p>
+
+<p>
+The <code>.pro</code> file at the root level is the project file for the exercise project.  We will further discuss project files later in this chapter. But for now, we will focus on the project structure. 
+</p>
+
+<p>
+The local tests that will be testing your exercises are located in the <code>test_runner</code> directory.  
+</p>
+
+<p>
+If you are having problems figuring out why your exercise isn't passing the tests and you have exhausted all other alternatives, it may be worth looking at the test runner files. Figuring out what the tests are testing may give you a clue as to what may be the problem in your code. You may even alter the local tests if it helps you understand the problem better. On a rare occasion, the problem may be that the tests themselves are faulty. In this case we recommend joining the course channel to see if others are having the same problem. We have done everything we can to make sure this does not happen, but there are always edge cases.
+</p>
+
+<p>
+Please take note that the local tests are only there to tell you if your exercise is fully completed and ready to be submitted. You cannot alter the tests to your liking, and expect to pass the exercise by submitting an incomplete assignment! We will test your exercise on the server before you receive points for it! Some times there may even be hidden tests serverside, for making sure that you aren't trying to complete the exercises based on what the tests are testing for instead of completing the actual exercise to support your learning.
+</p>
+
+<p>
+The <code>src</code> directory is where the magic, by which we mean your coding, will take place.  
+</p>
+
+<p>
+It includes the relevant source and header files for each exercise project. In some cases there may be additional directories included for libraries, and in some cases we may ask you to create new directories. Nobody knows if! Nobody knows when! Nobody knows how! But we'll figure that out later.  
+</p>
+
+<p>
+Have you already noticed how every directory has its own <code>.pro</code> file? What does this all mean? It's like trying to figure out the plot line of Lost! The reason for this is, that every subdirectory we have included in the exercise directory are actually projects within the actual exercise project (spoiler: this is also the plot line of Lost)! Let us elaborate and take look at the root level <code>.pro</code> file:
+</p>
+
+<pre class="sh_java code-highlight"><code>TEMPLATE = subdirs
+SUBDIRS += \
+      src \
+      test_runner
+
+      test_runner.depends = src
+</code></pre>
+
+<p>
+This tells <code>qmake</code>, which we will discuss next in this chapter, that the exercise project follows a build template called <code>subdirs</code>, and defines the subdirectories to be included in this project. Using the subdirectories template requires each declared subdirectory to be its own project and have its own project file included in said subdirectory.  In the end, we declare the test runner subdirectory to be dependent of the source directory. This is because we want to build your exercise before we build the test runner so the test runner has something to test.
+</p>
+
+<h2 class="material-heading">
+  qmake
+
+</h2>
+
+<p>
+The <a href="http://doc.qt.io/qt-5/qmake-manual.html" title="qmake">qmake</a> tool helps simplify the build process for development projects across different platforms. It automates the generation of Makefiles so that only a few lines of information are needed to create each Makefile. You can use qmake for any software project, whether it is written with Qt or not.
+</p>
+
+<code>qmake</code> generates a <code>Makefile</code> based on the information in a project file. The project files use the extension <code>.pro</code>, and are usually created by project templates in Qt Creator. Project files are worked on by the developer to specify the instruction set they want <code>qmake</code> to use for their project, and are usually simple. However, more sophisticated project files can be created for complex projects. We will further discuss project files later in this chapter, but as <code>qmake</code> uses the information stored in project files, we cannot completely avoid talking about their contents when talking about <code>qmake</code>.
+
+<p>
+The fundamental behavior of <code>qmake</code> is influenced by variable declarations that define the build process of each project. Some of these declare resources, such as headers and source files, that are common to each platform. Others are used to customize the behavior of compilers and linkers on specific platforms.  
+</p>
+
+<p>
+Let us elaborate by once again referring to our exercise structure, specifically the <code>.pro</code> file of the source directory:
+</p>
+
+<pre class="sh_java code-highlight"><code>QT -= gui
+
+TARGET = main
+
+CONFIG += c++11 console
+CONFIG -= app_bundle
+
+win32 {
+     CONFIG -= debug_and_release debug_and_release_target
+}
+
+DEFINES += QT_DEPRECATED_WARNINGS
+
+SOURCES += \
+     main.cpp \
+     hello.cpp
+
+ HEADERS += \
+      hello.h
+</code></pre>
+
+<p>
+You may refer to the exercise directory structure and file composition of exercise <code>01_HelloWorld</code>. You may also refer to the <a href="http://doc.qt.io/qt-5/qmake-variable-reference.html" title="qmake variable reference">qmake variable reference</a> and reflect on the declarations in the aforementioned <code>.pro</code> file code. Can you figure out what we are trying to tell <code>qmake</code> and why? The win32 bit may not be entirely self-explanatory. We may provide an explanation for this one later on.
+</p>
+
+<p>
+Platform-specific variables follow the naming pattern of the variables which they extend or modify, but include the name of the relevant platform in their name. For example, <code>LIBS</code> can be used to specify a list of libraries that a project needs to link against. Here is an example:
+</p>
+
+<pre class="sh_java code-highlight"><code>unix:LIBS += -L/usr/local/lib -lmath
+win32:LIBS += c:/mylibs/math.lib
+</code></pre>
+
+<p>
+If you feel like doing some exploring on your own, we recommend you take a look at the <a href="http://doc.qt.io/qt-5/qmake-variable-reference.html" title="full list of qmake variables">full list of qmake variables</a> to browse at your own discretion.
+</p>
+
+<h2 class="material-heading">
+  .pro files
+
+</h2>
+
+<p>
+In a project file, variables are used to hold lists of strings. In the simplest projects, these variables inform <code>qmake</code> about the configuration options to use, or supply filenames and paths to use in the build process.
+</p>
+
+<p>
+<code>qmake</code> looks for certain variables in each project file, and it uses the contents of these to determine what it should write to a <code>Makefile</code>. For example, the lists of values in the <code>HEADERS</code> and <code>SOURCES</code> variables are used to tell <code>qmake</code> about header and source files in the same directory as the project file.
+</p>
+
+<p>
+As long as you are using qmake, the Core and GUI modules are included by default.
+</p>
+
+<p>
+Variables can also be used internally to store temporary lists of values, and existing lists of values can be overwritten or extended with new values.
+</p>
+
+<p>
+The following snippet illustrates how lists of values are assigned to variables:
+</p>
+
+<pre class="sh_java code-highlight"><code>HEADERS = mainwindow.h paintwidget.h
+</code></pre>
+
+<p>
+The list of values in a variable is extended in the following way:
+</p>
+
+<pre class="sh_java code-highlight"><code>SOURCES = main.cpp mainwindow.cpp \
+          paintwidget.cpp
+CONFIG += console
+</code></pre>
+
+<p>
+Note: The first assignment only includes values that are specified on the same line as the <code>HEADERS</code> variable. The second assignment splits the values in the <code>SOURCES</code> variable across lines by using a backslash (<code>\</code>).
+</p>
+
+<h2 class="material-heading">
+  Qt resource system
+
+</h2>
+
+<p>
+The <a href="https://doc.qt.io/qt-5/resources.html" title="Qt resource system">Qt resource system</a> is a platform independent way to store application resources (images, icons, translation files, data, etc.) inside the application's executable. Resources are specified inside the <strong>resource collection</strong> <code>.qrc</code> file:
+</p>
+
+<pre class="sh_java code-highlight"><code>&lt;!DOCTYPE RCC&gt;&lt;RCC version="1.0"&gt;
+&lt;qresource&gt;
+    &lt;file&gt;images/icon.png&lt;/file&gt;
+    &lt;file&gt;data.txt&lt;/file&gt;
+&lt;/qresource&gt;
+&lt;/RCC&gt;
+</code></pre>
+
+<p>
+The file is then included in the <code>.pro</code> file with <code>RESOURCES = application.qrc</code>. The specified files will be then compressed and included as a static C++ array. They can be accessed with <a href="https://doc.qt.io/qt-5/qfile.html" title="QFile">QFile</a> or image types like any other file like so:
+</p>
+
+<pre class="sh_java code-highlight"><code>QIcon icon(":/images/icon.png")
+QFile file(":/data.txt");
+</code></pre>
+
+<h2 class="material-heading">
+  The QDebug class
+
+</h2>
+
+<p>
+The <a href="http://doc.qt.io/qt-5/qdebug.html" title="QDebug">QDebug</a> class provides an output stream for debugging information. 
+</p>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qdebug.html" title="QDebug">QDebug</a> is used whenever the developer needs to write out debugging or tracing information to a device, file, string or console.
+</p>
+
+<strong>Basic Use</strong>
+
+<p>
+In the common case, it is useful to call the <code>qDebug()</code> function to obtain a default QDebug object to use for writing debugging information.  
+</p>
+
+<pre class="sh_java code-highlight"><code>qDebug() &lt;&lt; "Date:" &lt;&lt; QDate::currentDate();
+qDebug() &lt;&lt; "Types:" &lt;&lt; QString("String") &lt;&lt; QChar('x') &lt;&lt; QRect(0, 10, 50, 40);
+qDebug() &lt;&lt; "Custom coordinate type:" &lt;&lt; coordinate;
+</code></pre>
+
+<p>
+This constructs a <code>QDebug</code> object using the constructor that accepts a <code>QtMsgType</code> value of <code>QtDebugMsg</code>. Similarly, the <code>qWarning()</code>, <code>qCritical()</code> and <code>qFatal()</code> functions also return QDebug objects for the corresponding message types.
+</p>
+
+<p>
+The class also provides several constructors for other situations, including a constructor that accepts a <a href="https://doc.qt.io/qt-5/qfile.html" title="QFile">QFile</a> or any other <a href="https://doc.qt.io/qt-5/qiodevice.html" title="QIODevice">QIODevice</a> subclass that is used to write debugging information to files, sockets, other processes, etc. The constructor that accepts a QString is used to write to a string for display or serialization.
+</p>
+
+<p>
+<strong>Formatting Options</strong> 
+</p>
+
+<p>
+QDebug formats output so that it's easily readable. It automatically adds spaces between arguments, and adds quotes around <code>QString</code>, <code>QByteArray</code>, <code>QChar</code> arguments.
+</p>
+
+<p>
+You can tweak these options through the <code>space()</code>, <code>nospace()</code> and <code>quote()</code>, <code>noquote()</code> methods. Furthermore, <code>QTextStream</code> manipulators can be piped into a <code>QDebug</code> stream.
+</p>
+
+<p>
+<code>QDebugStateSaver</code> limits changes to the formatting to the current scope. <code>resetFormat()</code> resets the options to the default ones.
+</p>
+
+<p>
+<strong>Writing Custom Types to a Stream</strong>
+</p>
+
+<p>
+Many standard types can be written to QDebug objects, and Qt provides support for most Qt value types. To add support for custom types, you need to implement a streaming operator, as in the following example:
+</p>
+
+<pre class="sh_java code-highlight"><code>QDebug operator&lt;&lt;(QDebug debug, const Coordinate &amp;c)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() &lt;&lt; '(' &lt;&lt; c.x() &lt;&lt; ", " &lt;&lt; c.y() &lt;&lt; ')';
+
+    return debug;
+}
+</code></pre>
+
+<h2 class="material-heading">
+  Outputting debug information
+
+</h2>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qtglobal.html#qdebug" title="QDegug">qDebug</a>, <a href="http://doc.qt.io/qt-5/qtglobal.html#qWarning" title="qWarning">qWarning</a>, <a href="http://doc.qt.io/qt-5/qtglobal.html#qCritical" title="qCritical">qCritical</a> and <a href="http://doc.qt.io/qt-5/qtglobal.html#qFatal" title="qFatal">qFatal</a> are functions defined in the Qt global declarations. The functions take a format string and a list of arguments, similar to the C <code>printf()</code> function. The format should be a Latin-1 string. To suppress any of these types, you may install your own message handler using <a href="https://doc.qt.io/qt-5/qtglobal.html#qInstallMessageHandler" title="qInstallMessageHandler">qInstallMessageHandler</a>. The functions call the message handler with the defined debug/critical/fatal/warning message. They call the message handler, or if no message handler is present, print out the message to <code>stderr</code>. On Windows, for the most parts, the message is sent to the debugger.
+</p>
+
+<pre class="sh_java code-highlight"><code>qDebug(const char *message, ...)
+</code></pre>
+
+<p>
+Under Windows the message is sent to the console, if it is a console application; otherwise, it is sent to the debugger. This function does nothing if QT_NO_DEBUG_OUTPUT was defined during compilation.
+</p>
+
+<p>
+For example:
+</p>
+
+<pre class="sh_java code-highlight"><code>qDebug("Items in list: %d", myList.size());
+</code></pre>
+
+<p>
+If you include <code>QtDebug</code>, a more convenient syntax is also available:
+</p>
+
+<pre class="sh_java code-highlight"><code>qDebug() &lt;&lt; "Brush:" &lt;&lt; myQBrush &lt;&lt; "Other value:" &lt;&lt; i;
+</code></pre>
+
+<p>
+With this syntax, the function returns a QDebug object that is configured to use the QtDebugMsg message type. It automatically puts a single space between each item, and outputs a newline at the end. It supports many C++ and Qt types.
+</p>
+
+<p>
+Including <code>QtDebug</code> also allows the equivalent syntax to be used with <code>qInfo</code>, <code>qCritical</code>, and <code>qWarning</code>.
+</p>
+
+<pre class="sh_java code-highlight"><code>qCritical(const char *message, ...)
+</code></pre>
+
+<p>
+It exits if the environment variable <code>QT_FATAL_CRITICALS</code> is not empty.
+</p>
+
+<p>
+For example:
+</p>
+
+<pre class="sh_java code-highlight"><code>void load(const QString &amp;fileName)
+{
+     QFile file(fileName);
+     if (!file.exists())
+          qCritical("File '%s' does not exist!", qUtf8Printable(fileName));
+}
+</code></pre>
+--
+
+<pre class="sh_java code-highlight"><code>qWarning(const char *message, ...)
+</code></pre>
+
+<p>
+This function does nothing if <code>QT_NO_WARNING_OUTPUT</code> was defined during compilation; it exits if at the nth warning corresponding to the counter in environment variable <code>QT_FATAL_WARNINGS</code>. That is, if the environment variable contains the value 1, it will exit on the 1st message; if it contains the value 10, it will exit on the 10th message. Any non-numeric value is equivalent to 1.
+</p>
+
+<p>
+For example:
+</p>
+
+<pre class="sh_java code-highlight"><code>void f(int c)
+{
+    if (c > 200)
+        qWarning("f: bad argument, c == %d", c);
+}
+</code></pre>
+
+<pre class="sh_java code-highlight"><code>qFatal(const char *message, ...)
+</code></pre>
+
+<p>
+If you are using the default message handler this function will abort to create a core dump. On Windows, for debug builds, this function will report a <code>_CRT_ERROR</code> enabling you to connect a debugger to the application.
+</p>
+
+<p>
+For example:
+</p>
+
+<pre class="sh_java code-highlight"><code>int divide(int a, int b)
+{
+    if (b == 0)                                // program error
+         qFatal("divide: cannot divide by zero");
+    return a / b;
+}
+</code></pre>
+
+<h2 class="material-heading">
+  Shadow builds
+
+</h2>
+
+<p>
+After you've successfully built your first Qt project, you might be interested in the built binaries. By default, Qt Creator builds the project in to a separate directory (`build-ProjectName-*`) as a <a href="https://doc.qt.io/qtcreator/creator-glossary.html#glossary-shadow-build" title="shadow build">shadow build</a>, which is separated from the source directory. <code>qmake</code> can also generate an <strong>in-source</strong> build, but this is not recommended. The benefit in shadow builds is keeping that directory clean, which makes changing between Kits or build configurations faster.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">HelloWorld</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Hey! It's time for our first exercise. It's going to be a simple one, don't worry. Just download the exercise template from TMC, open the project, and head to <code>hello.cpp</code>.
+</p>
+
+<p>
+In <code>world()</code> function, write "Hello world" as a <code>qDebug</code> message and "Don't panic!" as a <code>qWarning</code> message.
+</p>
+
+
+    </div>
+  </div>
+</div>
+
+<h1 class="material-heading">
+  String handling and value types
+
+</h1>
+
+<p>
+In this chapter we're going to discuss strings and their manipulation, and also talk briefly about Value vs Identity type in Qt. There will be some details that are discussed more thoroughly, but in general we'll try to keep to a coherent and concise presentation. If you wish to read up on the more specific techincal details, we encourage you to check the official Qt documentation.
+</p>
+
+<h2 class="material-heading">
+  QChar
+
+</h2>
+
+<code>QChar</code> class provides a 16-bit Unicode character. In Qt, Unicode characters are 16-bit entities without any markup or structure, and this class represents such an entity. It's lightweight, so it can be used everywhere. Most compilers treat it like an usigned short. The class features many functions you'd expect, such as <code>isNull()</code> and <code>isNumber()</code>. If you wish to read more about <code>QChar</code>, see the <a href="https://doc.qt.io/qt-5/qchar.html" title="official documentation">official documentation</a>.
+
+<h2 class="material-heading">
+  QString
+
+</h2>
+
+<p>
+The <code>QString</code> class provides a Unicode character string. <code>QString</code> stores a string of 16-bit <code>QChars</code>, where each <code>QChar</code> corresponds one Unicode 4.0 character. (Unicode characters with code values above 65535 are stored using surrogate pairs, i.e., two consecutive <code>QChars</code>.)
+</p>
+
+<p>
+Behind the scenes, <code>QString</code> uses implicit sharing (copy-on-write) to reduce memory usage and to avoid the needless copying of data. This also helps reduce the inherent overhead of storing 16-bit characters instead of 8-bit characters.
+</p>
+
+<p>
+In addition to <code>QString</code>, Qt also provides the <code>QByteArray</code> class to store raw bytes and traditional 8-bit '\0'-terminated strings. For most purposes, <code>QString</code> is the class you want to use. It is used throughout the Qt API, and the Unicode support ensures that your applications will be easy to translate if you want to expand your application's market at some point. The two main cases where <code>QByteArray</code> is appropriate are when you need to store raw binary data, and when memory conservation is critical (like in embedded systems).
+</p>
+
+<h3 class="material-heading">
+  Initializing a String
+
+</h3>
+
+<p>
+One way to initialize a <code>QString</code> is simply to pass a <code>const char *</code> to its constructor. For example, the following code creates a <code>QString</code> of size 5 containing the data "Hello":
+</p>
+
+<pre class="sh_java code-highlight"><code>QString str = "Hello";
+</code></pre>
+
+<p>
+Other ways exist too, such as providing the string data as an array of <code>QChars</code>.
+</p>
+
+<p>
+Another approach is to set the size of the string using <code>resize()</code>, and to initialize the data character per character using the <code>[]</code> operator, e.g. <code>str[2] = QChar('A')</code>. After a call to the <code>resize()</code> function, the newly allocated characters have undefined values. To set all the characters in the string to a particular value, use the <code>fill()</code> function.
+</p>
+
+<p>
+For read-only access, an alternative syntax is to use the <code>at()</code> function. The <code>at()</code> function can be faster than <code>operator[]()</code>, because it never causes a deep copy to occur.
+</p>
+
+<code>QString</code> provides dozens of overloads designed to simplify string usage. For example, if you want to compare a QString with a string literal, you can write code like this and it will work as expected:
+
+<pre class="sh_java code-highlight"><code>QString str;
+if (str == "auto" || str == "extern" || str == "static" || str == "register") {
+    // ...
+}
+</code></pre>
+
+<p>
+You can also pass string literals to functions that take <code>QString</code>s as arguments, invoking the <code>QString(const char *)</code> constructor.
+</p>
+
+<h3 class="material-heading">
+  Manipulating String Data
+
+</h3>
+
+<p>
+<code>QString</code> provides the following basic functions for modifying the character data: <code>append()</code>, <code>prepend()</code>, <code>insert()</code>, <code>replace()</code>, and <code>remove()</code>. For example:
+</p>
+
+<pre class="sh_java code-highlight"><code>QString str = "and";
+str.prepend("rock "); // str == "rock and"
+str.append(" roll"); // str == "rock and roll"
+str.replace(5, 3, "&amp;"); // str == "rock &amp; roll"
+</code></pre>
+
+<p>
+If you are building a <code>QString</code> gradually and know in advance approximately how many characters the <code>QString</code> will contain, you can call <code>reserve()</code>, asking <code>QString</code> to preallocate a certain amount of memory. You can also call <code>capacity()</code> to find out how much memory <code>QString</code> actually allocated.
+</p>
+
+<p>
+A frequent requirement is to remove whitespace characters from a string ('\n', '\t', ' ', etc.). If you want to remove whitespace from both ends of a <code>QString</code>, use the <code>trimmed()</code> function. If you want to remove whitespace from both ends and replace multiple consecutive whitespaces with a single space character within the string, use <code>simplified()</code>.
+</p>
+
+<p>
+<code>indexOf()</code> and <code>lastIndexOf()</code> functions return the first index position of the character or substring they find, former going forward from given position, and latter backwards; if none is found they return -1.
+</p>
+
+<p>
+Lists of strings are handled by the <code>QStringList</code> class. You can split a string into a list of strings using the <code>split()</code> function, and join a list of strings into a single string with an optional separator using <code>QStringList::join()</code>. You can obtain a list of strings from a string list that contain a particular substring or that match a particular <code>QRegExp</code> using the <code>QStringList::filter()</code> function.
+</p>
+
+<h3 class="material-heading">
+  Conversions
+
+</h3>
+
+<p>
+QString provides the following three functions that return a <code>const char *</code> version of the string as <code>QByteArray</code>: <code>toUtf8()</code>, <code>toLatin1()</code>, and <code>toLocal8Bit()</code>. Corresponding functions to convert from these encodings are <code>fromLatin1()</code>, <code>fromUtf8()</code>, and <code>fromLocal8Bit()</code>. Other encodings are supported through the <code>QTextCodec</code> class.
+</p>
+
+<h3 class="material-heading">
+  QTextCodec
+
+</h3>
+
+<p>
+Qt uses Unicode to store, draw and manipulate strings. In many situations you may wish to deal with data that uses a different encoding. For example, most Japanese documents are still stored in Shift-JIS or ISO 2022-JP, while Russian users often have their documents in KOI8-R or Windows-1251. The <code>QTextCodec</code> class provides conversions between text encodings. We aren't diving into different encodings on this course, but if you're interested in learning about it, please visit <a href="http://doc.qt.io/qt-5/qtextcodec.html" title="QTextCodec documentation">QTextCodec documentation</a>.
+</p>
+
+<h3 class="material-heading">
+  Distinction Between Null and Empty Strings
+
+</h3>
+
+<p>
+For historical reasons, <code>QString</code> distinguishes between a null string and an empty string. A null string is a string that is initialized using <code>QString</code>'s default constructor or by passing <code>const char *</code> 0 to the constructor. An empty string is any string with size 0. Thus, null string is always empty, but an empty string isn't necessarily null (e.g. <code>QString()</code> is both null and empty, <code>QString("")</code> is empty, but not null).
+</p>
+
+<p>
+All functions except <code>isNull()</code> treat null strings the same as empty strings. For example, <code>toUtf8().constData()</code> returns a pointer to a '\0' character for a null string (not a null pointer), and <code>QString()</code> compares equal to <code>QString("")</code>. We recommend that you always use the <code>isEmpty()</code> function and avoid <code>isNull()</code>.
+</p>
+
+<h3 class="material-heading">
+  More Efficient String Construction
+
+</h3>
+
+<p>
+Many strings are known at compile time. But the trivial constructor <code>QString("Hello")</code>, will copy the contents of the string, treating the contents as Latin-1. To avoid this one can use the <code>QStringLiteral</code> macro to directly create the required data at compile time. Constructing a <code>QString</code> out of the literal does then not cause any overhead at runtime.
+</p>
+
+<p>
+A slightly less efficient way is to use <code>QLatin1String</code>. This class wraps a C string literal, precalculates it length at compile time and can then be used for faster comparison with <code>QString</code>s and conversion to <code>QString</code>s than a regular C string literal.
+</p>
+
+<p>
+Using the <code>QString</code> '+' operator, it is easy to construct a complex string from multiple substrings. You will often write code like this:
+</p>
+
+<pre class="sh_java code-highlight"><code>QString foo;
+QString type = "long";
+
+foo->setText(QLatin1String("vector<") + type + QLatin1String(">::iterator"));
+
+if (foo.startsWith("(" + type + ") 0x"))
+    ...
+</code></pre>
+
+<p>
+There is nothing wrong with either of these string constructions, but there are a few hidden inefficiencies.
+</p>
+
+<p>
+First, multiple uses of the '+' operator usually means multiple memory allocations. When concatenating n substrings, where n > 2, there can be as many as n - 1 calls to the memory allocator.
+</p>
+
+<p>
+An internal template class <code>QStringBuilder</code> can be used along with a few helper functions. This class is marked internal and does not appear in the documentation, because you aren't meant to instantiate it in your code. Its use will be automatic, as described below. The class is found in <code>src/corelib/tools/qstringbuilder.cpp</code> if you want to have a look at it.
+</p>
+
+<p>
+<code>QStringBuilder</code> uses expression templates and reimplements the '%' operator so that when you use '%' for string concatenation instead of '+', multiple substring concatenations will be postponed until the final result is about to be assigned to a <code>QString</code>. At this point, the amount of memory required for the final result is known. The memory allocator is then called once to get the required space, and the substrings are copied into it one by one.
+</p>
+
+<p>
+There are two ways you can access this improved method of string construction. The straightforward way is to include <code>QStringBuilder</code> wherever you want to use it, and use the '%' operator instead of '+' when concatenating strings:
+</p>
+
+<pre class="sh_java code-highlight"><code>#include <QStringBuilder>
+
+QString hello("hello");
+QStringRef el(&amp;hello, 2, 3);
+QLatin1String world("world");
+QString message =  hello % el % world % QChar('!');
+</code></pre>
+
+<p>
+A more global approach which is the most convenient, but not entirely source compatible, is to this define in your .pro file:
+</p>
+
+<pre class="sh_java code-highlight"><code>DEFINES *= QT_USE_QSTRINGBUILDER
+</code></pre>
+
+<p>
+and the '+' will automatically be performed as the QStringBuilder '%' everywhere.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Strings</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+In this exercise you will implement several functions that handle strings. You'll find the exercise instructions in the exercise template, in the file <code>strings.cpp</code>.
+</p>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  QByteArray
+
+</h2>
+
+<p>
+The <a href="http://doc.qt.io/qt-5/qbytearray.html" title="<code>QByteArray</code>"><code>QByteArray</code></a> class provides an array of bytes.
+</p>
+
+<p>
+<code>QByteArray</code> can be used to store both raw bytes and traditional 8-bit '<code>\0</code>'-terminated strings. Using <code>QByteArray</code> is often much more convenient than using <code>const char *</code>. Behind the scenes, it always ensures that the data is followed by a '<code>\0</code>' terminator, and uses implicit sharing (copy-on-write) to reduce memory usage and avoid needless copying of data.
+</p>
+
+<p>
+One way to initialize a <code>QByteArray</code> is simply to pass a <code>const char *</code> to its constructor. For example, the following code creates a byte array of size 5 containing the data "Hello":
+</p>
+
+<pre class="sh_java code-highlight"><code>QByteArray ba("Hello");
+</code></pre>
+
+<p>
+Although the <code>size()</code> is 5, the byte array also maintains an extra '<code>\0</code>' character at the end so that if a function is used that asks for a pointer to the underlying data (e.g. a call to <code>data()</code>), the data pointed to is guaranteed to be '<code>\0</code>'-terminated.
+</p>
+
+<p>
+A <code>QByteArray</code> can embed '<code>\0</code>' bytes. The <code>size()</code> function always returns the size of the whole array, including embedded '<code>\0</code>' bytes, but excluding the terminating '<code>\0</code>' added by <code>QByteArray</code>. If you want to obtain the length of the data up to and excluding the first '<code>\0</code>' character, call <code>qstrlen()</code> on the byte array.
+</p>
+
+<p>
+As with <code>QString</code> you can also set the size of the array using <code>resize()</code> and then initialize the data byte per byte using <code>operator[]()</code>.
+</p>
+
+<p>
+To obtain a pointer to the actual character data, call <code>data()</code> or <code>constData()</code>. These functions return a pointer to the beginning of the data. The pointer is guaranteed to remain valid until a non-const function is called on the <code>QByteArray</code>.
+</p>
+
+<p>
+<code>QByteArray</code> provides the same functions for modifying and searching the byte data as <code>QString</code>, such as <code>append()</code> and <code>indexOf()</code>.
+</p>
+
+<p>
+Functions that perform conversions between numeric data types and strings are performed in the C locale, irrespective of the user's locale settings. Use <code>QString</code> to perform locale-aware conversions between numbers and strings.
+</p>
+
+<p>
+In QByteArray, the notion of uppercase and lowercase and of which character is greater than or less than another character is locale dependent. This affects functions that support a case insensitive option, or that compare, or lowercase or uppercase their arguments. Case insensitive operations and comparisons will be accurate if both strings contain only ASCII characters. (If $LC_CTYPE is set, most Unix systems do "the right thing".) This issue does not apply to <code>QString</code>s since they represent characters using Unicode.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Bytes</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+In this exercise you get to think a bit about bytes (Note: Laughing at bad puns is healthy for you). Exercise instructions can be found in the template as usual, in the file <code>bytes.cpp</code>.
+</p>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  Value Type vs Identity Type
+
+</h2>
+
+<p>
+Let's talk shortly about Value vs Identity type in Qt. All the objects discussed in this chapter, such as <code>QString</code>, are value types, meaning that they can be copied. Later on in the course we will be going into <code>Qt Objects</code> which are identity types. The difference here is that where values are assigned and copied, identities are cloned. Cloning means to create a new identity, not an exact copy of the old one. If you wish to learn more about the reasoning behind this, <a href="https://doc.qt.io/qt-5/object.html" title="see documentation">see documentation</a>.
+</p>
+
+<h3 class="material-heading">
+  QVariant
+
+</h3>
+
+<p>
+Later in the course we will be using <code>QVariant</code>, so we'll talk about it here briefly.
+</p>
+
+<p>
+The <code>QVariant</code> class acts like a union for the most common Qt data types, specifically value types. Because C++ forbids unions from including types that have non-default constructors or destructors, most interesting Qt classes cannot be used in unions. <code>QVariant</code> solves this problem.
+</p>
+
+<p>
+A <code>QVariant</code> object holds a single value of a single <code>type()</code> at a time. (Some <code>type()</code>s are multi-valued, for example a string list.) You can find out what type, <code>T</code>, the variant holds, convert it to a different type using <code>convert()</code>, get its value using one of the <code>toT()</code> functions (e.g., <code>toSize()</code>) and check whether the type can be converted to a particular type using <code>canConvert()</code>. See <a href="https://doc.qt.io/qt-5/qvariant.html" title="QVariant documentation">QVariant documentation</a> for further details.
+</p>
+
+<h1 class="material-heading">
+  Item Containers
+
+</h1>
+
+<h2 class="material-heading">
+  Qt Containers
+
+</h2>
+
+<p>
+The Qt library provides a set of general purpose template-based container classes. These classes can be used to store items of a specified type. For example, if you need a resizable array of QStrings, use <code>QVector<QString></code>.
+</p>
+
+<p>
+These container classes are designed to be lighter, safer, and easier to use than the <a href="http://www.cplusplus.com/reference/stl/" title="STL containers">STL containers</a>. If you are unfamiliar with the STL, or prefer to do things the "Qt way", you can use these classes instead of the STL classes. However, it's completely fine to use standard containers as well.  
+</p>
+
+<p>
+The Qt container classes are <a href="https://doc.qt.io/qt-5/implicit-sharing.html" title="implicitly shared">implicitly shared</a>, they are <a href="https://doc.qt.io/qt-5/threads-reentrancy.html" title="reentrant">reentrant</a>, and they are optimized for speed, low memory consumption, and minimal inline code expansion, resulting in smaller executables. In addition, they are thread-safe in situations where they are used as read-only containers by all threads used to access them.
+</p>
+
+<p>
+For traversing the items stored in a container, you can use one of two types of iterators: Java-style iterators and STL-style iterators. The Java-style iterators are easier to use and provide high-level functionality, whereas the STL-style iterators are slightly more efficient and can be used together with Qt's and STL's generic algorithms.
+</p>
+
+<p>
+Qt also offers a <code>foreach</code> keyword that make it very easy to iterate over all the items stored in a container.
+</p>
+
+<h2 class="material-heading">
+  Container classes
+
+</h2>
+
+<p>
+Qt provides the following sequential containers: <code>QList</code>, <code>QLinkedList</code>, <code>QVector</code>, <code>QStack</code>, and <code>QQueue</code>. For most applications, <code>QVector</code> is the best type to use unless you have a specific need for the other ones.
+</p>
+
+<p>
+Qt also provides these associative containers: <code>QMap</code>, <code>QMultiMap</code>, <code>QHash</code>, <code>QMultiHash</code>, and <code>QSet</code>. The "Multi" containers conveniently support multiple values associated with a single key. The "Hash" containers provide faster lookup by using a hash function instead of a binary search on a sorted set.
+</p>
+
+<p>
+As special cases, the <code>QCache</code> and <code>QContiguousCache</code> classes provide efficient hash-lookup of objects in a limited cache storage.
+</p>
+
+<p>
+Containers can be nested. For example, it is perfectly possible to use a <code>QMap&lt;QString, QList&lt;int&gt;&gt;</code>, where the key type is <code>QString</code> and the value type <code>QList<int></code>.
+</p>
+
+<p>
+The containers are defined in individual header files with the same name as the container (e.g., <code>&lt;QLinkedList&gt;</code>). For convenience, the containers are forward declared in <code>&lt;QtContainerFwd&gt;</code>.
+</p>
+
+<p>
+The values stored in the various containers can be of any assignable data type. To qualify, a type must provide a default constructor, a copy constructor, and an assignment operator. This covers most data types you are likely to want to store in a container, including basic types such as int and double, pointer types, and Qt data types such as <code>QString</code>, <code>QDate</code>, and <code>QTime</code>, but it doesn't cover <code>QObject</code> or any <code>QObject</code> subclass (QWidget, QDialog, QTimer, etc.). If you attempt to instantiate a <code>QList&lt;QWidget&gt;</code>, the compiler will complain that QWidget's copy constructor and assignment operators are disabled. If you want to store these kinds of objects in a container, store them as pointers, for example as <code>QList&lt;QWidget *&gt;</code>.
+</p>
+
+<p>
+Here's an example custom data type that meets the requirement of an assignable data type:
+</p>
+
+<pre class="sh_java code-highlight"><code>class Employee
+{
+public:
+     Employee() {}
+     Employee(const Employee &amp;other);
+
+     Employee &amp;operator=(const Employee &amp;other);
+
+ private:
+      QString myName;
+      QDate myDateOfBirth;
+};
+</code></pre>
+
+<p>
+If we don't provide a copy constructor or an assignment operator, C++ provides a default implementation that performs a member-by-member copy. In the example above, that would have been sufficient. Also, if you don't provide any constructors, C++ provides a default constructor that initializes its member using default constructors. Although it doesn't provide any explicit constructors or assignment operator, the following data type can be stored in a container:
+</p>
+
+<pre class="sh_java code-highlight"><code>struct Movie
+{
+    int id;
+    QString title;
+    QDate releaseDate;
+};
+</code></pre>
+
+<p>
+Some containers have additional requirements for the data types they can store. For example, the Key type of a <code>QMap<Key, T></code> must provide <code>operator<()</code>. Such special requirements are documented in a class's detailed description. In some cases, specific functions have special requirements; these are described on a per-function basis. The compiler will always emit an error if a requirement isn't met.
+</p>
+
+<p>
+Qt's containers provide <code>operator&lt;&lt;()</code> and <code>operator&gt;&gt;()</code> so that they can easily be read and written using a <code>QDataStream</code>. This means that the data types stored in the container must also support <code>operator&lt;&lt;()</code> and <code>operator&gt;&gt;()</code>. Providing such support is straightforward; here's how we could do it for the Movie struct above:
+</p>
+
+<pre class="sh_java code-highlight"><code>QDataStream &amp;operator&lt;&lt;(QDataStream &amp;out, const Movie &amp;movie)
+{
+    out &lt;&lt; (quint32)movie.id &lt;&lt; movie.title
+        &lt;&lt; movie.releaseDate;
+    return out;
+}
+
+QDataStream &amp;operator&gt;&gt;(QDataStream &amp;in, Movie &amp;movie)
+{
+    quint32 id;
+    QDate date;
+
+    in &gt;&gt; id &gt;&gt; movie.title &gt;&gt; date;
+    movie.id = (int)id;
+    movie.releaseDate = date;
+    return in;
+}
+</code></pre>
+
+<p>
+The documentation of certain container class functions refer to default-constructed values; for example, <code>QVector</code> automatically initializes its items with default-constructed values, and <code>QMap::value()</code> returns a default-constructed value if the specified key isn't in the map. For most value types, this simply means that a value is created using the default constructor (e.g. an empty string for <code>QString</code>). But for primitive types like <code>int</code> and <code>double</code>, as well as for pointer types, the C++ language doesn't specify any initialization; in those cases, Qt's containers automatically initialize the value to 0.
+</p>
+
+<h2 class="material-heading">
+  Iterating correctly and efficiently
+
+</h2>
+
+<p>
+Iterators provide a uniform means to access items in a container. Qt's container classes provide two types of iterators: Java-style iterators and STL-style iterators.
+</p>
+
+<p>
+Non-mutable iterating can be done with a simple range loop <code>for (const &amp;noteConstRefToMyItem : container)</code>.
+</p>
+
+<p>
+The Java-style iterators were introduced in Qt 4. In some ways they are more convenient to use than the STL-style iterators, at the price of being slightly less efficient. Their API is modelled on Java's iterator classes.
+</p>
+
+<p>
+In general we don't recommend using the normal Java-style iterators, though you may if you wish. For mutable iterating, the Java-style mutable iterators are arguably easiest to use.
+</p>
+
+<p>
+Example of <code>QMutableListIterator</code>:
+</p>
+
+<pre class="sh_java code-highlight"><code>QMutableListIterator<int> i(list);
+while (i.hasNext()) {
+    if (i.next() % 2 != 0)
+        i.remove();
+}
+</code></pre>
+
+<p>
+The code removes all odd numbers from the list. 
+</p>
+
+<p>
+The <code>next()</code> call in the loop is made every time. It jumps over the next item in the list. The <code>remove()</code> function removes the last item that we jumped over from the list. The call to <code>remove()</code> does not invalidate the iterator, so it is safe to continue using it. 
+</p>
+
+<p>
+If we just want to modify the value of an existing item, we can use <code>setValue()</code>. In the code below, we replace any value larger than 128 with 128:
+</p>
+
+<pre class="sh_java code-highlight"><code>QMutableListIterator<int> i(list);
+while (i.hasNext()) {
+    if (i.next() > 128)
+        i.setValue(128);
+}
+</code></pre>
+
+<p>
+Iterators for associative containers work slightly differently, but the idea is the same. The <a href="http://doc.qt.io/qt-5/containers.html#the-iterator-classes" title="official documentation">official documentation</a> goes over different iterators in depth, and includes multiple examples as well.
+</p>
+
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Containers</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+In this exercise you'll get familiar with <code>QVector</code> and <code>QMap</code>, exercise instructions can be found in <code>containers.cpp</code>.
+</p>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  Algorithms in container manipulation
+
+</h2>
+
+<p>
+If you are interested in learning about algorithmic complexities of Qt Containers and data types please check out the documentation <a href="http://doc.qt.io/qt-5/containers.html#algorithmic-complexity" title="here">here</a>. In many ways it is good to understand why certain containers are better for some things than others, and in some applications even focusing on most efficient growth strategies, but it's past the goal of this course to go through them here.
+</p>
+
+<div class="quiznator-plugin" data-quiz-id="5c1802d9b1297900042b3791"></div>
+
+        </div>
+      </div>
+
+      <div class="footer-wrapper">
+        <footer class="footer">
+  <div>
+    This material has been licenced with Creative Commons BY-NC-SA-licence.
+  </div>
+  <div>
+    The course has been made by The Qt Company.
+</footer>
+
+      </div>
+    </div>
+
+    <div class="modal fade" id="tmc-login-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="tmc-login-form">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Login to mooc.fi</h4>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            Missing a mooc.fi account? <a href="https://tmc.mooc.fi/user/new" class="alert-link" target="_blank" rel="noopener">Register!</a>
+          </div>
+
+          <div class="alert alert-danger" id="tmc-login-error" style="display: none;"></div>
+
+          <div class="form-group">
+            <label>Username or email</label>
+            <input type="text" id="tmc-login-username" class="form-control" placeholder="Username or email"/>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="tmc-login-password" class="form-control" placeholder="Password"/>
+          </div>
+
+          <div class="form-group">
+            <label>Course</label>
+
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="tmcLoginCourse" value="qt-mooc-newyear">
+                Qt MOOC
+              </label>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+    <div class="table-of-contents-layer" id="table-of-contents-layer">
+</div>
+
+<div class="table-of-contents" id="table-of-contents">
+  <h1 class="table-of-contents__heading">
+    Table of Contents
+  </h1>
+
+  <div class="table-of-contents__content">
+    <ul id="table-of-contents-list"></ul>
+  </div>
+</div>
+
+
+    <script>
+  window._QUIZNATOR_ENABLED = true;
+</script>
+
+<script src="https://quiznator.mooc.fi/javascripts/plugin-loader.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+	    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	    crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="../javascripts/scripts-0f290aff.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.1/cookieconsent.min.js"></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js'></script>
+
+    <script>window.cookieconsent.initialise({"palette":{"popup":{"background":"#000"},"button":{"background":"#f1d600"}}, "position": "bottom-left"});</script>
+
+    <script src='https://materiaalit.github.io/code-states-visualizer-cdn/app.js'></script>
+    <script src='https://materiaalit.github.io/typonator-cdn/app.js'></script>
+    <script src='https://crowdsorcerer.testmycode.io/dist/app.js'></script>
+    <script src='https://materiaalit.github.io/pdf-slideshow-cdn/app.js'></script>
+    <script>
+      window.initPdfSlideshow('../pdf.worker.min.js');
+    </script>
+  </body>
+</html>
