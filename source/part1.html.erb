@@ -68,7 +68,7 @@ Let's have an example of including namespaces! Say you want to include the <code
 <img class="naytto" src="/img/part-1/QtConcurrentNamespace.png" />
 
 <p>
-To include the <code>QtConcurrent</code> namespace, you will need to make a specific mention of it in two places: the header of the relevant file (<code>#include <QtConcurrent></code>),
+To include the <code>QtConcurrent</code> namespace, you will need to make a specific mention of it in two places: the header of the relevant file (<code>#include &lt;QtConcurrent&gt;</code>),
 </p>
 
 <img class="naytto" src="/img/part-1/QtConcurrentWorks.png" />
@@ -415,7 +415,7 @@ For example:
 <% partial 'partials/code_highlight' do %>
 void f(int c)
 {
-    if (c > 200)
+    if (c &gt; 200)
         qWarning("f: bad argument, c == %d", c);
 }
 <% end %>
@@ -606,7 +606,7 @@ Using the <code>QString</code> '+' operator, it is easy to construct a complex s
 QString foo;
 QString type = "long";
 
-foo->setText(QLatin1String("vector<") + type + QLatin1String(">::iterator"));
+foo-&gt;setText(QLatin1String("vector&lt;") + type + QLatin1String("&gt;::iterator"));
 
 if (foo.startsWith("(" + type + ") 0x"))
     ...
@@ -617,7 +617,7 @@ There is nothing wrong with either of these string constructions, but there are 
 </p>
 
 <p>
-First, multiple uses of the '+' operator usually means multiple memory allocations. When concatenating n substrings, where n > 2, there can be as many as n - 1 calls to the memory allocator.
+First, multiple uses of the '+' operator usually means multiple memory allocations. When concatenating n substrings, where n &gt; 2, there can be as many as n - 1 calls to the memory allocator.
 </p>
 
 <p>
@@ -633,7 +633,7 @@ There are two ways you can access this improved method of string construction. T
 </p>
 
 <% partial 'partials/code_highlight' do %>
-#include <QStringBuilder>
+#include &lt;QStringBuilder&gt;
 
 QString hello("hello");
 QStringRef el(&amp;hello, 2, 3);
@@ -748,7 +748,7 @@ Qt Containers
 <% end %>
 
 <p>
-The Qt library provides a set of general purpose template-based container classes. These classes can be used to store items of a specified type. For example, if you need a resizable array of QStrings, use <code>QVector<QString></code>.
+The Qt library provides a set of general purpose template-based container classes. These classes can be used to store items of a specified type. For example, if you need a resizable array of QStrings, use <code>QVector&lt;QString&gt;</code>.
 </p>
 
 <p>
@@ -784,7 +784,7 @@ As special cases, the <code>QCache</code> and <code>QContiguousCache</code> clas
 </p>
 
 <p>
-Containers can be nested. For example, it is perfectly possible to use a <code>QMap&lt;QString, QList&lt;int&gt;&gt;</code>, where the key type is <code>QString</code> and the value type <code>QList<int></code>.
+Containers can be nested. For example, it is perfectly possible to use a <code>QMap&lt;QString, QList&lt;int&gt;&gt;</code>, where the key type is <code>QString</code> and the value type <code>QList&lt;int&gt;</code>.
 </p>
 
 <p>
@@ -828,7 +828,7 @@ struct Movie
 <% end %>
 
 <p>
-Some containers have additional requirements for the data types they can store. For example, the Key type of a <code>QMap<Key, T></code> must provide <code>operator<()</code>. Such special requirements are documented in a class's detailed description. In some cases, specific functions have special requirements; these are described on a per-function basis. The compiler will always emit an error if a requirement isn't met.
+Some containers have additional requirements for the data types they can store. For example, the Key type of a <code>QMap&lt;Key, T&gt;</code> must provide <code>operator&lt;()</code>. Such special requirements are documented in a class's detailed description. In some cases, specific functions have special requirements; these are described on a per-function basis. The compiler will always emit an error if a requirement isn't met.
 </p>
 
 <p>
@@ -884,7 +884,7 @@ Example of <code>QMutableListIterator</code>:
 </p>
 
 <% partial 'partials/code_highlight' do %>
-QMutableListIterator<int> i(list);
+QMutableListIterator&lt;int&gt; i(list);
 while (i.hasNext()) {
     if (i.next() % 2 != 0)
         i.remove();
@@ -904,9 +904,9 @@ If we just want to modify the value of an existing item, we can use <code>setVal
 </p>
 
 <% partial 'partials/code_highlight' do %>
-QMutableListIterator<int> i(list);
+QMutableListIterator&lt;int&gt; i(list);
 while (i.hasNext()) {
-    if (i.next() > 128)
+    if (i.next() &gt; 128)
         i.setValue(128);
 }
 <% end %>

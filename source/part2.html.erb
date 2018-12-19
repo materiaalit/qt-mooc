@@ -80,7 +80,7 @@ Example:
 </p>
 
 <% partial 'partials/code_highlight' do %>
-#include <QObject>
+#include &lt;QObject&gt;
 
 class Counter : public QObject
 {
@@ -199,8 +199,8 @@ A property can be read and written using the generic functions <code>QObject::pr
 <% partial 'partials/code_highlight' do %>
 QPushButton *button = new QPushButton;
 QObject *object = button;
-button->setDown(true);
-object->setProperty("down", true);
+button-&gt;setDown(true);
+object-&gt;setProperty("down", true);
 <% end %>
 
 <p>
@@ -209,12 +209,12 @@ Accessing a property through its <code>WRITE</code> accessor is the better of th
 
 <% partial 'partials/code_highlight' do %>
 QObject *object = ...
-const QMetaObject *metaobject = object->metaObject();
-int count = metaobject->propertyCount();
-for (int i = 0; i < count; ++i) {
-    QMetaProperty metaproperty = metaobject->property(i);
+const QMetaObject *metaobject = object-&gt;metaObject();
+int count = metaobject-&gt;propertyCount();
+for (int i = 0; i &lt; count; ++i) {
+    QMetaProperty metaproperty = metaobject-&gt;property(i);
     const char *name = metaproperty.name();
-    QVariant value = object->property(name);
+    QVariant value = object-&gt;property(name);
     ...
 }
 <% end %>
@@ -275,8 +275,8 @@ Given a pointer to an instance of MyClass or a pointer to a <code>QObject</code>
 MyClass *myinstance = new MyClass;
 QObject *object = myinstance;
 
-myinstance->setPriority(MyClass::VeryHigh);
-object->setProperty("priority", "VeryHigh");
+myinstance-&gt;setPriority(MyClass::VeryHigh);
+object-&gt;setProperty("priority", "VeryHigh");
 <% end %>
 
 <p>
@@ -316,7 +316,7 @@ The declaration is done by putting the <code>Q_DECLARE_METATYPE()</code> macro i
 </p>
 
 <% partial 'partials/code_highlight' do %>
-#include <QMetaType>
+#include &lt;QMetaType&gt;
 
 class YourCustomClass
 {
@@ -507,7 +507,7 @@ As mentioned in the previous chapter, all classes that use the signal/slot syste
 </p>
 
 <% partial 'partials/code_highlight' do %>
-#include <QObject>
+#include &lt;QObject&gt;
 
 class Counter : public QObject
 {
@@ -550,7 +550,7 @@ You can also connect to functors or C++11 lambdas:
 </p>
 
 <% partial 'partials/code_highlight' do %>
-connect(sender, &amp;QObject::destroyed, [=](){ this->m_objects.remove(sender); });
+connect(sender, &amp;QObject::destroyed, [=](){ this-&gt;m_objects.remove(sender); });
 <% end %>
 
 <p>

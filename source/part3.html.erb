@@ -168,7 +168,7 @@ To prototype user interfaces even more quickly, one can create a <a href="http:/
 </p>
 
 <p>
-One can also enable a keyboard shortcut for the prototyping application <a href="https://doc.qt.io/qt-5/qtquick-qmlscene.html" title="qmlscene">qmlscene</a>, which renders any arbitary <code>.qml</code> files. <code>qmlscene</code> can be enabled in Qt Creator by going to <code>Options -> Environment -> Keyboard -> search for qmlscene -> assign shortcut</code>. When a <code>.qml</code> file is open in the Edit or Design mode, hit the shortcut to render the file.
+One can also enable a keyboard shortcut for the prototyping application <a href="https://doc.qt.io/qt-5/qtquick-qmlscene.html" title="qmlscene">qmlscene</a>, which renders any arbitary <code>.qml</code> files. <code>qmlscene</code> can be enabled in Qt Creator by going to <code>Options -&gt; Environment -&gt; Keyboard -&gt; search for qmlscene -&gt; assign shortcut</code>. When a <code>.qml</code> file is open in the Edit or Design mode, hit the shortcut to render the file.
 </p>
 
 <% partial 'partials/material_sub_heading' do %>
@@ -565,7 +565,7 @@ Many QML types provide signals you can catch, for example <code>MouseArea</code>
 </p>
 
 <p>
-QML types also provide built-in property change signals that are emitted whenever a property value changes. These signals take the form <code>on<Property>Changed</code> where <Property> is the name of the property with the first letter capitalized. These documentation of the types usually don't have these signals listed, because they are implicitly available throught the fact that the type has a property.
+QML types also provide built-in property change signals that are emitted whenever a property value changes. These signals take the form <code>on&lt;Property&gt;Changed</code> where &lt;Property&gt; is the name of the property with the first letter capitalized. These documentation of the types usually don't have these signals listed, because they are implicitly available throught the fact that the type has a property.
 </p>
 
 <p>
@@ -2101,8 +2101,8 @@ You should use <code>ApplicationWindow</code> as the root item in your applicati
 
 <% partial 'partials/code_highlight' do %>
 // main.cpp
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include &lt;QGuiApplication&gt;
+#include &lt;QQmlApplicationEngine&gt;
 
 int main(int argc, char *argv[])
 {
@@ -2223,7 +2223,7 @@ ApplicationWindow {
             }
             Button {
                 text: "Pop"
-                enabled: stack.depth > 1
+                enabled: stack.depth &gt; 1
                 onClicked: stack.pop()
 
             }
@@ -2576,7 +2576,7 @@ Connections Type
 <% end %>
 
 <p>
-As we already saw in chapter 3.02, when connecting to signals in QML, the usual way is to create an <code>on<Signal></code> handler that reacts when a signal is received.
+As we already saw in chapter 3.02, when connecting to signals in QML, the usual way is to create an <code>on&lt;Signal&gt;</code> handler that reacts when a signal is received.
 </p>
 
 <p>
