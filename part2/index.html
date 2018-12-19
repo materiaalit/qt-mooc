@@ -182,7 +182,7 @@ The <code>moc</code> tool reads a C++ header file. If it finds one or more class
 Example:
 </p>
 
-<pre class="sh_java code-highlight"><code>#include <QObject>
+<pre class="code-highlight"><code>#include &lt;QObject&gt;
 
 class Counter : public QObject
 {
@@ -242,7 +242,7 @@ Qt provides a sophisticated <a href="http://doc.qt.io/qt-5/properties.html" titl
 To declare a property, use the <code>Q_PROPERTY()</code> macro in a class that inherits <code>QObject</code>. Here is an example showing how to export member variables as Qt properties using the <code>MEMBER</code> keyword. Note that a <code>NOTIFY</code> signal must be specified to allow QML property bindings. We will talk more about QML in Part 3!
 </p>
 
-<pre class="sh_java code-highlight"><code>Q_PROPERTY(QColor color MEMBER m_color NOTIFY colorChanged)
+<pre class="code-highlight"><code>Q_PROPERTY(QColor color MEMBER m_color NOTIFY colorChanged)
 Q_PROPERTY(qreal spacing MEMBER m_spacing NOTIFY spacingChanged)
 Q_PROPERTY(QString text MEMBER m_text NOTIFY textChanged)
 
@@ -251,7 +251,7 @@ Q_PROPERTY(QString text MEMBER m_text NOTIFY textChanged)
 signals:
     void colorChanged();
     void spacingChanged();
-    void textChanged(const QString &amp;newText);
+    void textChanged(const QString &amp;amp;newText);
 
 private:
     QColor  m_color;
@@ -280,7 +280,7 @@ The property declaration syntax has multiple keywords to specify the behaviour o
 The property type can be any type supported by <code>QVariant</code>, or it can be a user-defined type. In this example, class <code>QDate</code> is considered to be a user-defined type.
 </p>
 
-<pre class="sh_java code-highlight"><code>Q_PROPERTY(QDate date READ getDate WRITE setDate)
+<pre class="code-highlight"><code>Q_PROPERTY(QDate date READ getDate WRITE setDate)
 </code></pre>
 
 <p>
@@ -300,23 +300,23 @@ For historical reasons, <code>QMap</code> and <code>QList</code> as property typ
 A property can be read and written using the generic functions <code>QObject::property()</code> and <code>QObject::setProperty()</code>, without knowing anything about the owning class except the property's name. In the code snippet below, the call to <code>QAbstractButton::setDown()</code> and the call to <code>QObject::setProperty()</code> both set property "down".
 </p>
 
-<pre class="sh_java code-highlight"><code>QPushButton *button = new QPushButton;
+<pre class="code-highlight"><code>QPushButton *button = new QPushButton;
 QObject *object = button;
-button->setDown(true);
-object->setProperty("down", true);
+button-&gt;setDown(true);
+object-&gt;setProperty(&quot;down&quot;, true);
 </code></pre>
 
 <p>
 Accessing a property through its <code>WRITE</code> accessor is the better of the two, because it is faster and gives better diagnostics at compile time, but setting the property this way requires that you know about the class at compile time. Accessing properties by name lets you access classes you don't know about at compile time. You can discover a class's properties at run time by querying its <code>QObject</code>, <code>QMetaObject</code>, and <code>QMetaProperties</code>.
 </p>
 
-<pre class="sh_java code-highlight"><code>QObject *object = ...
-const QMetaObject *metaobject = object->metaObject();
-int count = metaobject->propertyCount();
-for (int i = 0; i < count; ++i) {
-    QMetaProperty metaproperty = metaobject->property(i);
+<pre class="code-highlight"><code>QObject *object = ...
+const QMetaObject *metaobject = object-&gt;metaObject();
+int count = metaobject-&gt;propertyCount();
+for (int i = 0; i &lt; count; ++i) {
+    QMetaProperty metaproperty = metaobject-&gt;property(i);
     const char *name = metaproperty.name();
-    QVariant value = object->property(name);
+    QVariant value = object-&gt;property(name);
     ...
 }
 </code></pre>
@@ -346,7 +346,7 @@ The enumeration type must be registered with the Meta-Object System using the <c
 Registering an enumeration type makes the enumerator names available for use in calls to <code>QObject::setProperty()</code>. We must also provide our own declarations for the READ and WRITE functions.
 </p>
 
-<pre class="sh_java code-highlight"><code>class MyClass : public QObject
+<pre class="code-highlight"><code>class MyClass : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Priority priority READ priority WRITE setPriority NOTIFY priorityChanged)
@@ -373,11 +373,11 @@ public:
 Given a pointer to an instance of MyClass or a pointer to a <code>QObject</code> that is an instance of MyClass, we have two ways to set its priority property:
 </p>
 
-<pre class="sh_java code-highlight"><code>MyClass *myinstance = new MyClass;
+<pre class="code-highlight"><code>MyClass *myinstance = new MyClass;
 QObject *object = myinstance;
 
-myinstance->setPriority(MyClass::VeryHigh);
-object->setProperty("priority", "VeryHigh");
+myinstance-&gt;setPriority(MyClass::VeryHigh);
+object-&gt;setProperty(&quot;priority&quot;, &quot;VeryHigh&quot;);
 </code></pre>
 
 <p>
@@ -418,7 +418,7 @@ Custom value types used by properties need to be registered using the <code>Q_DE
 The declaration is done by putting the <code>Q_DECLARE_METATYPE()</code> macro in the header file of your custom class. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>#include <QMetaType>
+<pre class="code-highlight"><code>#include &lt;QMetaType&gt;
 
 class YourCustomClass
 {
@@ -562,7 +562,7 @@ Signals are emitted by an object when its internal state has changed in some way
 To define a signal, put it in the <code>signals:</code> block in the class definition:
 </p>
 
-<pre class="sh_java code-highlight"><code>...
+<pre class="code-highlight"><code>...
 signals:
     void valueChanged(int newValue);
 ...
@@ -572,7 +572,7 @@ signals:
 To emit a signal, you use the <code>emit</code> keyword. The keyword is purely syntactic, but it helps to differentiate it from normal function calls.
 </p>
 
-<pre class="sh_java code-highlight"><code>void Counter::setValue(int value)
+<pre class="code-highlight"><code>void Counter::setValue(int value)
 {
     if (value != m_value) {
         m_value = value;
@@ -643,7 +643,7 @@ Since slots are normal member functions, they follow the normal C++ rules when c
 As mentioned in the previous chapter, all classes that use the signal/slot system need to have the <code>Q_OBJECT</code> macro in the private section of the classes definition. Here's an example of a header file for a class that implements both signals and slots.
 </p>
 
-<pre class="sh_java code-highlight"><code>#include <QObject>
+<pre class="code-highlight"><code>#include &lt;QObject&gt;
 
 class Counter : public QObject
 {
@@ -674,7 +674,7 @@ private:
 To connect the signal to the slot, we use <code>QObject::connect()</code>. There are several ways to connect signal and slots. The first is to use function pointers:
 </p>
 
-<pre class="sh_java code-highlight"><code>connect(sender, &amp;QObject::destroyed, this, &amp;MyObject::objectDestroyed);
+<pre class="code-highlight"><code>connect(sender, &amp;amp;QObject::destroyed, this, &amp;amp;MyObject::objectDestroyed);
 </code></pre>
 
 <p>
@@ -685,7 +685,7 @@ There are several advantages to using <code>QObject::connect()</code> with funct
 You can also connect to functors or C++11 lambdas:
 </p>
 
-<pre class="sh_java code-highlight"><code>connect(sender, &amp;QObject::destroyed, [=](){ this->m_objects.remove(sender); });
+<pre class="code-highlight"><code>connect(sender, &amp;amp;QObject::destroyed, [=](){ this-&gt;m_objects.remove(sender); });
 </code></pre>
 
 <p>
@@ -696,7 +696,7 @@ The traditional way to connect a signal to a slot is to use <code>QObject::conne
 All of these would work:
 </p>
 
-<pre class="sh_java code-highlight"><code>connect(sender, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(Qbject*)));
+<pre class="code-highlight"><code>connect(sender, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(Qbject*)));
 connect(sender, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
 connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed()));
 </code></pre>
@@ -705,7 +705,7 @@ connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed()));
 But this one won't work:
 </p>
 
-<pre class="sh_java code-highlight"><code>connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed(QObject*)));
+<pre class="code-highlight"><code>connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed(QObject*)));
 </code></pre>
 
 <p>
@@ -744,7 +744,7 @@ In this exercise you'll create two classes to practise defining signals and slot
 You might be familiar with other signals slot mechanisms, like the <a href="https://www.boost.org/doc/libs/1_63_0/doc/html/signals2.html" title="Boost.Signals2 library">Boost.Signals2 library</a> It is possible to use Qt with a 3rd party signal/slot mechanism or even use both mechanisms in the same project. Add the following definition to your projects (.pro) file.
 </p>
 
-<pre class="sh_java code-highlight"><code>CONFIG += no_keywords
+<pre class="code-highlight"><code>CONFIG += no_keywords
 </code></pre>
 
 <p>
@@ -795,10 +795,10 @@ When <code>QObjects</code> are created on the heap (i.e., created with <code>new
 When <code>QObjects</code> are created on the stack, the same behavior applies. Normally, the order of destruction still doesn't present a problem. Consider the following snippet:
 </p>
 
-<pre class="sh_java code-highlight"><code>int main()
+<pre class="code-highlight"><code>int main()
 {
     QWidget window;
-    QPushButton quit("Quit", &amp;window);
+    QPushButton quit(&quot;Quit&quot;, &amp;amp;window);
     ...
 }
 </code></pre>
@@ -811,12 +811,12 @@ The parent (window), and the child (quit) are both <code>QObject</code>s because
 But now consider what happens if we swap the order of construction, as shown in this second snippet:
 </p>
 
-<pre class="sh_java code-highlight"><code>int main()
+<pre class="code-highlight"><code>int main()
 {
-    QPushButton quit("Quit");
+    QPushButton quit(&quot;Quit&quot;);
     QWidget window;
 
-    quit.setParent(&amp;window);
+    quit.setParent(&amp;amp;window);
     ...
 }
 </code></pre>

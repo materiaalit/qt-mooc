@@ -202,21 +202,21 @@ To include QML in your projects, you need to complete these three steps:
 1. To include the definitions of the module's classes, use the following directive:
 </p>
 
-<pre class="sh_java code-highlight"><code>#include &lt;QtQml&gt;
+<pre class="code-highlight"><code>#include &amp;lt;QtQml&amp;gt;
 </code></pre>
 
 <p>
 2. The QML types in Qt QML are available through the QtQML import. To use the types, add the following import statement to your .qml file:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQml 2.0
+<pre class="code-highlight"><code>import QtQml 2.0
 </code></pre>
 
 <p>
 3. To link against the module, add this line to your qmake .pro file:
 </p>
 
-<pre class="sh_java code-highlight"><code>QT += qml
+<pre class="code-highlight"><code>QT += qml
 </code></pre>
 
 <h3 class="material-heading">
@@ -242,20 +242,20 @@ JavaScript file imports must be qualified when imported, so that the properties 
 The generic form of the various imports are as follows:
 </p>
 
-<pre class="sh_java code-highlight"><code>import Namespace VersionMajor.VersionMinor
+<pre class="code-highlight"><code>import Namespace VersionMajor.VersionMinor
 import Namespace VersionMajor.VersionMinor as SingletonTypeIdentifier
-import "directory"
-import "file.js" as ScriptIdentifier
+import &quot;directory&quot;
+import &quot;file.js&quot; as ScriptIdentifier
 </code></pre>
 
 <p>
 Examples:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 import QtQuick.LocalStorage 2.0 as Database
-import "../privateComponents"
-import "somefile.js" as Script
+import &quot;../privateComponents&quot;
+import &quot;somefile.js&quot; as Script
 </code></pre>
 
 <h2 class="material-heading">
@@ -284,9 +284,9 @@ Qt Quick has extensive internationalization and localization support.
 Let's go through the basic process here:
 </p>
 
-<pre class="sh_java code-highlight"><code>Text {
+<pre class="code-highlight"><code>Text {
     id: txt1;
-    text: qsTr("Back");
+    text: qsTr(&quot;Back&quot;);
 }
 </code></pre>
 
@@ -294,12 +294,12 @@ Let's go through the basic process here:
 Use the function <code>qsTr()</code> to declare translatable strings inside the UI. This makes "Back" a key entry in the translation files.
 </p>
 
-<pre class="sh_java code-highlight"><code>Text {
+<pre class="code-highlight"><code>Text {
     id: txt1;
     // This user interface string is used only here
     //: The back of the object, not the front
     //~ Context Not related to back-stepping
-    text: qsTr("Back", "not front");
+    text: qsTr(&quot;Back&quot;, &quot;not front&quot;);
 }
 </code></pre>
 
@@ -311,8 +311,8 @@ You can add context for the translator by a comment line starting with <code>//:
 Sometimes the same word has different meanings in different contexts. Differentiate between them by adding the second parameter to <code>qsTr()</code>, which then gives the word an unique id in the translation files.
 </p>
 
-<pre class="sh_java code-highlight"><code>Text {
-    text: qsTr("File %1 of %2").arg(counter).arg(total)
+<pre class="code-highlight"><code>Text {
+    text: qsTr(&quot;File %1 of %2&quot;).arg(counter).arg(total)
 }
 </code></pre>
 
@@ -384,12 +384,12 @@ Although an <code>Item</code> object has no visual appearance, it defines all th
 The <code>Item</code> type is useful for grouping several items under a single root visual item. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Item {
     id: root
     Text {
-        text: "Hello There!"
+        text: &quot;Hello There!&quot;
         color: black
     }
     Image {
@@ -397,7 +397,7 @@ Item {
         x: 80
         width: 100
         height: 100
-        source: "tile.png"
+        source: &quot;tile.png&quot;
     }
     Image {
         id: imageTwo
@@ -405,7 +405,7 @@ Item {
         width: 100
         height: 100
         fillMode: Image.Tile
-        source: "tile.png"
+        source: &quot;tile.png&quot;
     }
 }
 </code></pre>
@@ -427,15 +427,15 @@ Syntactically, a block of QML code defines a tree of QML objects to be created. 
 For example, the Rectangle object declaration below includes a Gradient object declaration, which in turn contains two GradientStop declarations:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
     width: 100
     height: 100
 
     gradient: Gradient {
-        GradientStop { position: 0.0; color: "yellow" }
-        GradientStop { position: 1.0; color: "green" }
+        GradientStop { position: 0.0; color: &quot;yellow&quot; }
+        GradientStop { position: 1.0; color: &quot;green&quot; }
     }
 }
 </code></pre>
@@ -465,7 +465,7 @@ Any object assigned to an item's data property becomes a child of the item withi
 For convenience, the <code>Item</code> data property is its default property. This means that any child item declared within an <code>Item</code> object without being assigned to a specific property is automatically assigned to the data property and becomes a child of the item as described above. So, the two code blocks below produce the same result, and you will almost always see the form shown below: 
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Item {
     width: 100; height: 100
@@ -473,7 +473,7 @@ Item {
     Rectangle { 
         width: 50;
         height: 50;
-        color: "red"
+        color: &quot;red&quot;
     }
 }
 </code></pre>
@@ -482,7 +482,7 @@ Item {
 Rather than the explicit data assignment:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Item {
     width: 100; height: 100
@@ -491,7 +491,7 @@ Item {
         Rectangle {
             width: 50;
             height: 50;
-            color: "red"
+            color: &quot;red&quot;
         }
     ]
 }
@@ -531,7 +531,7 @@ A property is an attribute of an object that can be assigned a static value or b
 A property may be defined for a type in C++ by registering a <code>Q_PROPERTY</code> of a class which is then registered with the QML type system. We discussed these <code>QObject</code> properties in the last part. Alternatively, a custom or dynamic property of an object type may be defined in an object declaration in a QML document or component with the following syntax:
 </p>
 
-<pre class="sh_java code-highlight"><code>[default] property &lt;propertyType&gt; &lt;propertyName&gt;
+<pre class="code-highlight"><code>[default] property &amp;lt;propertyType&amp;gt; &amp;lt;propertyName&amp;gt;
 </code></pre>
 
 <p>
@@ -551,7 +551,7 @@ In some cases properties contain a logical group of sub-property attributes. The
 For example, the Text type has a font group property. Below, the first Text object initializes its font values using dot notation, while the second uses group notation:
 </p>
 
-<pre class="sh_java code-highlight"><code>Text {
+<pre class="code-highlight"><code>Text {
     //dot notation
     font.pixelSize: 12
     font.b: true
@@ -583,19 +583,19 @@ The <code>id</code> property is a special property used to identify QML objects.
 For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>Item { 
+<pre class="code-highlight"><code>Item { 
     width: 300; height: 115 
     Text { 
         id: title 
         x: 50; y: 25 
-        text: "Qt Quick" 
-        font { family: "Helvetica"; pointSize: parent.width * 0.1 } 
+        text: &quot;Qt Quick&quot; 
+        font { family: &quot;Helvetica&quot;; pointSize: parent.width * 0.1 } 
     } 
     
     Rectangle { 
         x: title.x; y: title.y + title.height - height; height: 5 
         width: title.width 
-        color: "green" 
+        color: &quot;green&quot; 
     }
 } 
 </code></pre>
@@ -609,12 +609,12 @@ For example:
 Each QML component defines a logical scope. Each document has at least one root component, but can have other inline sub-components. The component scope is the union of the object ids within the component and the component's root object's properties. 
 </p>
 
-<pre class="sh_java code-highlight"><code>Item {
+<pre class="code-highlight"><code>Item {
     property string title
 
     Text {
         id: titletype
-        text: "&lt;b&gt;" + title + "&lt;/b&gt;"
+        text: &quot;&amp;lt;b&amp;gt;&quot; + title + &quot;&amp;lt;/b&amp;gt;&quot;
         font.pixelSize: 22
         anchors.top: parent.top
     }
@@ -635,7 +635,7 @@ The example above shows a simple QML component that displays a rich text title s
 Component instances connect their component scopes together to form a scope hierarchy. Component instances can directly access the component scopes of their ancestors. This dynamic scoping allows us to do things like:
 </p>
 
-<pre class="sh_java code-highlight"><code>// TitlePage.qml
+<pre class="code-highlight"><code>// TitlePage.qml
 import QtQuick 2.0
 Item {
     property string title
@@ -655,7 +655,7 @@ Item {
 import QtQuick 2.0
 Text {
     property int size
-    text: "&lt;b&gt;" + title + "&lt;/b&gt;"
+    text: &quot;&amp;lt;b&amp;gt;&quot; + title + &quot;&amp;lt;/b&amp;gt;&quot;
     font.pixelSize: size
 }
 </code></pre>
@@ -689,9 +689,9 @@ We'll talk about implementing your own custom signals in QML later in Part 3.
 Signal handlers are a special sort of method attribute, where the method implementation is invoked by the QML engine whenever teh associated signal is emitted. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>TextInput {
-    text: "Change this!"
-    onTextChanged: console.log("Text has changed to:" text)
+<pre class="code-highlight"><code>TextInput {
+    text: &quot;Change this!&quot;
+    onTextChanged: console.log(&quot;Text has changed to:&quot; text)
 }
 </code></pre>
 
@@ -708,22 +708,22 @@ Attached properties and attached signal handlers are mechanisms that enable obje
 References to attached properties and handlers take the following syntax form:
 </p>
 
-<pre class="sh_java code-highlight"><code>&lt;AttachingType&gt;.&lt;propertyName&gt;
-&lt;AttachingType&gt;.on&lt;SignalName&gt;
+<pre class="code-highlight"><code>&amp;lt;AttachingType&amp;gt;.&amp;lt;propertyName&amp;gt;
+&amp;lt;AttachingType&amp;gt;.on&amp;lt;SignalName&amp;gt;
 </code></pre>
 
 <p>
 For example, the <code>ListView</code> type has an attached property <code>ListView.isCurrentItem</code> that is available to each delegate object in a <code>ListView</code>. This can be used by each individual delegate object to determine whether it is the currently selected item in the view:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 ListView {
     width: 240; height: 320
     model: 3
     delegate: Rectangle {
         width: 100; height: 30
-        color: ListView.isCurrentItem ? "red" : "yellow"
+        color: ListView.isCurrentItem ? &quot;red&quot; : &quot;yellow&quot;
     }
 }
 </code></pre>
@@ -736,15 +736,15 @@ In this case, the name of the attaching type is <code>ListView</code> and the pr
 An attached signal handler is referred to in the same way. For example, the <code>Component.onCompleted</code> attached signal handler is commonly used to execute some JavaScript code when a component's creation process has been completed. In the example below, once the <code>ListModel</code> has been fully created, its <code>Component.onCompleted</code> signal handler will automatically be invoked to populate the model:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 ListView {
     width: 240; height: 320
     model: ListModel {
         id: listModel
         Component.onCompleted: {
-            for (var i = 0; i &lt; 10; i++)
-                listModel.append({"Name": "Item " + i})
+            for (var i = 0; i &amp;lt; 10; i++)
+                listModel.append({&quot;Name&quot;: &quot;Item &quot; + i})
         }
     }
     delegate: Text { text: index }
@@ -768,7 +768,7 @@ A common error is to assume that attached properties and signal handlers are dir
 For example, below is a modified version of the earlier example involving attached properties. This time, the delegate is an <code>Item</code> and the colored <code>Rectangle</code> is a child of that item:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 ListView {
     width: 240; height: 320
@@ -778,7 +778,7 @@ ListView {
 
         Rectangle {
             width: 100; height: 30
-            color: ListView.isCurrentItem ? "red" : "yellow" // WRONG! This won't work.
+            color: ListView.isCurrentItem ? &quot;red&quot; : &quot;yellow&quot; // WRONG! This won&#39;t work.
         }
     }
 }
@@ -788,7 +788,7 @@ ListView {
 This does not work as expected because <code>ListView.isCurrentItem</code> is attached only to the root delegate object, and not its children. Since the <code>Rectangle</code> is a child of the delegate, rather than being the delegate itself, it cannot access the <code>isCurrentItem</code> attached property as <code>ListView.isCurrentItem</code>. So instead, the rectangle should access <code>isCurrentItem</code> through the root delegate:
 </p>
 
-<pre class="sh_java code-highlight"><code>ListView {
+<pre class="code-highlight"><code>ListView {
     //....
     delegate: Item {
         id: delegateItem
@@ -796,7 +796,7 @@ This does not work as expected because <code>ListView.isCurrentItem</code> is at
 
         Rectangle {
             width: 100; height: 30
-            color: delegateItem.ListView.isCurrentItem ? "red" : "yellow"   // correct
+            color: delegateItem.ListView.isCurrentItem ? &quot;red&quot; : &quot;yellow&quot;   // correct
         }
     }
 }
@@ -823,13 +823,13 @@ Behind the scenes, the QML engine monitors the property's dependencies (that is,
 To create a property binding, a property is assigned a JavaScript expression that evaluates to the desired value. At its simplest, a binding may be a reference to another property. Take the following example, where the blue Rectangle's height is bound to the height of its parent:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
     width: 200; height: 200
 
     Rectangle {
         width: 100
         height: parent.height
-        color: "blue"
+        color: &quot;blue&quot;
     }
 }
 </code></pre>
@@ -842,7 +842,7 @@ Whenever the height of the parent changes, the height of the rectangle automatic
 A binding can contain any valid JavaScript expression or statement. Bindings can access object properties, call methods, and use built-in JavaScript objects such as <code>Date</code> or <code>Math</code>. A bit more complex example would bind an objects <code>color</code> to the length of a text in another object.
 </p>
 
-<pre class="sh_java code-highlight"><code>color: myTextInput.text.length &lt;= 10 ? "red" : "blue"
+<pre class="code-highlight"><code>color: myTextInput.text.length &amp;lt;= 10 ? &quot;red&quot; : &quot;blue&quot;
 </code></pre>
 
 <p>
@@ -853,7 +853,7 @@ Here the object's color changes from blue to red when an other object's (with id
 It is important to note that while a bound property's value updates automatically, the binding will be removed if it's later assigned a static value by the JavaScript statement. This is a common source for troubles, especially for beginners! For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
     width: 100
@@ -874,7 +874,7 @@ Here, the Rectangle initially ensures that its height is always twice its width.
 This can be desirable behavious in many cases. If the intention is to give the rectangle a fixed height and stop automatic updates, the code does exactly that. However, if the intention is to establish a new relationship between width and height, then the new binding expression must be wrapped in the <code>Qt.binding()</code> function instead:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
     width: 100
@@ -926,11 +926,11 @@ This exercise awards no points, but you are recommended to download and check it
 
 <code>Qt</code> QML type provides a global object with useful enums and functions from Qt. It is not instantiable; to use it, call the members of the global <code>Qt</code> object directly. For example:
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Text {
     color: Qt.rgba(1, 0, 0, 1)
-    text: Qt.md5("hello, world")
+    text: Qt.md5(&quot;hello, world&quot;)
 }
 </code></pre>
 
@@ -967,13 +967,13 @@ If you need random shapes instead of rectangles, look into the <code>Shape</code
 For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
     width: 100
     height: 100
-    color: "red"
-    border.color: "black"
+    color: &quot;red&quot;
+    border.color: &quot;black&quot;
     border.width: 5
     radius: 10
 }
@@ -1004,16 +1004,16 @@ To monitor the state of an image, <code>Image</code> has <a href="https://doc.qt
 When using images with QML, they are often the greatest user of memory in the UI. To minimize memory usage of images that are not part of UI (like user provided resources), they should have their size bounded with the <a href="https://doc.qt.io/qt-5/qml-qtquick-image.html#sourceSize-prop" title="sourceSize">sourceSize</a> property. <code>sourceSize</code> dictates the actual width and height of the loaded image, while the <code>width</code> and <code>height</code> properties hold the dimensions where the image will be scaled to.
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Image {
     id: bigImage
     anchors.fill: parent
     asynchronous: true
     onStatusChanged: {
-        if (bigImage.status == Image.Ready) console.log("Image loaded")
+        if (bigImage.status == Image.Ready) console.log(&quot;Image loaded&quot;)
     }
-    source: "bigImage.jpg"
+    source: &quot;bigImage.jpg&quot;
     sourceSize.width: 1024
     sourceSize.height: 1024
 }
@@ -1052,12 +1052,12 @@ If the TileMode is set to <code>Stretch</code>, the parts of the image are stret
 </p>
 
 Example usage:
-<pre class="sh_java code-highlight"><code>BorderImage {
+<pre class="code-highlight"><code>BorderImage {
     width: 180; height: 180
     border { left: 30; top: 30; right: 30; bottom: 30 }
     horizontalTileMode: BorderImage.Repeat
     verticalTileMode: BorderImage.Repeat
-    source: "pics/borderframe.png"
+    source: &quot;pics/borderframe.png&quot;
 }
 </code></pre>
 
@@ -1069,13 +1069,13 @@ Example usage:
 <a href="https://doc.qt.io/qt-5/qml-qtquick-text.html" title="Text">Text</a> type can display plain or rich text (using <a href="https://doc.qt.io/qt-5/richtext-html-subset.html" title="HTML markup">HTML markup</a>).
 To have user editable text you can use <a href="https://doc.qt.io/qt-5/qml-qtquick-textedit.html" title="TextEdit">TextEdit</a>), which is very similar to <code>Text</code> type. 
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Text {
-    text: "Hello &lt;b&gt;World&lt;/b&gt;!"
-    font.family: "Helvetica"
+    text: &quot;Hello &amp;lt;b&amp;gt;World&amp;lt;/b&amp;gt;!&quot;
+    font.family: &quot;Helvetica&quot;
     font.pointSize: 24
-    color: "red"
+    color: &quot;red&quot;
 }
 </code></pre>
 
@@ -1101,11 +1101,11 @@ To customize the font, the properties in group <code>font</code> can be changed:
 To style the text, the property <a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#style-prop" title="style">style</a> can be used to change the style to either <code>Raised</code>, <code>Outline</code> or <code>Sunken</code>. Use <a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#styleColor-prop" title="styleColor">styleColor</a> to change the color of the added styling
 </p>
 
-<pre class="sh_java code-highlight"><code>Row {
-    Text { font.pointSize: 24; text: "Normal" }
-    Text { font.pointSize: 24; text: "Raised"; style: Text.Raised; styleColor: "#AAAAAA" }
-    Text { font.pointSize: 24; text: "Outline";style: Text.Outline; styleColor: "green" }
-    Text { font.pointSize: 24; text: "Sunken"; style: Text.Sunken; styleColor: "#AAAAAA" }
+<pre class="code-highlight"><code>Row {
+    Text { font.pointSize: 24; text: &quot;Normal&quot; }
+    Text { font.pointSize: 24; text: &quot;Raised&quot;; style: Text.Raised; styleColor: &quot;#AAAAAA&quot; }
+    Text { font.pointSize: 24; text: &quot;Outline&quot;;style: Text.Outline; styleColor: &quot;green&quot; }
+    Text { font.pointSize: 24; text: &quot;Sunken&quot;; style: Text.Sunken; styleColor: &quot;#AAAAAA&quot; }
 }
 </code></pre>
 
@@ -1117,19 +1117,19 @@ To scale text with other items, you can:
 <li>set the <a href="http://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop" title="<code>fontSizeMode</code>"><code>fontSizeMode</code></a> to scale the text size</li>
 </ul>
 
-<pre class="sh_java code-highlight"><code>Rectangle { 
+<pre class="code-highlight"><code>Rectangle { 
     width: 400
     height: 400
-    color: "lightblue" 
+    color: &quot;lightblue&quot; 
     
     
     Text { 
         x: parent.width * 0.25
         y: parent.height * 0.25 
         
-        text: "Qt Quick"
+        text: &quot;Qt Quick&quot;
         font {
-            family: "Sans"
+            family: &quot;Sans&quot;
             pixelSize: parent.width * 0.1
         } 
     } 
@@ -1140,12 +1140,12 @@ To scale text with other items, you can:
 You can also use <a href="https://doc.qt.io/qt-5/qml-qtquick-fontmetrics.html" title="FontMetrics">FontMetrics</a> to get the geometry of a certain font:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
 
     FontMetrics {
         id: metrics
         font.pointSize: 20
-        font.family: "Courier"
+        font.family: &quot;Courier&quot;
     }
 
     width: 200
@@ -1194,17 +1194,17 @@ In order for an object to receive keyboard events, it needs to have active focus
 In the most simple case, where we only have one Item in need of focus, this can be done by simply setting the <code>focus</code> property to true. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
-    color: "lightsteelblue"; width: 240; height: 25
+<pre class="code-highlight"><code>Rectangle {
+    color: &quot;lightsteelblue&quot;; width: 240; height: 25
     Text { id: myText }
     Item {
         id: keyHandler
         focus: true
         Keys.onPressed: {
             if (event.key == Qt.Key_A)
-                myText.text = 'Key A was pressed'
+                myText.text = &#39;Key A was pressed&#39;
             else
-                myText.text = 'Key other than A was pressed'
+                myText.text = &#39;Key other than A was pressed&#39;
         }
     }
 }
@@ -1222,7 +1222,7 @@ There are a few ways to solve this probelm. In the case of <code>TextInput</code
 Another way to get focus would be to explicitly pass it between objects. In this example the <code>nameField</code> item defines <code>KeyNavigation.tab</code>, which results to pressing Tab moving the focus to the <code>addressField</code> item
 </p>
 
-<pre class="sh_java code-highlight"><code>TextInput { 
+<pre class="code-highlight"><code>TextInput { 
     id: nameField
     focus: true 
     KeyNavigation.tab: addressField 
@@ -1233,7 +1233,7 @@ Another way to get focus would be to explicitly pass it between objects. In this
 And the <code>addressField</code> item defines <code>KeyNavigation.backtab</code>, which results to pressing Shift+Tab moving focus to the <code>nameField</code> item.
 </p>
 
-<pre class="sh_java code-highlight"><code>TextInput { 
+<pre class="code-highlight"><code>TextInput { 
     id: addressField
     KeyNavigation.backtab: nameField 
 }
@@ -1260,20 +1260,20 @@ Within each focus scope one object may have <code>Item::focus</code> set to true
 Let's look at an example. The code creates two MyClickableWidget instances:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
     id: window
 
-    color: "white"; width: 240; height: 150
+    color: &quot;white&quot;; width: 240; height: 150
 
     Column {
         anchors.centerIn: parent; spacing: 15
 
         MyClickableWidget {
             focus: true  // Initial focus here
-            color: "lightblue"
+            color: &quot;lightblue&quot;
         }
         MyClickableWidget {
-            color: "palegreen"
+            color: &quot;palegreen&quot;
         }
     }
 
@@ -1281,7 +1281,7 @@ Let's look at an example. The code creates two MyClickableWidget instances:
 </code></pre>
 The inital focus is set to the first <code>MyClickableWidget</code> created. If <code>MyClickableObject</code> was created without <code>FocusScope</code>, this initial focus would not be granted, because the <code>Rectangle</code> within <code>MyClickableWidget</code> sets its focus to true, and eventually the focus would go to the last object created, in this case the second instance of <code>MyClickableWidget</code>.
 
-<pre class="sh_java code-highlight"><code>// MyClickableWidget
+<pre class="code-highlight"><code>// MyClickableWidget
 FocusScope {
 
     id: scope
@@ -1294,16 +1294,16 @@ FocusScope {
     Rectangle {
         id: rectangle
         anchors.centerIn: parent
-        color: "lightsteelblue"; width: 175; height: 25; radius: 10; antialiasing: true
+        color: &quot;lightsteelblue&quot;; width: 175; height: 25; radius: 10; antialiasing: true
         Text { id: label; anchors.centerIn: parent }
         focus: true
         Keys.onPressed: {
             if (event.key == Qt.Key_A)
-                label.text = 'Key A was pressed'
+                label.text = &#39;Key A was pressed&#39;
             else if (event.key == Qt.Key_B)
-                label.text = 'Key B was pressed'
+                label.text = &#39;Key B was pressed&#39;
             else if (event.key == Qt.Key_C)
-                label.text = 'Key C was pressed'
+                label.text = &#39;Key C was pressed&#39;
         }
     }
     MouseArea { anchors.fill: parent; onClicked: { scope.focus = true } }
@@ -1368,16 +1368,16 @@ The <code>TextInput</code> type displays a single line of editable plain text.
 For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>TextInput {
+<pre class="code-highlight"><code>TextInput {
     id: hexNumber
     validator: RegExpValidator { regExp: /[0-9A-F]+/ }
 }
 </code></pre>
 A regular expression validator is set to only allow inputs that are hexadecimal (0-9, A-F).
 
-<pre class="sh_java code-highlight"><code>TextInput {
+<pre class="code-highlight"><code>TextInput {
     id: ipAddress
-    inputMask: "000.000.000.000"
+    inputMask: &quot;000.000.000.000&quot;
 }
 </code></pre>
 Input mask is set to allow IPv4 addresses.
@@ -1395,12 +1395,12 @@ The <code>TextEdit</code> item displays a block of editable, formatted text.
 It can display both plain and rich text. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>TextEdit {
+<pre class="code-highlight"><code>TextEdit {
     width: 240
-    text: "&lt;b&gt;Hello&lt;/b&gt; &lt;i&gt;World!&lt;/i&gt;"
-    font.family: "Helvetica"
+    text: &quot;&amp;lt;b&amp;gt;Hello&amp;lt;/b&amp;gt; &amp;lt;i&amp;gt;World!&amp;lt;/i&amp;gt;&quot;
+    font.family: &quot;Helvetica&quot;
     font.pointSize: 20
-    color: "blue"
+    color: &quot;blue&quot;
     focus: true
 }
 </code></pre>
@@ -1409,7 +1409,7 @@ It can display both plain and rich text. For example:
 Note that the <code>TextEdit</code> does not implement scrolling, following the cursor, or other behaviors specific to a look-and-feel. For example, to add flickable scrolling that follows the cursor:
 </p>
 
-<pre class="sh_java code-highlight"><code>Flickable {
+<pre class="code-highlight"><code>Flickable {
     id: flick
 
     width: 300; height: 200;
@@ -1418,13 +1418,13 @@ Note that the <code>TextEdit</code> does not implement scrolling, following the 
     clip: true
     
     function ensureVisible(r) {
-        if (contentX &gt;= r.x)
+        if (contentX &amp;gt;= r.x)
             contentX = r.x;
-        else if (contentX+width &lt;= r.x+r.width)
+        else if (contentX+width &amp;lt;= r.x+r.width)
             contentX = r.x+r.width-width;
-        if (contentY &gt;= r.y)
+        if (contentY &amp;gt;= r.y)
             contentY = r.y;
-        else if (contentY+height &lt;= r.y+r.height)
+        else if (contentY+height &amp;lt;= r.y+r.height)
             contentY = r.y+r.height-height;
     }
 
@@ -1475,12 +1475,12 @@ The <code>Keys</code> attached property can be configured to handle key events b
 In the following example we use the general <code>onPressed</code> handler to test if a 'Y' key is being pressed with Ctrl modifier:
 </p>
 
-<pre class="sh_java code-highlight"><code>Item {
+<pre class="code-highlight"><code>Item {
     anchors.fill: parent
     focus: true
     Keys.onPressed: {
-        if ((event.key == Qt.Key_Y) &amp;&amp; (event.modifiers &amp;Qt.ControlModifier)) {
-            console.log("Y pressed with Ctrl");
+        if ((event.key == Qt.Key_Y) &amp;amp;&amp;amp; (event.modifiers &amp;amp;Qt.ControlModifier)) {
+            console.log(&quot;Y pressed with Ctrl&quot;);
             event.accepted = true;
         }
     }
@@ -1491,10 +1491,10 @@ In the following example we use the general <code>onPressed</code> handler to te
 Some keys may alternatively be handled via specific signal properties, for example <code>onSelectPressed</code>. These handlers automatically set <code>event.accepted</code> to <code>true</code>.
 </p>
 
-<pre class="sh_java code-highlight"><code>Item {
+<pre class="code-highlight"><code>Item {
     anchors.fill: parent
     focus: true
-    Keys.onLeftPressed: console.log("move left")
+    Keys.onLeftPressed: console.log(&quot;move left&quot;)
 }
 </code></pre>
 
@@ -1555,12 +1555,12 @@ In some cases you might even want to catch these events in Qt, before they get d
 If the <code>Rectangle</code> type in the following example has active focus and the A key is pressed, the event will not be propagated further. Upon pressing the B key, the event will propagate to the root item and thus be ignored.
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
     width: 100; height: 100
     focus: true
     Keys.onPressed: {
         if (event.key == Qt.Key_A) {
-            console.log('Key A was pressed');
+            console.log(&#39;Key A was pressed&#39;);
              event.accepted = true;
         }
     }
@@ -1630,13 +1630,13 @@ Qt can handle input form different input devices, such as touch screen, mouse, a
 To enable mouse interaction with elements, <code>MouseArea</code> can be used. It's an invisible rectangular item that can capture mouse events and can be nested into an element like so:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
     width: 100; height: 100
-    color: "green"
+    color: &quot;green&quot;
      
     MouseArea {
         anchors.fill: parent
-        onClicked: parent.color = 'red'
+        onClicked: parent.color = &#39;red&#39;
     }
 }
 </code></pre>
@@ -1670,18 +1670,18 @@ When emitted, many <code>MouseArea</code> signals pass in a <code>mouse</code> p
 In this example we enable the left and right button of the mouse, and change the <code>Rectangle</code> color accordingly:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
     width: 100; height: 100
-    color: "green"
+    color: &quot;green&quot;
      
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             if (mouse.button == Qt.RightButton) {
-                parent.color = 'blue';
+                parent.color = &#39;blue&#39;;
             } else {
-                parent.color = 'red';
+                parent.color = &#39;red&#39;;
             }
         }
     }
@@ -1705,9 +1705,9 @@ To enable hover event handling, the property <code>hoverEnabled</code> must be s
 This example demonstrates text following the mouse pointer whenever the mouse enters the <code>MouseArea</code>:
 </p>
 
-<pre class="sh_java code-highlight"><code>Text {
+<pre class="code-highlight"><code>Text {
     id: movingText
-    text: "hover"
+    text: &quot;hover&quot;
 }
      
 MouseArea {
@@ -1818,22 +1818,22 @@ Now, let's go through some of the Input Handlers with examples.
 
 <code>TapHandler</code> is comparable to <code>MouseArea</code> with a few key differences:
 
-<pre class="sh_java code-highlight"><code>import Qt.labs.handlers 1.0
+<pre class="code-highlight"><code>import Qt.labs.handlers 1.0
 
 Item {
     TapHandler {
         acceptedDevices: PointerDevice.Mouse | PointerDevice.Stylus
-        onTapped: console.log("left clicked")
+        onTapped: console.log(&quot;left clicked&quot;)
     }
     
     TapHandler {
         acceptedDevices: PointerDevice.TouchScreen
-        onTapped: console.log("tapped")
+        onTapped: console.log(&quot;tapped&quot;)
     }
     
     TapHandler {
         acceptedButtons: Qt.RightButton
-        onTapped: console.log("right clicked")
+        onTapped: console.log(&quot;right clicked&quot;)
     }
 }
 </code></pre>
@@ -1846,12 +1846,12 @@ We can now accept events from specific devices and react accordingly. We can als
 
 <code>DragHandler</code> is similar to the <code>MouseArea</code>'s <code>drag</code> property, but more straightforward to use. It has the similar <code>xAxis</code> and <code>yAxis</code> <a href="http://doc-snapshots.qt.io/qt5-5.10/qml-qt-labs-handlers-draghandler.html#xAxis-prop" title="property groups">property groups</a> as the <code>MouseArea</code>: 
 
-<pre class="sh_java code-highlight"><code>import Qt.labs.handlers 1.0
+<pre class="code-highlight"><code>import Qt.labs.handlers 1.0
 
 Rectangle {
     width: 50
     height: 50
-    color: "green"
+    color: &quot;green&quot;
     
     DragHandler {
         yAxis.enabled: false
@@ -1869,7 +1869,7 @@ In the example, the <code>Rectangle</code> can be dragger, but only along the X-
 There is also a <code>PointHandler</code> which can be used to track a touch point:
 </p>
 
-<pre class="sh_java code-highlight"><code>import Qt.labs.handlers 1.0
+<pre class="code-highlight"><code>import Qt.labs.handlers 1.0
 
 Item {
     id: root
@@ -1879,7 +1879,7 @@ Item {
         acceptedDevices: PointerDevice.Mouse | PointerDevice.Stylus
         target: Rectangle {
             parent: root
-            color: "blue"
+            color: &quot;blue&quot;
             visible: handler.active
             x: handler.point.position.x - width / 2
             y: handler.point.position.y - height / 2
@@ -1931,11 +1931,11 @@ Qt Quick Layouts can also be used to arrange Qt Quick items in a user interface.
 We ensure that the parent <code>Rectangle</code> is large enough so that there is some space left around the edges of the horizontally centered <code>Row</code> item.
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
     width: 320; height: 110
-    color: "#c0c0c0"
+    color: &quot;#c0c0c0&quot;
 
     Row {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -1944,11 +1944,11 @@ Rectangle {
         spacing: 5
 
         Rectangle { width: 100; height: 100; radius: 20.0
-                             color: "#024c1c" }
+                             color: &quot;#024c1c&quot; }
         Rectangle { width: 100; height: 100; radius: 20.0
-                             color: "#42a51c" }
+                             color: &quot;#42a51c&quot; }
         Rectangle { width: 100; height: 100; radius: 20.0
-                             color: "white" }
+                             color: &quot;white&quot; }
     }
 }
 </code></pre>
@@ -1968,7 +1968,7 @@ Rectangle {
 <code>Column</code> items are used to vertically arrange items. The following example uses a <code>Column</code> item to arrange three <code>Rectangle</code> items in an area defined by an outer <code>Item</code>. The spacing property is set to include a small amount of space between the rectangles.
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Item {
     width: 310; height: 170
@@ -1980,27 +1980,27 @@ Item {
         spacing: 5
 
         Rectangle {
-            color: "lightblue"; radius: 10.0
+            color: &quot;lightblue&quot;; radius: 10.0
             width: 300; height: 50
             Text {
                 anchors.centerIn: parent
-                font.pointSize: 24; text: "Books"
+                font.pointSize: 24; text: &quot;Books&quot;
             }
         }
         Rectangle {
-            color: "gold"; radius: 10.0
+            color: &quot;gold&quot;; radius: 10.0
             width: 300; height: 50
             Text {
                 anchors.centerIn: parent
-                font.pointSize: 24; text: "Music"
+                font.pointSize: 24; text: &quot;Music&quot;
             }
         }
         Rectangle {
-            color: "lightgreen"; radius: 10.0
+            color: &quot;lightgreen&quot;; radius: 10.0
             width: 300; height: 50
             Text {
                 anchors.centerIn: parent
-                font.pointSize: 24; text: "Movies"
+                font.pointSize: 24; text: &quot;Movies&quot;
             }
         }
     }
@@ -2025,11 +2025,11 @@ Note that, since <code>Column</code> inherits directly from <code>Item</code>, a
 <code>Grid</code> items are used to place items in a grid or table arrangement. The following example uses a <code>Grid</code> item to place four <code>Rectangle</code> items in a 2-by-2 grid. As with the other positioners, the spacing between items can be specified using the spacing property.
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
     width: 112; height: 112
-    color: "#303030"
+    color: &quot;#303030&quot;
 
     Grid {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -2037,10 +2037,10 @@ Rectangle {
         columns: 2
         spacing: 6
   
-        Rectangle { color: "#aa6666"; width: 50; height: 50 }
-        Rectangle { color: "#aaaa66"; width: 50; height: 50 }
-        Rectangle { color: "#9999aa"; width: 50; height: 50 }
-        Rectangle { color: "#6666aa"; width: 50; height: 50 }
+        Rectangle { color: &quot;#aa6666&quot;; width: 50; height: 50 }
+        Rectangle { color: &quot;#aaaa66&quot;; width: 50; height: 50 }
+        Rectangle { color: &quot;#9999aa&quot;; width: 50; height: 50 }
+        Rectangle { color: &quot;#6666aa&quot;; width: 50; height: 50 }
     }
 }
 </code></pre>
@@ -2075,10 +2075,10 @@ Any empty cells in the grid must be created by defining placeholder items at the
 The following example shows a <code>Flow</code> item containing a number of <code>Text</code> child items. These are arranged in a similar way to those shown in the screenshots.
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
-    color: "lightblue"
+    color: &quot;lightblue&quot;
     width: 300; height: 200
 
     Flow {
@@ -2086,13 +2086,13 @@ Rectangle {
         anchors.margins: 4
         spacing: 10
 
-        Text { text: "Text"; font.pixelSize: 40 }
-        Text { text: "items"; font.pixelSize: 40 }
-        Text { text: "flowing"; font.pixelSize: 40 }
-        Text { text: "inside"; font.pixelSize: 40 }
-        Text { text: "a"; font.pixelSize: 40 }
-        Text { text: "Flow"; font.pixelSize: 40 }
-        Text { text: "item"; font.pixelSize: 40 }
+        Text { text: &quot;Text&quot;; font.pixelSize: 40 }
+        Text { text: &quot;items&quot;; font.pixelSize: 40 }
+        Text { text: &quot;flowing&quot;; font.pixelSize: 40 }
+        Text { text: &quot;inside&quot;; font.pixelSize: 40 }
+        Text { text: &quot;a&quot;; font.pixelSize: 40 }
+        Text { text: &quot;Flow&quot;; font.pixelSize: 40 }
+        Text { text: &quot;item&quot;; font.pixelSize: 40 }
     }
 }
 </code></pre>
@@ -2140,7 +2140,7 @@ The baseline (not pictured above) corresponds to the imaginary line on which tex
 The Qt Quick anchoring system allows you to define relationships between the anchor lines of different items. For example, you can write:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle { id: rect1; ... }
+<pre class="code-highlight"><code>Rectangle { id: rect1; ... }
 Rectangle { id: rect2; anchors.left: rect1.right; ... }
 </code></pre>
 
@@ -2154,7 +2154,7 @@ In this case, the left edge of <code>rect2</code> is bound to the right edge of 
 You can specify multiple anchors. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle { id: rect1; ... }
+<pre class="code-highlight"><code>Rectangle { id: rect1; ... }
 Rectangle { id: rect2; anchors.left: rect1.right; anchors.top: rect1.bottom; ... }
 </code></pre>
 
@@ -2164,7 +2164,7 @@ Rectangle { id: rect2; anchors.left: rect1.right; anchors.top: rect1.bottom; ...
 By specifying multiple horizontal or vertical anchors you can control the size of an item. Below, <code>rect2</code> is anchored to the right of <code>rect1</code> and the left of <code>rect3</code>. If either of the blue rectangles are moved, <code>rect2</code> will stretch and shrink as necessary:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle { id: rect1; x: 0; ... }
+<pre class="code-highlight"><code>Rectangle { id: rect1; x: 0; ... }
 Rectangle { id: rect2; anchors.left: rect1.right; anchors.right: rect3.left; ... }
 Rectangle { id: rect3; x: 150; ... }
 </code></pre>
@@ -2179,7 +2179,7 @@ There are also some convenience anchors. <code>anchors.fill</code> is a convenie
 For performance reasons, you can only anchor an item to its siblings and direct parent. For example, the following anchor is invalid and would produce a warning:
 </p>
 
-<pre class="sh_java code-highlight"><code>// bad code
+<pre class="code-highlight"><code>// bad code
 Item {
     id: group1
     Rectangle { id: rect1; ... }
@@ -2209,7 +2209,7 @@ The anchoring system also allows margins and offsets to be specified for an item
 The following example specifies a left margin:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle { id: rect1; ... }
+<pre class="code-highlight"><code>Rectangle { id: rect1; ... }
 Rectangle { id: rect2; anchors.left: rect1.right; anchors.leftMargin: 5; ... }
 </code></pre>
 
@@ -2257,7 +2257,7 @@ You have two nautical themed types available: Wheel and Anchor in their own file
 3. Create Anchors for the Wheel and set them up like this:
 </p>
 
-<pre class="sh_java code-highlight"><code>⚓ ⚓ ⚓
+<pre class="code-highlight"><code>⚓ ⚓ ⚓
 ⚓ ☸️ ⚓
 ⚓ ⚓ ⚓
 </code></pre>
@@ -2302,18 +2302,18 @@ Note that when we talk about Qt Quick Controls on this course, we are always ref
 To use Qt Quick Controls you need to import <code>QtQuick.Controls</code> in your .qml file. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>// main.qml
+<pre class="code-highlight"><code>// main.qml
 import QtQuick 2.6
 import QtQuick.Controls 2.4
 
 ApplicationWindow {
-    title: "My Application"
+    title: &quot;My Application&quot;
     width: 640
     height: 480
     visible: true
 
     Button {
-        text: "Push Me"
+        text: &quot;Push Me&quot;
         anchors.centerIn: parent
     }
 }
@@ -2323,16 +2323,16 @@ ApplicationWindow {
 You should use <code>ApplicationWindow</code> as the root item in your application and launch it by using <code>QQmlApplicationEngine</code> in C++. This ensures that you can control top level window properties from QML. For example: 
 </p>
 
-<pre class="sh_java code-highlight"><code>// main.cpp
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+<pre class="code-highlight"><code>// main.cpp
+#include &lt;QGuiApplication&gt;
+#include &lt;QQmlApplicationEngine&gt;
 
 int main(int argc, char *argv[])
 {
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    engine.load(QUrl(QStringLiteral(&quot;qrc:/main.qml&quot;)));
     return app.exec();
 }
 </code></pre>
@@ -2350,22 +2350,22 @@ Note that if you built Qt from source, make sure Qt Graphical Effects module is 
 <code>ApplicationWindow</code> is a <code>Window</code> which makes it convenient to add a menu bar, header and footer item to the window. As we already stated, you should usually use <code>ApplicationWindow</code> as the root item in your application. 
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.11
+<pre class="code-highlight"><code>import QtQuick 2.11
 import QtQuick.Controls 2.4
 
 ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Application Window")
+    title: qsTr(&quot;Application Window&quot;)
     minimumHeight: 300
     minimumWidth: 330
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("File")
-            MenuItem { text: qsTr("Open") }
-            MenuItem { text: qsTr("Close") }
+            title: qsTr(&quot;File&quot;)
+            MenuItem { text: qsTr(&quot;Open&quot;) }
+            MenuItem { text: qsTr(&quot;Close&quot;) }
         }
     }
 
@@ -2375,18 +2375,18 @@ ApplicationWindow {
         font.pixelSize: 70
         minimumPixelSize: 8
         fontSizeMode: Text.Fit
-        text: qsTr("Header")
+        text: qsTr(&quot;Header&quot;)
         background: Rectangle {
             anchors.fill: parent
-            border { width: 2; color: "black" }
-            color: "lightgreen"
+            border { width: 2; color: &quot;black&quot; }
+            color: &quot;lightgreen&quot;
         }
     }
 
     footer:
         Label {
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr("Footer")
+            text: qsTr(&quot;Footer&quot;)
             font.pixelSize: 24
         }
 }
@@ -2419,11 +2419,11 @@ With Quick Controls making fluid UI's is easy. It provides several different vie
 The following example demonstrates a simple use case, where the mainView is pushed onto and popped out of the stack on relevant button click:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.11
+<pre class="code-highlight"><code>import QtQuick 2.11
 import QtQuick.Controls 2.4
 
 ApplicationWindow {
-    title: qsTr("StackView")
+    title: qsTr(&quot;StackView&quot;)
     width: 400
     height: 280
     visible: true
@@ -2441,12 +2441,12 @@ ApplicationWindow {
             spacing: 10
 
             Button {
-                text: "Push"
+                text: &quot;Push&quot;
                 onClicked: stack.push(mainView)
             }
             Button {
-                text: "Pop"
-                enabled: stack.depth > 1
+                text: &quot;Pop&quot;
+                enabled: stack.depth &gt; 1
                 onClicked: stack.pop()
 
             }
@@ -2484,13 +2484,13 @@ Note that the transition animations affect each others' transitional behavior. C
 The following example defines a simple fade transition for push and pop operations:
 </p>
 
-<pre class="sh_java code-highlight"><code>StackView {
+<pre class="code-highlight"><code>StackView {
     id: stackview
     anchors.fill: parent
 
     pushEnter: Transition {
         PropertyAnimation {
-            property: "opacity"
+            property: &quot;opacity&quot;
             from: 0
             to:1
             duration: 200
@@ -2498,7 +2498,7 @@ The following example defines a simple fade transition for push and pop operatio
     }
     pushExit: Transition {
         PropertyAnimation {
-            property: "opacity"
+            property: &quot;opacity&quot;
             from: 1
             to:0
             duration: 200
@@ -2506,7 +2506,7 @@ The following example defines a simple fade transition for push and pop operatio
     }
     popEnter: Transition {
         PropertyAnimation {
-            property: "opacity"
+            property: &quot;opacity&quot;
             from: 0
             to:1
             duration: 200
@@ -2514,7 +2514,7 @@ The following example defines a simple fade transition for push and pop operatio
     }
     popExit: Transition {
         PropertyAnimation {
-            property: "opacity"
+            property: &quot;opacity&quot;
             from: 1
             to:0
             duration: 200
@@ -2540,7 +2540,7 @@ Qt Quick Controls offers a large selection of controls that can be used to build
 Simple controls like <code>Button</code>, <code>Slider</code>, etc. are rather trivial to use, for example you'd define a slider from 0 to 100 with:
 </p>
 
-<pre class="sh_java code-highlight"><code>Slider {
+<pre class="code-highlight"><code>Slider {
     id: percentage
     from: 0
     to: 100
@@ -2554,12 +2554,12 @@ Simple controls like <code>Button</code>, <code>Slider</code>, etc. are rather t
 Little bit more complex controls like <code>Drawer</code> and <code>ComboBox</code> are also reasonably simple to use. We're not giving an example on <code>Drawer</code> here, since most of you are doing the course on PC's without the ability to swipe, but check out the documentation if you're interested. For <code>ComboBox</code>, here are a couple examples:
 </p>
 
-<pre class="sh_java code-highlight"><code>ComboBox {
-    textRole: "key"
+<pre class="code-highlight"><code>ComboBox {
+    textRole: &quot;key&quot;
     model: ListModel {
-        ListElement { key: "First"; value: 123 }
-        ListElement { key: "Second"; value: 456 }
-        ListElement { key: "Third"; value: 789 }
+        ListElement { key: &quot;First&quot;; value: 123 }
+        ListElement { key: &quot;Second&quot;; value: 456 }
+        ListElement { key: &quot;Third&quot;; value: 789 }
     }
 }
 </code></pre>
@@ -2578,13 +2578,13 @@ Here the noteworthy point is that when using a model that has multiple named rol
 You can also make a <code>ComboBox</code> editable, like so:
 </p>
 
-<pre class="sh_java code-highlight"><code>ComboBox {
+<pre class="code-highlight"><code>ComboBox {
     editable: true
     model: ListModel {
         id: model
-        ListElement { text: "Banana" }
-        ListElement { text: "Apple" }
-        ListElement { text: "Coconut" }
+        ListElement { text: &quot;Banana&quot; }
+        ListElement { text: &quot;Apple&quot; }
+        ListElement { text: &quot;Coconut&quot; }
     }
     onAccepted: {
         if (find(editText) === -1)
@@ -2600,7 +2600,7 @@ You can also make a <code>ComboBox</code> editable, like so:
 
 <code>Container</code> type supports adding, inserting, moving, and removing items. You can use a ready visual implementation of <code>Container</code> like <code>SwipeView</code>. To implement a custom container, the most important part of the API is <code>contentModel</code> which provides the contained items in a way that it can be used as a delegate model for item views and repeaters. For example:
 
-<pre class="sh_java code-highlight"><code>Container {
+<pre class="code-highlight"><code>Container {
     id: container
 
     contentItem: ListView {
@@ -2610,13 +2610,13 @@ You can also make a <code>ComboBox</code> editable, like so:
     }
 
     Text {
-        text: "Page 1"
+        text: &quot;Page 1&quot;
         width: container.width
         height: container.height
     }
 
     Text {
-        text: "Page 2"
+        text: &quot;Page 2&quot;
         width: container.width
         height: container.height
     }
@@ -2651,7 +2651,7 @@ The priority of these approaches follows the order they are listed above, from h
 <li>Configuration file: Qt Quick Controls 2 support a special configuration file, <code>:/qtquickcontrols2.conf</code>, that is built into an application's resources. The configuration file can specify the preferred style (may be overridden by either of the methods described earlier) and certain style-specific attributes.</li>
 </ul>
 
-<pre class="sh_java code-highlight"><code>[Controls]
+<pre class="code-highlight"><code>[Controls]
 Style=Material
 </code></pre>
 
@@ -2682,7 +2682,7 @@ Before getting into the actual subject of this chapter, Custom Components, let's
 When we introduced properties you saw the syntax 
 </p>
 
-<pre class="sh_java code-highlight"><code>[default] property &lt;propertyType&gt; &lt;propertyName&gt;
+<pre class="code-highlight"><code>[default] property &amp;lt;propertyType&amp;gt; &amp;lt;propertyName&amp;gt;
 </code></pre>
 
 <p>
@@ -2697,13 +2697,13 @@ An object definition can have a single <code>default</code> property. A <code>de
 For example, say there is a file <code>MyLabel.qml</code> with a default property <code>someText</code>:
 </p>
 
-<pre class="sh_java code-highlight"><code>// MyLabel.qml
+<pre class="code-highlight"><code>// MyLabel.qml
 import QtQuick 2.0
 
 Text {
     default property var someText
 
-    text: "Hello, " + someText.text
+    text: &quot;Hello, &quot; + someText.text
 }
 </code></pre>
 
@@ -2711,8 +2711,8 @@ Text {
 The <code>someText</code> value could be assigned to in a <code>MyLabel</code> object definition, like this:
 </p>
 
-<pre class="sh_java code-highlight"><code>MyLabel {
-    Text { text: "world!" }
+<pre class="code-highlight"><code>MyLabel {
+    Text { text: &quot;world!&quot; }
 }
 </code></pre>
 
@@ -2720,8 +2720,8 @@ The <code>someText</code> value could be assigned to in a <code>MyLabel</code> o
 This has exactly the same effect as the following:
 </p>
 
-<pre class="sh_java code-highlight"><code>MyLabel {
-    someText: Text { text: "world!" }
+<pre class="code-highlight"><code>MyLabel {
+    someText: Text { text: &quot;world!&quot; }
 }
 </code></pre>
 
@@ -2742,7 +2742,7 @@ You might have noticed that child objects can be added to any Item-based type wi
 An object declaration may define a read-only property using the <code>readonly</code> keyword, with the following syntax:
 </p>
 
-<pre class="sh_java code-highlight"><code>readonly property &lt;propertyType&gt; &lt;propertyName&gt; : &lt;initialValue&gt;
+<pre class="code-highlight"><code>readonly property &amp;lt;propertyType&amp;gt; &amp;lt;propertyName&amp;gt; : &amp;lt;initialValue&amp;gt;
 </code></pre>
 
 <p>
@@ -2774,7 +2774,7 @@ Attempting to declare two signals or methods with the same name in the same type
 Here are three examples of signal declarations:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.0
+<pre class="code-highlight"><code>import QtQuick 2.0
 
 Item {
     signal clicked
@@ -2818,7 +2818,7 @@ When any of these are needed, the <code>Connections</code> type can be used inst
 For example, the <code>Connections</code> object can be a child of some object other than the sender of the signal:
 </p>
 
-<pre class="sh_java code-highlight"><code>MouseArea {
+<pre class="code-highlight"><code>MouseArea {
     id: area
 }
 // ...
@@ -2841,7 +2841,7 @@ Property aliases are properties which hold a reference to another property. Unli
 A property alias declaration looks like an ordinary property definition, except that it requires the alias keyword instead of a property type, and the right-hand-side of the property declaration must be a valid alias reference:
 </p>
 
-<pre class="sh_java code-highlight"><code>[default] property alias &lt;name&gt;: &lt;alias reference&gt;
+<pre class="code-highlight"><code>[default] property alias &amp;lt;name&amp;gt;: &amp;lt;alias reference&amp;gt;
 </code></pre>
 
 <p>
@@ -2856,7 +2856,7 @@ Unlike an ordinary property, an alias has the following restrictions:
 <li>It cannot refer to grouped properties; the following code will not work:</li>
 </ul>
 
-<pre class="sh_java code-highlight"><code>property alias color: rectangle.border.color
+<pre class="code-highlight"><code>property alias color: rectangle.border.color
 
 Rectangle {
     id: rectangle
@@ -2867,7 +2867,7 @@ Rectangle {
 However, aliases to value type properties do work:
 </p>
 
-<pre class="sh_java code-highlight"><code>property alias rectX: object.rectProperty.x
+<pre class="code-highlight"><code>property alias rectX: object.rectProperty.x
 
 Item {
     id: object
@@ -2893,15 +2893,15 @@ The <code>Button</code> definition may contain other components. The <code>Butto
 Let's walk through an example of a color picker for choosing the color of a text element. Our picker is currently made of four cells with different colors. A very naive approach is to write multiple <code>Item</code>s with <code>Rectangle</code> and <code>MouseArea</code> items inside the main application.
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
     id: page
     width: 500
     height: 200
-    color: "black"
+    color: &quot;black&quot;
 
     Text {
         id: helloText
-        text: "Hello world!"
+        text: &quot;Hello world!&quot;
         y: 30
         anchors.horizontalCenter: page.horizontalCenter
     }
@@ -2917,13 +2917,13 @@ Let's walk through an example of a color picker for choosing the color of a text
 
             Rectangle {
                 id: rectangle
-                color: "red"
+                color: &quot;red&quot;
                 anchors.fill: parent
             }
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: helloText.color = "red"
+                onClicked: helloText.color = &quot;red&quot;
             }
         }          
         // Imagine more duplicate lines of Items with different color values defined...
@@ -2939,19 +2939,19 @@ You might notice that we have lots of duplicate code here! Additionally, to add 
 Here is our component definition with <code>Rectangle</code> and <code>MouseArea</code> items extracted:
 </p>
 
-<pre class="sh_java code-highlight"><code>Item {
+<pre class="code-highlight"><code>Item {
     id: container
     width: 40; height: 25
 
     Rectangle {
         id: rectangle
-        color: "red"
+        color: &quot;red&quot;
         anchors.fill: parent
     }
 
     MouseArea {
         anchors.fill: parent
-        onClicked: console.log("clicked?")
+        onClicked: console.log(&quot;clicked?&quot;)
     }
 }
 </code></pre>
@@ -2968,7 +2968,7 @@ We cannot access the <code>text</code> property of our <code>Text</code> item <c
 To do this, we need to expose an <strong>interface</strong> for other components to use. We can use the <code>property</code> keyword <code>alias</code> and the attribute <code>signal</code> to expose functionality.
 </p>
 
-<pre class="sh_java code-highlight"><code>Item {
+<pre class="code-highlight"><code>Item {
     id: container
      
     property alias cellColor: rectangle.color
@@ -2992,8 +2992,8 @@ To do this, we need to expose an <strong>interface</strong> for other components
 Now we can write to the <code>rectangle.color</code> property outside from the component with the property <code>cellColor</code>, and we can install a <strong>signal handler</strong> for the <code>clicked</code> signal with the <code>onClicked</code> property:
 </p>
 
-<pre class="sh_java code-highlight"><code>Cell {
-    cellColor: "red"
+<pre class="code-highlight"><code>Cell {
+    cellColor: &quot;red&quot;
     onClicked: helloText.color = cellColor
 }
 </code></pre>
@@ -3002,15 +3002,15 @@ Now we can write to the <code>rectangle.color</code> property outside from the c
 Now we can easily add more colors with just the <code>Cell</code> definition:
 </p>
 
-<pre class="sh_java code-highlight"><code>Rectangle {
+<pre class="code-highlight"><code>Rectangle {
     id: page
     width: 500
     height: 200
-    color: "black"
+    color: &quot;black&quot;
 
     Text {
         id: helloText
-        text: "Hello world!"
+        text: &quot;Hello world!&quot;
         y: 30
         anchors.horizontalCenter: page.horizontalCenter
     }
@@ -3020,10 +3020,10 @@ Now we can easily add more colors with just the <code>Cell</code> definition:
         x: 4; anchors.bottom: page.bottom; anchors.bottomMargin: 4
         rows: 2; columns: 2; spacing: 3
 
-        Cell { cellColor: "red"; onClicked: helloText.color = cellColor }
-        Cell { cellColor: "green"; onClicked: helloText.color = cellColor }
-        Cell { cellColor: "blue"; onClicked: helloText.color = cellColor }
-        Cell { cellColor: "yellow"; onClicked: helloText.color = cellColor }
+        Cell { cellColor: &quot;red&quot;; onClicked: helloText.color = cellColor }
+        Cell { cellColor: &quot;green&quot;; onClicked: helloText.color = cellColor }
+        Cell { cellColor: &quot;blue&quot;; onClicked: helloText.color = cellColor }
+        Cell { cellColor: &quot;yellow&quot;; onClicked: helloText.color = cellColor }
     }
 }
 </code></pre>
@@ -3143,7 +3143,7 @@ When using <code>Shape</code>, it is important to be aware of potential performa
 Now, let's look at an example:
 </p>
 
-<pre class="sh_java code-highlight"><code>import QtQuick 2.9
+<pre class="code-highlight"><code>import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQuick.Shapes 1.0
 
@@ -3151,21 +3151,21 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Shapes")
+    title: qsTr(&quot;Shapes&quot;)
 
     Shape {
         id: shape
         anchors.fill: parent
         ShapePath {
             strokeWidth: 10
-            strokeColor: "black"
+            strokeColor: &quot;black&quot;
             fillGradient: RadialGradient {
                 centerX: shape.width / 2; centerY: shape.height / 2
                 centerRadius: shape.width * 0.1
                 focalX: centerX; focalY: centerY
                 spread: ShapeGradient.RepeatSpread
-                GradientStop { position: 0; color: "yellow" }
-                GradientStop { position: 1; color: "blue" }
+                GradientStop { position: 0; color: &quot;yellow&quot; }
+                GradientStop { position: 1; color: &quot;blue&quot; }
             }
             strokeStyle: ShapePath.SolidLine
             startX: shape.width * 0.3; startY: shape.height * 0.1

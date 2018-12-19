@@ -237,7 +237,7 @@ It includes the relevant source and header files for each exercise project. In s
 Have you already noticed how every directory has its own <code>.pro</code> file? What does this all mean? It's like trying to figure out the plot line of Lost! The reason for this is, that every subdirectory we have included in the exercise directory are actually projects within the actual exercise project (spoiler: this is also the plot line of Lost)! Let us elaborate and take look at the root level <code>.pro</code> file:
 </p>
 
-<pre class="sh_java code-highlight"><code>TEMPLATE = subdirs
+<pre class="code-highlight"><code>TEMPLATE = subdirs
 SUBDIRS += \
       src \
       test_runner
@@ -268,7 +268,7 @@ The fundamental behavior of <code>qmake</code> is influenced by variable declara
 Let us elaborate by once again referring to our exercise structure, specifically the <code>.pro</code> file of the source directory:
 </p>
 
-<pre class="sh_java code-highlight"><code>QT -= gui
+<pre class="code-highlight"><code>QT -= gui
 
 TARGET = main
 
@@ -297,7 +297,7 @@ You may refer to the exercise directory structure and file composition of exerci
 Platform-specific variables follow the naming pattern of the variables which they extend or modify, but include the name of the relevant platform in their name. For example, <code>LIBS</code> can be used to specify a list of libraries that a project needs to link against. Here is an example:
 </p>
 
-<pre class="sh_java code-highlight"><code>unix:LIBS += -L/usr/local/lib -lmath
+<pre class="code-highlight"><code>unix:LIBS += -L/usr/local/lib -lmath
 win32:LIBS += c:/mylibs/math.lib
 </code></pre>
 
@@ -330,14 +330,14 @@ Variables can also be used internally to store temporary lists of values, and ex
 The following snippet illustrates how lists of values are assigned to variables:
 </p>
 
-<pre class="sh_java code-highlight"><code>HEADERS = mainwindow.h paintwidget.h
+<pre class="code-highlight"><code>HEADERS = mainwindow.h paintwidget.h
 </code></pre>
 
 <p>
 The list of values in a variable is extended in the following way:
 </p>
 
-<pre class="sh_java code-highlight"><code>SOURCES = main.cpp mainwindow.cpp \
+<pre class="code-highlight"><code>SOURCES = main.cpp mainwindow.cpp \
           paintwidget.cpp
 CONFIG += console
 </code></pre>
@@ -355,20 +355,20 @@ Note: The first assignment only includes values that are specified on the same l
 The <a href="https://doc.qt.io/qt-5/resources.html" title="Qt resource system">Qt resource system</a> is a platform independent way to store application resources (images, icons, translation files, data, etc.) inside the application's executable. Resources are specified inside the <strong>resource collection</strong> <code>.qrc</code> file:
 </p>
 
-<pre class="sh_java code-highlight"><code>&lt;!DOCTYPE RCC&gt;&lt;RCC version="1.0"&gt;
-&lt;qresource&gt;
-    &lt;file&gt;images/icon.png&lt;/file&gt;
-    &lt;file&gt;data.txt&lt;/file&gt;
-&lt;/qresource&gt;
-&lt;/RCC&gt;
+<pre class="code-highlight"><code>&amp;lt;!DOCTYPE RCC&amp;gt;&amp;lt;RCC version=&quot;1.0&quot;&amp;gt;
+&amp;lt;qresource&amp;gt;
+    &amp;lt;file&amp;gt;images/icon.png&amp;lt;/file&amp;gt;
+    &amp;lt;file&amp;gt;data.txt&amp;lt;/file&amp;gt;
+&amp;lt;/qresource&amp;gt;
+&amp;lt;/RCC&amp;gt;
 </code></pre>
 
 <p>
 The file is then included in the <code>.pro</code> file with <code>RESOURCES = application.qrc</code>. The specified files will be then compressed and included as a static C++ array. They can be accessed with <a href="https://doc.qt.io/qt-5/qfile.html" title="QFile">QFile</a> or image types like any other file like so:
 </p>
 
-<pre class="sh_java code-highlight"><code>QIcon icon(":/images/icon.png")
-QFile file(":/data.txt");
+<pre class="code-highlight"><code>QIcon icon(&quot;:/images/icon.png&quot;)
+QFile file(&quot;:/data.txt&quot;);
 </code></pre>
 
 <h2 class="material-heading">
@@ -390,9 +390,9 @@ The <a href="http://doc.qt.io/qt-5/qdebug.html" title="QDebug">QDebug</a> class 
 In the common case, it is useful to call the <code>qDebug()</code> function to obtain a default QDebug object to use for writing debugging information.  
 </p>
 
-<pre class="sh_java code-highlight"><code>qDebug() &lt;&lt; "Date:" &lt;&lt; QDate::currentDate();
-qDebug() &lt;&lt; "Types:" &lt;&lt; QString("String") &lt;&lt; QChar('x') &lt;&lt; QRect(0, 10, 50, 40);
-qDebug() &lt;&lt; "Custom coordinate type:" &lt;&lt; coordinate;
+<pre class="code-highlight"><code>qDebug() &amp;lt;&amp;lt; &quot;Date:&quot; &amp;lt;&amp;lt; QDate::currentDate();
+qDebug() &amp;lt;&amp;lt; &quot;Types:&quot; &amp;lt;&amp;lt; QString(&quot;String&quot;) &amp;lt;&amp;lt; QChar(&#39;x&#39;) &amp;lt;&amp;lt; QRect(0, 10, 50, 40);
+qDebug() &amp;lt;&amp;lt; &quot;Custom coordinate type:&quot; &amp;lt;&amp;lt; coordinate;
 </code></pre>
 
 <p>
@@ -427,10 +427,10 @@ You can tweak these options through the <code>space()</code>, <code>nospace()</c
 Many standard types can be written to QDebug objects, and Qt provides support for most Qt value types. To add support for custom types, you need to implement a streaming operator, as in the following example:
 </p>
 
-<pre class="sh_java code-highlight"><code>QDebug operator&lt;&lt;(QDebug debug, const Coordinate &amp;c)
+<pre class="code-highlight"><code>QDebug operator&amp;lt;&amp;lt;(QDebug debug, const Coordinate &amp;amp;c)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() &lt;&lt; '(' &lt;&lt; c.x() &lt;&lt; ", " &lt;&lt; c.y() &lt;&lt; ')';
+    debug.nospace() &amp;lt;&amp;lt; &#39;(&#39; &amp;lt;&amp;lt; c.x() &amp;lt;&amp;lt; &quot;, &quot; &amp;lt;&amp;lt; c.y() &amp;lt;&amp;lt; &#39;)&#39;;
 
     return debug;
 }
@@ -445,7 +445,7 @@ Many standard types can be written to QDebug objects, and Qt provides support fo
 <a href="http://doc.qt.io/qt-5/qtglobal.html#qdebug" title="QDegug">qDebug</a>, <a href="http://doc.qt.io/qt-5/qtglobal.html#qWarning" title="qWarning">qWarning</a>, <a href="http://doc.qt.io/qt-5/qtglobal.html#qCritical" title="qCritical">qCritical</a> and <a href="http://doc.qt.io/qt-5/qtglobal.html#qFatal" title="qFatal">qFatal</a> are functions defined in the Qt global declarations. The functions take a format string and a list of arguments, similar to the C <code>printf()</code> function. The format should be a Latin-1 string. To suppress any of these types, you may install your own message handler using <a href="https://doc.qt.io/qt-5/qtglobal.html#qInstallMessageHandler" title="qInstallMessageHandler">qInstallMessageHandler</a>. The functions call the message handler with the defined debug/critical/fatal/warning message. They call the message handler, or if no message handler is present, print out the message to <code>stderr</code>. On Windows, for the most parts, the message is sent to the debugger.
 </p>
 
-<pre class="sh_java code-highlight"><code>qDebug(const char *message, ...)
+<pre class="code-highlight"><code>qDebug(const char *message, ...)
 </code></pre>
 
 <p>
@@ -456,14 +456,14 @@ Under Windows the message is sent to the console, if it is a console application
 For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>qDebug("Items in list: %d", myList.size());
+<pre class="code-highlight"><code>qDebug(&quot;Items in list: %d&quot;, myList.size());
 </code></pre>
 
 <p>
 If you include <code>QtDebug</code>, a more convenient syntax is also available:
 </p>
 
-<pre class="sh_java code-highlight"><code>qDebug() &lt;&lt; "Brush:" &lt;&lt; myQBrush &lt;&lt; "Other value:" &lt;&lt; i;
+<pre class="code-highlight"><code>qDebug() &amp;lt;&amp;lt; &quot;Brush:&quot; &amp;lt;&amp;lt; myQBrush &amp;lt;&amp;lt; &quot;Other value:&quot; &amp;lt;&amp;lt; i;
 </code></pre>
 
 <p>
@@ -474,7 +474,7 @@ With this syntax, the function returns a QDebug object that is configured to use
 Including <code>QtDebug</code> also allows the equivalent syntax to be used with <code>qInfo</code>, <code>qCritical</code>, and <code>qWarning</code>.
 </p>
 
-<pre class="sh_java code-highlight"><code>qCritical(const char *message, ...)
+<pre class="code-highlight"><code>qCritical(const char *message, ...)
 </code></pre>
 
 <p>
@@ -485,16 +485,16 @@ It exits if the environment variable <code>QT_FATAL_CRITICALS</code> is not empt
 For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>void load(const QString &amp;fileName)
+<pre class="code-highlight"><code>void load(const QString &amp;amp;fileName)
 {
      QFile file(fileName);
      if (!file.exists())
-          qCritical("File '%s' does not exist!", qUtf8Printable(fileName));
+          qCritical(&quot;File &#39;%s&#39; does not exist!&quot;, qUtf8Printable(fileName));
 }
 </code></pre>
 --
 
-<pre class="sh_java code-highlight"><code>qWarning(const char *message, ...)
+<pre class="code-highlight"><code>qWarning(const char *message, ...)
 </code></pre>
 
 <p>
@@ -505,14 +505,14 @@ This function does nothing if <code>QT_NO_WARNING_OUTPUT</code> was defined duri
 For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>void f(int c)
+<pre class="code-highlight"><code>void f(int c)
 {
-    if (c > 200)
-        qWarning("f: bad argument, c == %d", c);
+    if (c &gt; 200)
+        qWarning(&quot;f: bad argument, c == %d&quot;, c);
 }
 </code></pre>
 
-<pre class="sh_java code-highlight"><code>qFatal(const char *message, ...)
+<pre class="code-highlight"><code>qFatal(const char *message, ...)
 </code></pre>
 
 <p>
@@ -523,10 +523,10 @@ If you are using the default message handler this function will abort to create 
 For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>int divide(int a, int b)
+<pre class="code-highlight"><code>int divide(int a, int b)
 {
     if (b == 0)                                // program error
-         qFatal("divide: cannot divide by zero");
+         qFatal(&quot;divide: cannot divide by zero&quot;);
     return a / b;
 }
 </code></pre>
@@ -608,7 +608,7 @@ In addition to <code>QString</code>, Qt also provides the <code>QByteArray</code
 One way to initialize a <code>QString</code> is simply to pass a <code>const char *</code> to its constructor. For example, the following code creates a <code>QString</code> of size 5 containing the data "Hello":
 </p>
 
-<pre class="sh_java code-highlight"><code>QString str = "Hello";
+<pre class="code-highlight"><code>QString str = &quot;Hello&quot;;
 </code></pre>
 
 <p>
@@ -625,8 +625,8 @@ For read-only access, an alternative syntax is to use the <code>at()</code> func
 
 <code>QString</code> provides dozens of overloads designed to simplify string usage. For example, if you want to compare a QString with a string literal, you can write code like this and it will work as expected:
 
-<pre class="sh_java code-highlight"><code>QString str;
-if (str == "auto" || str == "extern" || str == "static" || str == "register") {
+<pre class="code-highlight"><code>QString str;
+if (str == &quot;auto&quot; || str == &quot;extern&quot; || str == &quot;static&quot; || str == &quot;register&quot;) {
     // ...
 }
 </code></pre>
@@ -644,10 +644,10 @@ You can also pass string literals to functions that take <code>QString</code>s a
 <code>QString</code> provides the following basic functions for modifying the character data: <code>append()</code>, <code>prepend()</code>, <code>insert()</code>, <code>replace()</code>, and <code>remove()</code>. For example:
 </p>
 
-<pre class="sh_java code-highlight"><code>QString str = "and";
-str.prepend("rock "); // str == "rock and"
-str.append(" roll"); // str == "rock and roll"
-str.replace(5, 3, "&amp;"); // str == "rock &amp; roll"
+<pre class="code-highlight"><code>QString str = &quot;and&quot;;
+str.prepend(&quot;rock &quot;); // str == &quot;rock and&quot;
+str.append(&quot; roll&quot;); // str == &quot;rock and roll&quot;
+str.replace(5, 3, &quot;&amp;amp;&quot;); // str == &quot;rock &amp;amp; roll&quot;
 </code></pre>
 
 <p>
@@ -714,12 +714,12 @@ A slightly less efficient way is to use <code>QLatin1String</code>. This class w
 Using the <code>QString</code> '+' operator, it is easy to construct a complex string from multiple substrings. You will often write code like this:
 </p>
 
-<pre class="sh_java code-highlight"><code>QString foo;
-QString type = "long";
+<pre class="code-highlight"><code>QString foo;
+QString type = &quot;long&quot;;
 
-foo->setText(QLatin1String("vector<") + type + QLatin1String(">::iterator"));
+foo-&gt;setText(QLatin1String(&quot;vector&lt;&quot;) + type + QLatin1String(&quot;&gt;::iterator&quot;));
 
-if (foo.startsWith("(" + type + ") 0x"))
+if (foo.startsWith(&quot;(&quot; + type + &quot;) 0x&quot;))
     ...
 </code></pre>
 
@@ -743,19 +743,19 @@ An internal template class <code>QStringBuilder</code> can be used along with a 
 There are two ways you can access this improved method of string construction. The straightforward way is to include <code>QStringBuilder</code> wherever you want to use it, and use the '%' operator instead of '+' when concatenating strings:
 </p>
 
-<pre class="sh_java code-highlight"><code>#include &lt;QStringBuilder&gt;
+<pre class="code-highlight"><code>#include &lt;QStringBuilder&gt;
 
-QString hello("hello");
-QStringRef el(&amp;hello, 2, 3);
-QLatin1String world("world");
-QString message =  hello % el % world % QChar('!');
+QString hello(&quot;hello&quot;);
+QStringRef el(&amp;amp;hello, 2, 3);
+QLatin1String world(&quot;world&quot;);
+QString message =  hello % el % world % QChar(&#39;!&#39;);
 </code></pre>
 
 <p>
 A more global approach which is the most convenient, but not entirely source compatible, is to this define in your .pro file:
 </p>
 
-<pre class="sh_java code-highlight"><code>DEFINES *= QT_USE_QSTRINGBUILDER
+<pre class="code-highlight"><code>DEFINES *= QT_USE_QSTRINGBUILDER
 </code></pre>
 
 <p>
@@ -801,7 +801,7 @@ The <a href="http://doc.qt.io/qt-5/qbytearray.html" title="<code>QByteArray</cod
 One way to initialize a <code>QByteArray</code> is simply to pass a <code>const char *</code> to its constructor. For example, the following code creates a byte array of size 5 containing the data "Hello":
 </p>
 
-<pre class="sh_java code-highlight"><code>QByteArray ba("Hello");
+<pre class="code-highlight"><code>QByteArray ba(&quot;Hello&quot;);
 </code></pre>
 
 <p>
@@ -943,13 +943,13 @@ The values stored in the various containers can be of any assignable data type. 
 Here's an example custom data type that meets the requirement of an assignable data type:
 </p>
 
-<pre class="sh_java code-highlight"><code>class Employee
+<pre class="code-highlight"><code>class Employee
 {
 public:
      Employee() {}
-     Employee(const Employee &amp;other);
+     Employee(const Employee &amp;amp;other);
 
-     Employee &amp;operator=(const Employee &amp;other);
+     Employee &amp;amp;operator=(const Employee &amp;amp;other);
 
  private:
       QString myName;
@@ -961,7 +961,7 @@ public:
 If we don't provide a copy constructor or an assignment operator, C++ provides a default implementation that performs a member-by-member copy. In the example above, that would have been sufficient. Also, if you don't provide any constructors, C++ provides a default constructor that initializes its member using default constructors. Although it doesn't provide any explicit constructors or assignment operator, the following data type can be stored in a container:
 </p>
 
-<pre class="sh_java code-highlight"><code>struct Movie
+<pre class="code-highlight"><code>struct Movie
 {
     int id;
     QString title;
@@ -977,19 +977,19 @@ Some containers have additional requirements for the data types they can store. 
 Qt's containers provide <code>operator&lt;&lt;()</code> and <code>operator&gt;&gt;()</code> so that they can easily be read and written using a <code>QDataStream</code>. This means that the data types stored in the container must also support <code>operator&lt;&lt;()</code> and <code>operator&gt;&gt;()</code>. Providing such support is straightforward; here's how we could do it for the Movie struct above:
 </p>
 
-<pre class="sh_java code-highlight"><code>QDataStream &amp;operator&lt;&lt;(QDataStream &amp;out, const Movie &amp;movie)
+<pre class="code-highlight"><code>QDataStream &amp;amp;operator&amp;lt;&amp;lt;(QDataStream &amp;amp;out, const Movie &amp;amp;movie)
 {
-    out &lt;&lt; (quint32)movie.id &lt;&lt; movie.title
-        &lt;&lt; movie.releaseDate;
+    out &amp;lt;&amp;lt; (quint32)movie.id &amp;lt;&amp;lt; movie.title
+        &amp;lt;&amp;lt; movie.releaseDate;
     return out;
 }
 
-QDataStream &amp;operator&gt;&gt;(QDataStream &amp;in, Movie &amp;movie)
+QDataStream &amp;amp;operator&amp;gt;&amp;gt;(QDataStream &amp;amp;in, Movie &amp;amp;movie)
 {
     quint32 id;
     QDate date;
 
-    in &gt;&gt; id &gt;&gt; movie.title &gt;&gt; date;
+    in &amp;gt;&amp;gt; id &amp;gt;&amp;gt; movie.title &amp;gt;&amp;gt; date;
     movie.id = (int)id;
     movie.releaseDate = date;
     return in;
@@ -1025,7 +1025,7 @@ In general we don't recommend using the normal Java-style iterators, though you 
 Example of <code>QMutableListIterator</code>:
 </p>
 
-<pre class="sh_java code-highlight"><code>QMutableListIterator<int> i(list);
+<pre class="code-highlight"><code>QMutableListIterator&lt;int&gt; i(list);
 while (i.hasNext()) {
     if (i.next() % 2 != 0)
         i.remove();
@@ -1044,9 +1044,9 @@ The <code>next()</code> call in the loop is made every time. It jumps over the n
 If we just want to modify the value of an existing item, we can use <code>setValue()</code>. In the code below, we replace any value larger than 128 with 128:
 </p>
 
-<pre class="sh_java code-highlight"><code>QMutableListIterator<int> i(list);
+<pre class="code-highlight"><code>QMutableListIterator&lt;int&gt; i(list);
 while (i.hasNext()) {
-    if (i.next() > 128)
+    if (i.next() &gt; 128)
         i.setValue(128);
 }
 </code></pre>
