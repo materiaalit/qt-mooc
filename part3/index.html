@@ -202,7 +202,7 @@ To include QML in your projects, you need to complete these three steps:
 1. To include the definitions of the module's classes, use the following directive:
 </p>
 
-<pre class="code-highlight"><code>#include &amp;lt;QtQml&amp;gt;
+<pre class="code-highlight"><code>#include &lt;QtQml&gt;
 </code></pre>
 
 <p>
@@ -244,8 +244,8 @@ The generic form of the various imports are as follows:
 
 <pre class="code-highlight"><code>import Namespace VersionMajor.VersionMinor
 import Namespace VersionMajor.VersionMinor as SingletonTypeIdentifier
-import &quot;directory&quot;
-import &quot;file.js&quot; as ScriptIdentifier
+import "directory"
+import "file.js" as ScriptIdentifier
 </code></pre>
 
 <p>
@@ -254,8 +254,8 @@ Examples:
 
 <pre class="code-highlight"><code>import QtQuick 2.0
 import QtQuick.LocalStorage 2.0 as Database
-import &quot;../privateComponents&quot;
-import &quot;somefile.js&quot; as Script
+import "../privateComponents"
+import "somefile.js" as Script
 </code></pre>
 
 <h2 class="material-heading">
@@ -268,7 +268,7 @@ To prototype user interfaces even more quickly, one can create a <a href="http:/
 </p>
 
 <p>
-One can also enable a keyboard shortcut for the prototyping application <a href="https://doc.qt.io/qt-5/qtquick-qmlscene.html" title="qmlscene">qmlscene</a>, which renders any arbitary <code>.qml</code> files. <code>qmlscene</code> can be enabled in Qt Creator by going to <code>Options -> Environment -> Keyboard -> search for qmlscene -> assign shortcut</code>. When a <code>.qml</code> file is open in the Edit or Design mode, hit the shortcut to render the file.
+One can also enable a keyboard shortcut for the prototyping application <a href="https://doc.qt.io/qt-5/qtquick-qmlscene.html" title="qmlscene">qmlscene</a>, which renders any arbitary <code>.qml</code> files. <code>qmlscene</code> can be enabled in Qt Creator by going to <code>Options -&gt; Environment -&gt; Keyboard -&gt; search for qmlscene -&gt; assign shortcut</code>. When a <code>.qml</code> file is open in the Edit or Design mode, hit the shortcut to render the file.
 </p>
 
 <h2 class="material-heading">
@@ -286,7 +286,7 @@ Let's go through the basic process here:
 
 <pre class="code-highlight"><code>Text {
     id: txt1;
-    text: qsTr(&quot;Back&quot;);
+    text: qsTr("Back");
 }
 </code></pre>
 
@@ -299,7 +299,7 @@ Use the function <code>qsTr()</code> to declare translatable strings inside the 
     // This user interface string is used only here
     //: The back of the object, not the front
     //~ Context Not related to back-stepping
-    text: qsTr(&quot;Back&quot;, &quot;not front&quot;);
+    text: qsTr("Back", "not front");
 }
 </code></pre>
 
@@ -312,7 +312,7 @@ Sometimes the same word has different meanings in different contexts. Differenti
 </p>
 
 <pre class="code-highlight"><code>Text {
-    text: qsTr(&quot;File %1 of %2&quot;).arg(counter).arg(total)
+    text: qsTr("File %1 of %2").arg(counter).arg(total)
 }
 </code></pre>
 
@@ -389,7 +389,7 @@ The <code>Item</code> type is useful for grouping several items under a single r
 Item {
     id: root
     Text {
-        text: &quot;Hello There!&quot;
+        text: "Hello There!"
         color: black
     }
     Image {
@@ -397,7 +397,7 @@ Item {
         x: 80
         width: 100
         height: 100
-        source: &quot;tile.png&quot;
+        source: "tile.png"
     }
     Image {
         id: imageTwo
@@ -405,7 +405,7 @@ Item {
         width: 100
         height: 100
         fillMode: Image.Tile
-        source: &quot;tile.png&quot;
+        source: "tile.png"
     }
 }
 </code></pre>
@@ -434,8 +434,8 @@ Rectangle {
     height: 100
 
     gradient: Gradient {
-        GradientStop { position: 0.0; color: &quot;yellow&quot; }
-        GradientStop { position: 1.0; color: &quot;green&quot; }
+        GradientStop { position: 0.0; color: "yellow" }
+        GradientStop { position: 1.0; color: "green" }
     }
 }
 </code></pre>
@@ -473,7 +473,7 @@ Item {
     Rectangle { 
         width: 50;
         height: 50;
-        color: &quot;red&quot;
+        color: "red"
     }
 }
 </code></pre>
@@ -491,7 +491,7 @@ Item {
         Rectangle {
             width: 50;
             height: 50;
-            color: &quot;red&quot;
+            color: "red"
         }
     ]
 }
@@ -531,7 +531,7 @@ A property is an attribute of an object that can be assigned a static value or b
 A property may be defined for a type in C++ by registering a <code>Q_PROPERTY</code> of a class which is then registered with the QML type system. We discussed these <code>QObject</code> properties in the last part. Alternatively, a custom or dynamic property of an object type may be defined in an object declaration in a QML document or component with the following syntax:
 </p>
 
-<pre class="code-highlight"><code>[default] property &amp;lt;propertyType&amp;gt; &amp;lt;propertyName&amp;gt;
+<pre class="code-highlight"><code>[default] property &lt;propertyType&gt; &lt;propertyName&gt;
 </code></pre>
 
 <p>
@@ -588,14 +588,14 @@ For example:
     Text { 
         id: title 
         x: 50; y: 25 
-        text: &quot;Qt Quick&quot; 
-        font { family: &quot;Helvetica&quot;; pointSize: parent.width * 0.1 } 
+        text: "Qt Quick" 
+        font { family: "Helvetica"; pointSize: parent.width * 0.1 } 
     } 
     
     Rectangle { 
         x: title.x; y: title.y + title.height - height; height: 5 
         width: title.width 
-        color: &quot;green&quot; 
+        color: "green" 
     }
 } 
 </code></pre>
@@ -614,7 +614,7 @@ Each QML component defines a logical scope. Each document has at least one root 
 
     Text {
         id: titletype
-        text: &quot;&amp;lt;b&amp;gt;&quot; + title + &quot;&amp;lt;/b&amp;gt;&quot;
+        text: "&lt;b&gt;" + title + "&lt;/b&gt;"
         font.pixelSize: 22
         anchors.top: parent.top
     }
@@ -655,7 +655,7 @@ Item {
 import QtQuick 2.0
 Text {
     property int size
-    text: &quot;&amp;lt;b&amp;gt;&quot; + title + &quot;&amp;lt;/b&amp;gt;&quot;
+    text: "&lt;b&gt;" + title + "&lt;/b&gt;"
     font.pixelSize: size
 }
 </code></pre>
@@ -678,7 +678,7 @@ Many QML types provide signals you can catch, for example <code>MouseArea</code>
 </p>
 
 <p>
-QML types also provide built-in property change signals that are emitted whenever a property value changes. These signals take the form <code>on<Property>Changed</code> where <Property> is the name of the property with the first letter capitalized. These documentation of the types usually don't have these signals listed, because they are implicitly available throught the fact that the type has a property.
+QML types also provide built-in property change signals that are emitted whenever a property value changes. These signals take the form <code>on&lt;Property&gt;Changed</code> where &lt;Property&gt; is the name of the property with the first letter capitalized. These documentation of the types usually don't have these signals listed, because they are implicitly available throught the fact that the type has a property.
 </p>
 
 <p>
@@ -690,8 +690,8 @@ Signal handlers are a special sort of method attribute, where the method impleme
 </p>
 
 <pre class="code-highlight"><code>TextInput {
-    text: &quot;Change this!&quot;
-    onTextChanged: console.log(&quot;Text has changed to:&quot; text)
+    text: "Change this!"
+    onTextChanged: console.log("Text has changed to:" text)
 }
 </code></pre>
 
@@ -708,8 +708,8 @@ Attached properties and attached signal handlers are mechanisms that enable obje
 References to attached properties and handlers take the following syntax form:
 </p>
 
-<pre class="code-highlight"><code>&amp;lt;AttachingType&amp;gt;.&amp;lt;propertyName&amp;gt;
-&amp;lt;AttachingType&amp;gt;.on&amp;lt;SignalName&amp;gt;
+<pre class="code-highlight"><code>&lt;AttachingType&gt;.&lt;propertyName&gt;
+&lt;AttachingType&gt;.on&lt;SignalName&gt;
 </code></pre>
 
 <p>
@@ -723,7 +723,7 @@ ListView {
     model: 3
     delegate: Rectangle {
         width: 100; height: 30
-        color: ListView.isCurrentItem ? &quot;red&quot; : &quot;yellow&quot;
+        color: ListView.isCurrentItem ? "red" : "yellow"
     }
 }
 </code></pre>
@@ -743,8 +743,8 @@ ListView {
     model: ListModel {
         id: listModel
         Component.onCompleted: {
-            for (var i = 0; i &amp;lt; 10; i++)
-                listModel.append({&quot;Name&quot;: &quot;Item &quot; + i})
+            for (var i = 0; i &lt; 10; i++)
+                listModel.append({"Name": "Item " + i})
         }
     }
     delegate: Text { text: index }
@@ -778,7 +778,7 @@ ListView {
 
         Rectangle {
             width: 100; height: 30
-            color: ListView.isCurrentItem ? &quot;red&quot; : &quot;yellow&quot; // WRONG! This won&#39;t work.
+            color: ListView.isCurrentItem ? "red" : "yellow" // WRONG! This won't work.
         }
     }
 }
@@ -796,7 +796,7 @@ This does not work as expected because <code>ListView.isCurrentItem</code> is at
 
         Rectangle {
             width: 100; height: 30
-            color: delegateItem.ListView.isCurrentItem ? &quot;red&quot; : &quot;yellow&quot;   // correct
+            color: delegateItem.ListView.isCurrentItem ? "red" : "yellow"   // correct
         }
     }
 }
@@ -829,7 +829,7 @@ To create a property binding, a property is assigned a JavaScript expression tha
     Rectangle {
         width: 100
         height: parent.height
-        color: &quot;blue&quot;
+        color: "blue"
     }
 }
 </code></pre>
@@ -842,7 +842,7 @@ Whenever the height of the parent changes, the height of the rectangle automatic
 A binding can contain any valid JavaScript expression or statement. Bindings can access object properties, call methods, and use built-in JavaScript objects such as <code>Date</code> or <code>Math</code>. A bit more complex example would bind an objects <code>color</code> to the length of a text in another object.
 </p>
 
-<pre class="code-highlight"><code>color: myTextInput.text.length &amp;lt;= 10 ? &quot;red&quot; : &quot;blue&quot;
+<pre class="code-highlight"><code>color: myTextInput.text.length &lt;= 10 ? "red" : "blue"
 </code></pre>
 
 <p>
@@ -930,7 +930,7 @@ This exercise awards no points, but you are recommended to download and check it
 
 Text {
     color: Qt.rgba(1, 0, 0, 1)
-    text: Qt.md5(&quot;hello, world&quot;)
+    text: Qt.md5("hello, world")
 }
 </code></pre>
 
@@ -972,8 +972,8 @@ For example:
 Rectangle {
     width: 100
     height: 100
-    color: &quot;red&quot;
-    border.color: &quot;black&quot;
+    color: "red"
+    border.color: "black"
     border.width: 5
     radius: 10
 }
@@ -1011,9 +1011,9 @@ Image {
     anchors.fill: parent
     asynchronous: true
     onStatusChanged: {
-        if (bigImage.status == Image.Ready) console.log(&quot;Image loaded&quot;)
+        if (bigImage.status == Image.Ready) console.log("Image loaded")
     }
-    source: &quot;bigImage.jpg&quot;
+    source: "bigImage.jpg"
     sourceSize.width: 1024
     sourceSize.height: 1024
 }
@@ -1057,7 +1057,7 @@ Example usage:
     border { left: 30; top: 30; right: 30; bottom: 30 }
     horizontalTileMode: BorderImage.Repeat
     verticalTileMode: BorderImage.Repeat
-    source: &quot;pics/borderframe.png&quot;
+    source: "pics/borderframe.png"
 }
 </code></pre>
 
@@ -1072,10 +1072,10 @@ To have user editable text you can use <a href="https://doc.qt.io/qt-5/qml-qtqui
 <pre class="code-highlight"><code>import QtQuick 2.0
 
 Text {
-    text: &quot;Hello &amp;lt;b&amp;gt;World&amp;lt;/b&amp;gt;!&quot;
-    font.family: &quot;Helvetica&quot;
+    text: "Hello &lt;b&gt;World&lt;/b&gt;!"
+    font.family: "Helvetica"
     font.pointSize: 24
-    color: &quot;red&quot;
+    color: "red"
 }
 </code></pre>
 
@@ -1102,10 +1102,10 @@ To style the text, the property <a href="http://doc.qt.io/qt-5/qml-qtquick-text.
 </p>
 
 <pre class="code-highlight"><code>Row {
-    Text { font.pointSize: 24; text: &quot;Normal&quot; }
-    Text { font.pointSize: 24; text: &quot;Raised&quot;; style: Text.Raised; styleColor: &quot;#AAAAAA&quot; }
-    Text { font.pointSize: 24; text: &quot;Outline&quot;;style: Text.Outline; styleColor: &quot;green&quot; }
-    Text { font.pointSize: 24; text: &quot;Sunken&quot;; style: Text.Sunken; styleColor: &quot;#AAAAAA&quot; }
+    Text { font.pointSize: 24; text: "Normal" }
+    Text { font.pointSize: 24; text: "Raised"; style: Text.Raised; styleColor: "#AAAAAA" }
+    Text { font.pointSize: 24; text: "Outline";style: Text.Outline; styleColor: "green" }
+    Text { font.pointSize: 24; text: "Sunken"; style: Text.Sunken; styleColor: "#AAAAAA" }
 }
 </code></pre>
 
@@ -1120,16 +1120,16 @@ To scale text with other items, you can:
 <pre class="code-highlight"><code>Rectangle { 
     width: 400
     height: 400
-    color: &quot;lightblue&quot; 
+    color: "lightblue" 
     
     
     Text { 
         x: parent.width * 0.25
         y: parent.height * 0.25 
         
-        text: &quot;Qt Quick&quot;
+        text: "Qt Quick"
         font {
-            family: &quot;Sans&quot;
+            family: "Sans"
             pixelSize: parent.width * 0.1
         } 
     } 
@@ -1145,7 +1145,7 @@ You can also use <a href="https://doc.qt.io/qt-5/qml-qtquick-fontmetrics.html" t
     FontMetrics {
         id: metrics
         font.pointSize: 20
-        font.family: &quot;Courier&quot;
+        font.family: "Courier"
     }
 
     width: 200
@@ -1195,16 +1195,16 @@ In the most simple case, where we only have one Item in need of focus, this can 
 </p>
 
 <pre class="code-highlight"><code>Rectangle {
-    color: &quot;lightsteelblue&quot;; width: 240; height: 25
+    color: "lightsteelblue"; width: 240; height: 25
     Text { id: myText }
     Item {
         id: keyHandler
         focus: true
         Keys.onPressed: {
             if (event.key == Qt.Key_A)
-                myText.text = &#39;Key A was pressed&#39;
+                myText.text = 'Key A was pressed'
             else
-                myText.text = &#39;Key other than A was pressed&#39;
+                myText.text = 'Key other than A was pressed'
         }
     }
 }
@@ -1263,17 +1263,17 @@ Let's look at an example. The code creates two MyClickableWidget instances:
 <pre class="code-highlight"><code>Rectangle {
     id: window
 
-    color: &quot;white&quot;; width: 240; height: 150
+    color: "white"; width: 240; height: 150
 
     Column {
         anchors.centerIn: parent; spacing: 15
 
         MyClickableWidget {
             focus: true  // Initial focus here
-            color: &quot;lightblue&quot;
+            color: "lightblue"
         }
         MyClickableWidget {
-            color: &quot;palegreen&quot;
+            color: "palegreen"
         }
     }
 
@@ -1294,16 +1294,16 @@ FocusScope {
     Rectangle {
         id: rectangle
         anchors.centerIn: parent
-        color: &quot;lightsteelblue&quot;; width: 175; height: 25; radius: 10; antialiasing: true
+        color: "lightsteelblue"; width: 175; height: 25; radius: 10; antialiasing: true
         Text { id: label; anchors.centerIn: parent }
         focus: true
         Keys.onPressed: {
             if (event.key == Qt.Key_A)
-                label.text = &#39;Key A was pressed&#39;
+                label.text = 'Key A was pressed'
             else if (event.key == Qt.Key_B)
-                label.text = &#39;Key B was pressed&#39;
+                label.text = 'Key B was pressed'
             else if (event.key == Qt.Key_C)
-                label.text = &#39;Key C was pressed&#39;
+                label.text = 'Key C was pressed'
         }
     }
     MouseArea { anchors.fill: parent; onClicked: { scope.focus = true } }
@@ -1377,7 +1377,7 @@ A regular expression validator is set to only allow inputs that are hexadecimal 
 
 <pre class="code-highlight"><code>TextInput {
     id: ipAddress
-    inputMask: &quot;000.000.000.000&quot;
+    inputMask: "000.000.000.000"
 }
 </code></pre>
 Input mask is set to allow IPv4 addresses.
@@ -1397,10 +1397,10 @@ It can display both plain and rich text. For example:
 
 <pre class="code-highlight"><code>TextEdit {
     width: 240
-    text: &quot;&amp;lt;b&amp;gt;Hello&amp;lt;/b&amp;gt; &amp;lt;i&amp;gt;World!&amp;lt;/i&amp;gt;&quot;
-    font.family: &quot;Helvetica&quot;
+    text: "&lt;b&gt;Hello&lt;/b&gt; &lt;i&gt;World!&lt;/i&gt;"
+    font.family: "Helvetica"
     font.pointSize: 20
-    color: &quot;blue&quot;
+    color: "blue"
     focus: true
 }
 </code></pre>
@@ -1418,13 +1418,13 @@ Note that the <code>TextEdit</code> does not implement scrolling, following the 
     clip: true
     
     function ensureVisible(r) {
-        if (contentX &amp;gt;= r.x)
+        if (contentX &gt;= r.x)
             contentX = r.x;
-        else if (contentX+width &amp;lt;= r.x+r.width)
+        else if (contentX+width &lt;= r.x+r.width)
             contentX = r.x+r.width-width;
-        if (contentY &amp;gt;= r.y)
+        if (contentY &gt;= r.y)
             contentY = r.y;
-        else if (contentY+height &amp;lt;= r.y+r.height)
+        else if (contentY+height &lt;= r.y+r.height)
             contentY = r.y+r.height-height;
     }
 
@@ -1479,8 +1479,8 @@ In the following example we use the general <code>onPressed</code> handler to te
     anchors.fill: parent
     focus: true
     Keys.onPressed: {
-        if ((event.key == Qt.Key_Y) &amp;amp;&amp;amp; (event.modifiers &amp;amp;Qt.ControlModifier)) {
-            console.log(&quot;Y pressed with Ctrl&quot;);
+        if ((event.key == Qt.Key_Y) &amp;&amp; (event.modifiers &amp;Qt.ControlModifier)) {
+            console.log("Y pressed with Ctrl");
             event.accepted = true;
         }
     }
@@ -1494,7 +1494,7 @@ Some keys may alternatively be handled via specific signal properties, for examp
 <pre class="code-highlight"><code>Item {
     anchors.fill: parent
     focus: true
-    Keys.onLeftPressed: console.log(&quot;move left&quot;)
+    Keys.onLeftPressed: console.log("move left")
 }
 </code></pre>
 
@@ -1560,7 +1560,7 @@ If the <code>Rectangle</code> type in the following example has active focus and
     focus: true
     Keys.onPressed: {
         if (event.key == Qt.Key_A) {
-            console.log(&#39;Key A was pressed&#39;);
+            console.log('Key A was pressed');
              event.accepted = true;
         }
     }
@@ -1632,11 +1632,11 @@ To enable mouse interaction with elements, <code>MouseArea</code> can be used. I
 
 <pre class="code-highlight"><code>Rectangle {
     width: 100; height: 100
-    color: &quot;green&quot;
+    color: "green"
      
     MouseArea {
         anchors.fill: parent
-        onClicked: parent.color = &#39;red&#39;
+        onClicked: parent.color = 'red'
     }
 }
 </code></pre>
@@ -1672,16 +1672,16 @@ In this example we enable the left and right button of the mouse, and change the
 
 <pre class="code-highlight"><code>Rectangle {
     width: 100; height: 100
-    color: &quot;green&quot;
+    color: "green"
      
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             if (mouse.button == Qt.RightButton) {
-                parent.color = &#39;blue&#39;;
+                parent.color = 'blue';
             } else {
-                parent.color = &#39;red&#39;;
+                parent.color = 'red';
             }
         }
     }
@@ -1707,7 +1707,7 @@ This example demonstrates text following the mouse pointer whenever the mouse en
 
 <pre class="code-highlight"><code>Text {
     id: movingText
-    text: &quot;hover&quot;
+    text: "hover"
 }
      
 MouseArea {
@@ -1823,17 +1823,17 @@ Now, let's go through some of the Input Handlers with examples.
 Item {
     TapHandler {
         acceptedDevices: PointerDevice.Mouse | PointerDevice.Stylus
-        onTapped: console.log(&quot;left clicked&quot;)
+        onTapped: console.log("left clicked")
     }
     
     TapHandler {
         acceptedDevices: PointerDevice.TouchScreen
-        onTapped: console.log(&quot;tapped&quot;)
+        onTapped: console.log("tapped")
     }
     
     TapHandler {
         acceptedButtons: Qt.RightButton
-        onTapped: console.log(&quot;right clicked&quot;)
+        onTapped: console.log("right clicked")
     }
 }
 </code></pre>
@@ -1851,7 +1851,7 @@ We can now accept events from specific devices and react accordingly. We can als
 Rectangle {
     width: 50
     height: 50
-    color: &quot;green&quot;
+    color: "green"
     
     DragHandler {
         yAxis.enabled: false
@@ -1879,7 +1879,7 @@ Item {
         acceptedDevices: PointerDevice.Mouse | PointerDevice.Stylus
         target: Rectangle {
             parent: root
-            color: &quot;blue&quot;
+            color: "blue"
             visible: handler.active
             x: handler.point.position.x - width / 2
             y: handler.point.position.y - height / 2
@@ -1935,7 +1935,7 @@ We ensure that the parent <code>Rectangle</code> is large enough so that there i
 
 Rectangle {
     width: 320; height: 110
-    color: &quot;#c0c0c0&quot;
+    color: "#c0c0c0"
 
     Row {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -1944,11 +1944,11 @@ Rectangle {
         spacing: 5
 
         Rectangle { width: 100; height: 100; radius: 20.0
-                             color: &quot;#024c1c&quot; }
+                             color: "#024c1c" }
         Rectangle { width: 100; height: 100; radius: 20.0
-                             color: &quot;#42a51c&quot; }
+                             color: "#42a51c" }
         Rectangle { width: 100; height: 100; radius: 20.0
-                             color: &quot;white&quot; }
+                             color: "white" }
     }
 }
 </code></pre>
@@ -1980,27 +1980,27 @@ Item {
         spacing: 5
 
         Rectangle {
-            color: &quot;lightblue&quot;; radius: 10.0
+            color: "lightblue"; radius: 10.0
             width: 300; height: 50
             Text {
                 anchors.centerIn: parent
-                font.pointSize: 24; text: &quot;Books&quot;
+                font.pointSize: 24; text: "Books"
             }
         }
         Rectangle {
-            color: &quot;gold&quot;; radius: 10.0
+            color: "gold"; radius: 10.0
             width: 300; height: 50
             Text {
                 anchors.centerIn: parent
-                font.pointSize: 24; text: &quot;Music&quot;
+                font.pointSize: 24; text: "Music"
             }
         }
         Rectangle {
-            color: &quot;lightgreen&quot;; radius: 10.0
+            color: "lightgreen"; radius: 10.0
             width: 300; height: 50
             Text {
                 anchors.centerIn: parent
-                font.pointSize: 24; text: &quot;Movies&quot;
+                font.pointSize: 24; text: "Movies"
             }
         }
     }
@@ -2029,7 +2029,7 @@ Note that, since <code>Column</code> inherits directly from <code>Item</code>, a
 
 Rectangle {
     width: 112; height: 112
-    color: &quot;#303030&quot;
+    color: "#303030"
 
     Grid {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -2037,10 +2037,10 @@ Rectangle {
         columns: 2
         spacing: 6
   
-        Rectangle { color: &quot;#aa6666&quot;; width: 50; height: 50 }
-        Rectangle { color: &quot;#aaaa66&quot;; width: 50; height: 50 }
-        Rectangle { color: &quot;#9999aa&quot;; width: 50; height: 50 }
-        Rectangle { color: &quot;#6666aa&quot;; width: 50; height: 50 }
+        Rectangle { color: "#aa6666"; width: 50; height: 50 }
+        Rectangle { color: "#aaaa66"; width: 50; height: 50 }
+        Rectangle { color: "#9999aa"; width: 50; height: 50 }
+        Rectangle { color: "#6666aa"; width: 50; height: 50 }
     }
 }
 </code></pre>
@@ -2078,7 +2078,7 @@ The following example shows a <code>Flow</code> item containing a number of <cod
 <pre class="code-highlight"><code>import QtQuick 2.0
 
 Rectangle {
-    color: &quot;lightblue&quot;
+    color: "lightblue"
     width: 300; height: 200
 
     Flow {
@@ -2086,13 +2086,13 @@ Rectangle {
         anchors.margins: 4
         spacing: 10
 
-        Text { text: &quot;Text&quot;; font.pixelSize: 40 }
-        Text { text: &quot;items&quot;; font.pixelSize: 40 }
-        Text { text: &quot;flowing&quot;; font.pixelSize: 40 }
-        Text { text: &quot;inside&quot;; font.pixelSize: 40 }
-        Text { text: &quot;a&quot;; font.pixelSize: 40 }
-        Text { text: &quot;Flow&quot;; font.pixelSize: 40 }
-        Text { text: &quot;item&quot;; font.pixelSize: 40 }
+        Text { text: "Text"; font.pixelSize: 40 }
+        Text { text: "items"; font.pixelSize: 40 }
+        Text { text: "flowing"; font.pixelSize: 40 }
+        Text { text: "inside"; font.pixelSize: 40 }
+        Text { text: "a"; font.pixelSize: 40 }
+        Text { text: "Flow"; font.pixelSize: 40 }
+        Text { text: "item"; font.pixelSize: 40 }
     }
 }
 </code></pre>
@@ -2307,13 +2307,13 @@ import QtQuick 2.6
 import QtQuick.Controls 2.4
 
 ApplicationWindow {
-    title: &quot;My Application&quot;
+    title: "My Application"
     width: 640
     height: 480
     visible: true
 
     Button {
-        text: &quot;Push Me&quot;
+        text: "Push Me"
         anchors.centerIn: parent
     }
 }
@@ -2332,7 +2332,7 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral(&quot;qrc:/main.qml&quot;)));
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     return app.exec();
 }
 </code></pre>
@@ -2357,15 +2357,15 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr(&quot;Application Window&quot;)
+    title: qsTr("Application Window")
     minimumHeight: 300
     minimumWidth: 330
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr(&quot;File&quot;)
-            MenuItem { text: qsTr(&quot;Open&quot;) }
-            MenuItem { text: qsTr(&quot;Close&quot;) }
+            title: qsTr("File")
+            MenuItem { text: qsTr("Open") }
+            MenuItem { text: qsTr("Close") }
         }
     }
 
@@ -2375,18 +2375,18 @@ ApplicationWindow {
         font.pixelSize: 70
         minimumPixelSize: 8
         fontSizeMode: Text.Fit
-        text: qsTr(&quot;Header&quot;)
+        text: qsTr("Header")
         background: Rectangle {
             anchors.fill: parent
-            border { width: 2; color: &quot;black&quot; }
-            color: &quot;lightgreen&quot;
+            border { width: 2; color: "black" }
+            color: "lightgreen"
         }
     }
 
     footer:
         Label {
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr(&quot;Footer&quot;)
+            text: qsTr("Footer")
             font.pixelSize: 24
         }
 }
@@ -2423,7 +2423,7 @@ The following example demonstrates a simple use case, where the mainView is push
 import QtQuick.Controls 2.4
 
 ApplicationWindow {
-    title: qsTr(&quot;StackView&quot;)
+    title: qsTr("StackView")
     width: 400
     height: 280
     visible: true
@@ -2441,11 +2441,11 @@ ApplicationWindow {
             spacing: 10
 
             Button {
-                text: &quot;Push&quot;
+                text: "Push"
                 onClicked: stack.push(mainView)
             }
             Button {
-                text: &quot;Pop&quot;
+                text: "Pop"
                 enabled: stack.depth &gt; 1
                 onClicked: stack.pop()
 
@@ -2490,7 +2490,7 @@ The following example defines a simple fade transition for push and pop operatio
 
     pushEnter: Transition {
         PropertyAnimation {
-            property: &quot;opacity&quot;
+            property: "opacity"
             from: 0
             to:1
             duration: 200
@@ -2498,7 +2498,7 @@ The following example defines a simple fade transition for push and pop operatio
     }
     pushExit: Transition {
         PropertyAnimation {
-            property: &quot;opacity&quot;
+            property: "opacity"
             from: 1
             to:0
             duration: 200
@@ -2506,7 +2506,7 @@ The following example defines a simple fade transition for push and pop operatio
     }
     popEnter: Transition {
         PropertyAnimation {
-            property: &quot;opacity&quot;
+            property: "opacity"
             from: 0
             to:1
             duration: 200
@@ -2514,7 +2514,7 @@ The following example defines a simple fade transition for push and pop operatio
     }
     popExit: Transition {
         PropertyAnimation {
-            property: &quot;opacity&quot;
+            property: "opacity"
             from: 1
             to:0
             duration: 200
@@ -2555,11 +2555,11 @@ Little bit more complex controls like <code>Drawer</code> and <code>ComboBox</co
 </p>
 
 <pre class="code-highlight"><code>ComboBox {
-    textRole: &quot;key&quot;
+    textRole: "key"
     model: ListModel {
-        ListElement { key: &quot;First&quot;; value: 123 }
-        ListElement { key: &quot;Second&quot;; value: 456 }
-        ListElement { key: &quot;Third&quot;; value: 789 }
+        ListElement { key: "First"; value: 123 }
+        ListElement { key: "Second"; value: 456 }
+        ListElement { key: "Third"; value: 789 }
     }
 }
 </code></pre>
@@ -2582,9 +2582,9 @@ You can also make a <code>ComboBox</code> editable, like so:
     editable: true
     model: ListModel {
         id: model
-        ListElement { text: &quot;Banana&quot; }
-        ListElement { text: &quot;Apple&quot; }
-        ListElement { text: &quot;Coconut&quot; }
+        ListElement { text: "Banana" }
+        ListElement { text: "Apple" }
+        ListElement { text: "Coconut" }
     }
     onAccepted: {
         if (find(editText) === -1)
@@ -2610,13 +2610,13 @@ You can also make a <code>ComboBox</code> editable, like so:
     }
 
     Text {
-        text: &quot;Page 1&quot;
+        text: "Page 1"
         width: container.width
         height: container.height
     }
 
     Text {
-        text: &quot;Page 2&quot;
+        text: "Page 2"
         width: container.width
         height: container.height
     }
@@ -2682,7 +2682,7 @@ Before getting into the actual subject of this chapter, Custom Components, let's
 When we introduced properties you saw the syntax 
 </p>
 
-<pre class="code-highlight"><code>[default] property &amp;lt;propertyType&amp;gt; &amp;lt;propertyName&amp;gt;
+<pre class="code-highlight"><code>[default] property &lt;propertyType&gt; &lt;propertyName&gt;
 </code></pre>
 
 <p>
@@ -2703,7 +2703,7 @@ import QtQuick 2.0
 Text {
     default property var someText
 
-    text: &quot;Hello, &quot; + someText.text
+    text: "Hello, " + someText.text
 }
 </code></pre>
 
@@ -2712,7 +2712,7 @@ The <code>someText</code> value could be assigned to in a <code>MyLabel</code> o
 </p>
 
 <pre class="code-highlight"><code>MyLabel {
-    Text { text: &quot;world!&quot; }
+    Text { text: "world!" }
 }
 </code></pre>
 
@@ -2721,7 +2721,7 @@ This has exactly the same effect as the following:
 </p>
 
 <pre class="code-highlight"><code>MyLabel {
-    someText: Text { text: &quot;world!&quot; }
+    someText: Text { text: "world!" }
 }
 </code></pre>
 
@@ -2742,7 +2742,7 @@ You might have noticed that child objects can be added to any Item-based type wi
 An object declaration may define a read-only property using the <code>readonly</code> keyword, with the following syntax:
 </p>
 
-<pre class="code-highlight"><code>readonly property &amp;lt;propertyType&amp;gt; &amp;lt;propertyName&amp;gt; : &amp;lt;initialValue&amp;gt;
+<pre class="code-highlight"><code>readonly property &lt;propertyType&gt; &lt;propertyName&gt; : &lt;initialValue&gt;
 </code></pre>
 
 <p>
@@ -2797,7 +2797,7 @@ To emit a signal, invoke it as a method. Any relevant signal handlers will be in
 </h3>
 
 <p>
-As we already saw in chapter 3.02, when connecting to signals in QML, the usual way is to create an <code>on<Signal></code> handler that reacts when a signal is received.
+As we already saw in chapter 3.02, when connecting to signals in QML, the usual way is to create an <code>on&lt;Signal&gt;</code> handler that reacts when a signal is received.
 </p>
 
 <p>
@@ -2841,7 +2841,7 @@ Property aliases are properties which hold a reference to another property. Unli
 A property alias declaration looks like an ordinary property definition, except that it requires the alias keyword instead of a property type, and the right-hand-side of the property declaration must be a valid alias reference:
 </p>
 
-<pre class="code-highlight"><code>[default] property alias &amp;lt;name&amp;gt;: &amp;lt;alias reference&amp;gt;
+<pre class="code-highlight"><code>[default] property alias &lt;name&gt;: &lt;alias reference&gt;
 </code></pre>
 
 <p>
@@ -2897,11 +2897,11 @@ Let's walk through an example of a color picker for choosing the color of a text
     id: page
     width: 500
     height: 200
-    color: &quot;black&quot;
+    color: "black"
 
     Text {
         id: helloText
-        text: &quot;Hello world!&quot;
+        text: "Hello world!"
         y: 30
         anchors.horizontalCenter: page.horizontalCenter
     }
@@ -2917,13 +2917,13 @@ Let's walk through an example of a color picker for choosing the color of a text
 
             Rectangle {
                 id: rectangle
-                color: &quot;red&quot;
+                color: "red"
                 anchors.fill: parent
             }
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: helloText.color = &quot;red&quot;
+                onClicked: helloText.color = "red"
             }
         }          
         // Imagine more duplicate lines of Items with different color values defined...
@@ -2945,13 +2945,13 @@ Here is our component definition with <code>Rectangle</code> and <code>MouseArea
 
     Rectangle {
         id: rectangle
-        color: &quot;red&quot;
+        color: "red"
         anchors.fill: parent
     }
 
     MouseArea {
         anchors.fill: parent
-        onClicked: console.log(&quot;clicked?&quot;)
+        onClicked: console.log("clicked?")
     }
 }
 </code></pre>
@@ -2993,7 +2993,7 @@ Now we can write to the <code>rectangle.color</code> property outside from the c
 </p>
 
 <pre class="code-highlight"><code>Cell {
-    cellColor: &quot;red&quot;
+    cellColor: "red"
     onClicked: helloText.color = cellColor
 }
 </code></pre>
@@ -3006,11 +3006,11 @@ Now we can easily add more colors with just the <code>Cell</code> definition:
     id: page
     width: 500
     height: 200
-    color: &quot;black&quot;
+    color: "black"
 
     Text {
         id: helloText
-        text: &quot;Hello world!&quot;
+        text: "Hello world!"
         y: 30
         anchors.horizontalCenter: page.horizontalCenter
     }
@@ -3020,10 +3020,10 @@ Now we can easily add more colors with just the <code>Cell</code> definition:
         x: 4; anchors.bottom: page.bottom; anchors.bottomMargin: 4
         rows: 2; columns: 2; spacing: 3
 
-        Cell { cellColor: &quot;red&quot;; onClicked: helloText.color = cellColor }
-        Cell { cellColor: &quot;green&quot;; onClicked: helloText.color = cellColor }
-        Cell { cellColor: &quot;blue&quot;; onClicked: helloText.color = cellColor }
-        Cell { cellColor: &quot;yellow&quot;; onClicked: helloText.color = cellColor }
+        Cell { cellColor: "red"; onClicked: helloText.color = cellColor }
+        Cell { cellColor: "green"; onClicked: helloText.color = cellColor }
+        Cell { cellColor: "blue"; onClicked: helloText.color = cellColor }
+        Cell { cellColor: "yellow"; onClicked: helloText.color = cellColor }
     }
 }
 </code></pre>
@@ -3151,21 +3151,21 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr(&quot;Shapes&quot;)
+    title: qsTr("Shapes")
 
     Shape {
         id: shape
         anchors.fill: parent
         ShapePath {
             strokeWidth: 10
-            strokeColor: &quot;black&quot;
+            strokeColor: "black"
             fillGradient: RadialGradient {
                 centerX: shape.width / 2; centerY: shape.height / 2
                 centerRadius: shape.width * 0.1
                 focalX: centerX; focalY: centerY
                 spread: ShapeGradient.RepeatSpread
-                GradientStop { position: 0; color: &quot;yellow&quot; }
-                GradientStop { position: 1; color: &quot;blue&quot; }
+                GradientStop { position: 0; color: "yellow" }
+                GradientStop { position: 1; color: "blue" }
             }
             strokeStyle: ShapePath.SolidLine
             startX: shape.width * 0.3; startY: shape.height * 0.1

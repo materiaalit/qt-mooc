@@ -251,7 +251,7 @@ Q_PROPERTY(QString text MEMBER m_text NOTIFY textChanged)
 signals:
     void colorChanged();
     void spacingChanged();
-    void textChanged(const QString &amp;amp;newText);
+    void textChanged(const QString &amp;newText);
 
 private:
     QColor  m_color;
@@ -303,7 +303,7 @@ A property can be read and written using the generic functions <code>QObject::pr
 <pre class="code-highlight"><code>QPushButton *button = new QPushButton;
 QObject *object = button;
 button-&gt;setDown(true);
-object-&gt;setProperty(&quot;down&quot;, true);
+object-&gt;setProperty("down", true);
 </code></pre>
 
 <p>
@@ -377,7 +377,7 @@ Given a pointer to an instance of MyClass or a pointer to a <code>QObject</code>
 QObject *object = myinstance;
 
 myinstance-&gt;setPriority(MyClass::VeryHigh);
-object-&gt;setProperty(&quot;priority&quot;, &quot;VeryHigh&quot;);
+object-&gt;setProperty("priority", "VeryHigh");
 </code></pre>
 
 <p>
@@ -674,7 +674,7 @@ private:
 To connect the signal to the slot, we use <code>QObject::connect()</code>. There are several ways to connect signal and slots. The first is to use function pointers:
 </p>
 
-<pre class="code-highlight"><code>connect(sender, &amp;amp;QObject::destroyed, this, &amp;amp;MyObject::objectDestroyed);
+<pre class="code-highlight"><code>connect(sender, &amp;QObject::destroyed, this, &amp;MyObject::objectDestroyed);
 </code></pre>
 
 <p>
@@ -685,7 +685,7 @@ There are several advantages to using <code>QObject::connect()</code> with funct
 You can also connect to functors or C++11 lambdas:
 </p>
 
-<pre class="code-highlight"><code>connect(sender, &amp;amp;QObject::destroyed, [=](){ this-&gt;m_objects.remove(sender); });
+<pre class="code-highlight"><code>connect(sender, &amp;QObject::destroyed, [=](){ this-&gt;m_objects.remove(sender); });
 </code></pre>
 
 <p>
@@ -798,7 +798,7 @@ When <code>QObjects</code> are created on the stack, the same behavior applies. 
 <pre class="code-highlight"><code>int main()
 {
     QWidget window;
-    QPushButton quit(&quot;Quit&quot;, &amp;amp;window);
+    QPushButton quit("Quit", &amp;window);
     ...
 }
 </code></pre>
@@ -813,10 +813,10 @@ But now consider what happens if we swap the order of construction, as shown in 
 
 <pre class="code-highlight"><code>int main()
 {
-    QPushButton quit(&quot;Quit&quot;);
+    QPushButton quit("Quit");
     QWidget window;
 
-    quit.setParent(&amp;amp;window);
+    quit.setParent(&amp;window);
     ...
 }
 </code></pre>

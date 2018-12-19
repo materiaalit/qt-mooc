@@ -169,7 +169,7 @@ Let's have an example of including namespaces! Say you want to include the <code
 <img class="naytto" src="../img/part-1/QtConcurrentNamespace-3b53fc17.png" />
 
 <p>
-To include the <code>QtConcurrent</code> namespace, you will need to make a specific mention of it in two places: the header of the relevant file (<code>#include <QtConcurrent></code>),
+To include the <code>QtConcurrent</code> namespace, you will need to make a specific mention of it in two places: the header of the relevant file (<code>#include &lt;QtConcurrent&gt;</code>),
 </p>
 
 <img class="naytto" src="../img/part-1/QtConcurrentWorks-d0a37e77.png" />
@@ -355,20 +355,20 @@ Note: The first assignment only includes values that are specified on the same l
 The <a href="https://doc.qt.io/qt-5/resources.html" title="Qt resource system">Qt resource system</a> is a platform independent way to store application resources (images, icons, translation files, data, etc.) inside the application's executable. Resources are specified inside the <strong>resource collection</strong> <code>.qrc</code> file:
 </p>
 
-<pre class="code-highlight"><code>&amp;lt;!DOCTYPE RCC&amp;gt;&amp;lt;RCC version=&quot;1.0&quot;&amp;gt;
-&amp;lt;qresource&amp;gt;
-    &amp;lt;file&amp;gt;images/icon.png&amp;lt;/file&amp;gt;
-    &amp;lt;file&amp;gt;data.txt&amp;lt;/file&amp;gt;
-&amp;lt;/qresource&amp;gt;
-&amp;lt;/RCC&amp;gt;
+<pre class="code-highlight"><code>&lt;!DOCTYPE RCC&gt;&lt;RCC version="1.0"&gt;
+&lt;qresource&gt;
+    &lt;file&gt;images/icon.png&lt;/file&gt;
+    &lt;file&gt;data.txt&lt;/file&gt;
+&lt;/qresource&gt;
+&lt;/RCC&gt;
 </code></pre>
 
 <p>
 The file is then included in the <code>.pro</code> file with <code>RESOURCES = application.qrc</code>. The specified files will be then compressed and included as a static C++ array. They can be accessed with <a href="https://doc.qt.io/qt-5/qfile.html" title="QFile">QFile</a> or image types like any other file like so:
 </p>
 
-<pre class="code-highlight"><code>QIcon icon(&quot;:/images/icon.png&quot;)
-QFile file(&quot;:/data.txt&quot;);
+<pre class="code-highlight"><code>QIcon icon(":/images/icon.png")
+QFile file(":/data.txt");
 </code></pre>
 
 <h2 class="material-heading">
@@ -390,9 +390,9 @@ The <a href="http://doc.qt.io/qt-5/qdebug.html" title="QDebug">QDebug</a> class 
 In the common case, it is useful to call the <code>qDebug()</code> function to obtain a default QDebug object to use for writing debugging information.  
 </p>
 
-<pre class="code-highlight"><code>qDebug() &amp;lt;&amp;lt; &quot;Date:&quot; &amp;lt;&amp;lt; QDate::currentDate();
-qDebug() &amp;lt;&amp;lt; &quot;Types:&quot; &amp;lt;&amp;lt; QString(&quot;String&quot;) &amp;lt;&amp;lt; QChar(&#39;x&#39;) &amp;lt;&amp;lt; QRect(0, 10, 50, 40);
-qDebug() &amp;lt;&amp;lt; &quot;Custom coordinate type:&quot; &amp;lt;&amp;lt; coordinate;
+<pre class="code-highlight"><code>qDebug() &lt;&lt; "Date:" &lt;&lt; QDate::currentDate();
+qDebug() &lt;&lt; "Types:" &lt;&lt; QString("String") &lt;&lt; QChar('x') &lt;&lt; QRect(0, 10, 50, 40);
+qDebug() &lt;&lt; "Custom coordinate type:" &lt;&lt; coordinate;
 </code></pre>
 
 <p>
@@ -427,10 +427,10 @@ You can tweak these options through the <code>space()</code>, <code>nospace()</c
 Many standard types can be written to QDebug objects, and Qt provides support for most Qt value types. To add support for custom types, you need to implement a streaming operator, as in the following example:
 </p>
 
-<pre class="code-highlight"><code>QDebug operator&amp;lt;&amp;lt;(QDebug debug, const Coordinate &amp;amp;c)
+<pre class="code-highlight"><code>QDebug operator&lt;&lt;(QDebug debug, const Coordinate &amp;c)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() &amp;lt;&amp;lt; &#39;(&#39; &amp;lt;&amp;lt; c.x() &amp;lt;&amp;lt; &quot;, &quot; &amp;lt;&amp;lt; c.y() &amp;lt;&amp;lt; &#39;)&#39;;
+    debug.nospace() &lt;&lt; '(' &lt;&lt; c.x() &lt;&lt; ", " &lt;&lt; c.y() &lt;&lt; ')';
 
     return debug;
 }
@@ -456,14 +456,14 @@ Under Windows the message is sent to the console, if it is a console application
 For example:
 </p>
 
-<pre class="code-highlight"><code>qDebug(&quot;Items in list: %d&quot;, myList.size());
+<pre class="code-highlight"><code>qDebug("Items in list: %d", myList.size());
 </code></pre>
 
 <p>
 If you include <code>QtDebug</code>, a more convenient syntax is also available:
 </p>
 
-<pre class="code-highlight"><code>qDebug() &amp;lt;&amp;lt; &quot;Brush:&quot; &amp;lt;&amp;lt; myQBrush &amp;lt;&amp;lt; &quot;Other value:&quot; &amp;lt;&amp;lt; i;
+<pre class="code-highlight"><code>qDebug() &lt;&lt; "Brush:" &lt;&lt; myQBrush &lt;&lt; "Other value:" &lt;&lt; i;
 </code></pre>
 
 <p>
@@ -485,11 +485,11 @@ It exits if the environment variable <code>QT_FATAL_CRITICALS</code> is not empt
 For example:
 </p>
 
-<pre class="code-highlight"><code>void load(const QString &amp;amp;fileName)
+<pre class="code-highlight"><code>void load(const QString &amp;fileName)
 {
      QFile file(fileName);
      if (!file.exists())
-          qCritical(&quot;File &#39;%s&#39; does not exist!&quot;, qUtf8Printable(fileName));
+          qCritical("File '%s' does not exist!", qUtf8Printable(fileName));
 }
 </code></pre>
 --
@@ -508,7 +508,7 @@ For example:
 <pre class="code-highlight"><code>void f(int c)
 {
     if (c &gt; 200)
-        qWarning(&quot;f: bad argument, c == %d&quot;, c);
+        qWarning("f: bad argument, c == %d", c);
 }
 </code></pre>
 
@@ -526,7 +526,7 @@ For example:
 <pre class="code-highlight"><code>int divide(int a, int b)
 {
     if (b == 0)                                // program error
-         qFatal(&quot;divide: cannot divide by zero&quot;);
+         qFatal("divide: cannot divide by zero");
     return a / b;
 }
 </code></pre>
@@ -608,7 +608,7 @@ In addition to <code>QString</code>, Qt also provides the <code>QByteArray</code
 One way to initialize a <code>QString</code> is simply to pass a <code>const char *</code> to its constructor. For example, the following code creates a <code>QString</code> of size 5 containing the data "Hello":
 </p>
 
-<pre class="code-highlight"><code>QString str = &quot;Hello&quot;;
+<pre class="code-highlight"><code>QString str = "Hello";
 </code></pre>
 
 <p>
@@ -626,7 +626,7 @@ For read-only access, an alternative syntax is to use the <code>at()</code> func
 <code>QString</code> provides dozens of overloads designed to simplify string usage. For example, if you want to compare a QString with a string literal, you can write code like this and it will work as expected:
 
 <pre class="code-highlight"><code>QString str;
-if (str == &quot;auto&quot; || str == &quot;extern&quot; || str == &quot;static&quot; || str == &quot;register&quot;) {
+if (str == "auto" || str == "extern" || str == "static" || str == "register") {
     // ...
 }
 </code></pre>
@@ -644,10 +644,10 @@ You can also pass string literals to functions that take <code>QString</code>s a
 <code>QString</code> provides the following basic functions for modifying the character data: <code>append()</code>, <code>prepend()</code>, <code>insert()</code>, <code>replace()</code>, and <code>remove()</code>. For example:
 </p>
 
-<pre class="code-highlight"><code>QString str = &quot;and&quot;;
-str.prepend(&quot;rock &quot;); // str == &quot;rock and&quot;
-str.append(&quot; roll&quot;); // str == &quot;rock and roll&quot;
-str.replace(5, 3, &quot;&amp;amp;&quot;); // str == &quot;rock &amp;amp; roll&quot;
+<pre class="code-highlight"><code>QString str = "and";
+str.prepend("rock "); // str == "rock and"
+str.append(" roll"); // str == "rock and roll"
+str.replace(5, 3, "&amp;"); // str == "rock &amp; roll"
 </code></pre>
 
 <p>
@@ -715,11 +715,11 @@ Using the <code>QString</code> '+' operator, it is easy to construct a complex s
 </p>
 
 <pre class="code-highlight"><code>QString foo;
-QString type = &quot;long&quot;;
+QString type = "long";
 
-foo-&gt;setText(QLatin1String(&quot;vector&lt;&quot;) + type + QLatin1String(&quot;&gt;::iterator&quot;));
+foo-&gt;setText(QLatin1String("vector&lt;") + type + QLatin1String("&gt;::iterator"));
 
-if (foo.startsWith(&quot;(&quot; + type + &quot;) 0x&quot;))
+if (foo.startsWith("(" + type + ") 0x"))
     ...
 </code></pre>
 
@@ -728,7 +728,7 @@ There is nothing wrong with either of these string constructions, but there are 
 </p>
 
 <p>
-First, multiple uses of the '+' operator usually means multiple memory allocations. When concatenating n substrings, where n > 2, there can be as many as n - 1 calls to the memory allocator.
+First, multiple uses of the '+' operator usually means multiple memory allocations. When concatenating n substrings, where n &gt; 2, there can be as many as n - 1 calls to the memory allocator.
 </p>
 
 <p>
@@ -745,10 +745,10 @@ There are two ways you can access this improved method of string construction. T
 
 <pre class="code-highlight"><code>#include &lt;QStringBuilder&gt;
 
-QString hello(&quot;hello&quot;);
-QStringRef el(&amp;amp;hello, 2, 3);
-QLatin1String world(&quot;world&quot;);
-QString message =  hello % el % world % QChar(&#39;!&#39;);
+QString hello("hello");
+QStringRef el(&amp;hello, 2, 3);
+QLatin1String world("world");
+QString message =  hello % el % world % QChar('!');
 </code></pre>
 
 <p>
@@ -801,7 +801,7 @@ The <a href="http://doc.qt.io/qt-5/qbytearray.html" title="<code>QByteArray</cod
 One way to initialize a <code>QByteArray</code> is simply to pass a <code>const char *</code> to its constructor. For example, the following code creates a byte array of size 5 containing the data "Hello":
 </p>
 
-<pre class="code-highlight"><code>QByteArray ba(&quot;Hello&quot;);
+<pre class="code-highlight"><code>QByteArray ba("Hello");
 </code></pre>
 
 <p>
@@ -891,7 +891,7 @@ A <code>QVariant</code> object holds a single value of a single <code>type()</co
 </h2>
 
 <p>
-The Qt library provides a set of general purpose template-based container classes. These classes can be used to store items of a specified type. For example, if you need a resizable array of QStrings, use <code>QVector<QString></code>.
+The Qt library provides a set of general purpose template-based container classes. These classes can be used to store items of a specified type. For example, if you need a resizable array of QStrings, use <code>QVector&lt;QString&gt;</code>.
 </p>
 
 <p>
@@ -928,7 +928,7 @@ As special cases, the <code>QCache</code> and <code>QContiguousCache</code> clas
 </p>
 
 <p>
-Containers can be nested. For example, it is perfectly possible to use a <code>QMap&lt;QString, QList&lt;int&gt;&gt;</code>, where the key type is <code>QString</code> and the value type <code>QList<int></code>.
+Containers can be nested. For example, it is perfectly possible to use a <code>QMap&lt;QString, QList&lt;int&gt;&gt;</code>, where the key type is <code>QString</code> and the value type <code>QList&lt;int&gt;</code>.
 </p>
 
 <p>
@@ -947,9 +947,9 @@ Here's an example custom data type that meets the requirement of an assignable d
 {
 public:
      Employee() {}
-     Employee(const Employee &amp;amp;other);
+     Employee(const Employee &amp;other);
 
-     Employee &amp;amp;operator=(const Employee &amp;amp;other);
+     Employee &amp;operator=(const Employee &amp;other);
 
  private:
       QString myName;
@@ -970,26 +970,26 @@ If we don't provide a copy constructor or an assignment operator, C++ provides a
 </code></pre>
 
 <p>
-Some containers have additional requirements for the data types they can store. For example, the Key type of a <code>QMap<Key, T></code> must provide <code>operator<()</code>. Such special requirements are documented in a class's detailed description. In some cases, specific functions have special requirements; these are described on a per-function basis. The compiler will always emit an error if a requirement isn't met.
+Some containers have additional requirements for the data types they can store. For example, the Key type of a <code>QMap&lt;Key, T&gt;</code> must provide <code>operator&lt;()</code>. Such special requirements are documented in a class's detailed description. In some cases, specific functions have special requirements; these are described on a per-function basis. The compiler will always emit an error if a requirement isn't met.
 </p>
 
 <p>
 Qt's containers provide <code>operator&lt;&lt;()</code> and <code>operator&gt;&gt;()</code> so that they can easily be read and written using a <code>QDataStream</code>. This means that the data types stored in the container must also support <code>operator&lt;&lt;()</code> and <code>operator&gt;&gt;()</code>. Providing such support is straightforward; here's how we could do it for the Movie struct above:
 </p>
 
-<pre class="code-highlight"><code>QDataStream &amp;amp;operator&amp;lt;&amp;lt;(QDataStream &amp;amp;out, const Movie &amp;amp;movie)
+<pre class="code-highlight"><code>QDataStream &amp;operator&lt;&lt;(QDataStream &amp;out, const Movie &amp;movie)
 {
-    out &amp;lt;&amp;lt; (quint32)movie.id &amp;lt;&amp;lt; movie.title
-        &amp;lt;&amp;lt; movie.releaseDate;
+    out &lt;&lt; (quint32)movie.id &lt;&lt; movie.title
+        &lt;&lt; movie.releaseDate;
     return out;
 }
 
-QDataStream &amp;amp;operator&amp;gt;&amp;gt;(QDataStream &amp;amp;in, Movie &amp;amp;movie)
+QDataStream &amp;operator&gt;&gt;(QDataStream &amp;in, Movie &amp;movie)
 {
     quint32 id;
     QDate date;
 
-    in &amp;gt;&amp;gt; id &amp;gt;&amp;gt; movie.title &amp;gt;&amp;gt; date;
+    in &gt;&gt; id &gt;&gt; movie.title &gt;&gt; date;
     movie.id = (int)id;
     movie.releaseDate = date;
     return in;
