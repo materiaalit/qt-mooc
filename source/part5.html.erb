@@ -1,0 +1,1395 @@
+---
+  title: Part 5
+  exercise_page: true
+  quiz_page: true
+  published: false
+---
+
+<% partial 'partials/material_heading' do %>
+QML Context Properties and Objects
+<% end %>
+
+<p>
+In Part 5 we'll learn how to integrate C++ and QML. In most cases this means accessing C++ from QML, and it will be our focus. It is also possible to access QML objects from C++, but generally this is not what you want to do, except perhaps for testing purposes, so we're not going into that here.
+</p>
+
+<p>
+All communication between C++ and QML happens via the Qt Meta-Object System.
+</p>
+
+<ul>
+<li>
+	Signals &amp; Slots can be connected
+</li>
+<li>
+	Properties can be accessed and modified
+</li>
+<li>
+	C++ slots and methods marked as <code>Q_INVOKABLE</code> can be called from QML
+</li>
+<li>
+	Enumerations registered with <code>Q_ENUM</code> can be accessed from QML
+</li>
+</ul>
+
+<% partial 'partials/material_sub_heading' do %>
+QML Context
+<% end %>
+
+<p>
+C++ objects and values can be embedded directly into the context of loaded QML objects using <em>context properties</em> and <em>context objects</em>. This is achieved through the <code>QQmlContext</code> class provided by the <code>Qt QML</code> module, which exposes data to the context of a QML component, allowing data to be injected from C++ into QML.
+</p>
+
+<p>
+Each <code>QQmlContext</code> contains a set of properties, distinct from its <code>QObject</code> properties, that allow data to be explicitly bound to a context by name. 
+</p>
+
+<p>
+Contexts form a hierarchy, the root of which is the QML engine's root context. The root context is automatically created by the <code>QQmlEngine</code>. Data that should be available to all QML component instances instantiated by the engine should be put in the root context. Additional data that should only be available to a subset of component instances should be added to sub-contexts parented to the root context. Child contexts inherit the context properties of their parents; if a child context sets a context property that already exists in its parent, the new context property overrides that of the parent.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Context Properties
+<% end %>
+
+<p>
+You can expose context properties with the <code>setContextProperty</code> method. It's possible to expose both value types supported by <code>QVariant</code>, and pointers to <code>QObject</code>s. The former simply exposes the value you set to be available by the property name, while the latter exposes the object itself.
+</p>
+
+<p>
+For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// main.cpp
+#include &lt;QGuiApplication&gt;
+#include &lt;QQmlApplicationEngine&gt;
+#include &lt;QQmlContext&gt;
+#include &lt;QColor&gt;
+
+int main(int argc, char *argv[])
+{
+    QGuiApplication app(argc, argv);
+    QQmlApplicationEngine engine;
+
+    QQmlContext* context = engine.rootContext();
+    context-&gt;setContextProperty("myBackgroundColor", QColor(Qt::yellow));
+    context-&gt;setContextProperty("myText", "I'm text from C++!");
+    
+    context-&gt;setContextProperty("application", &amp;app);
+
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+    
+    return app.exec();
+}
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// main.qml
+import QtQuick 2.9
+import QtQuick.Window 2.3
+
+Window {
+    width: 640; height: 480; visible: true
+
+    Rectangle {
+        objectName: "rectangle"
+        width: 200; height: 100
+        color: myBackgroundColor
+
+        Text {
+            id: textField
+            anchors.centerIn: parent
+            font.pixelSize: 18
+            text: myText
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                application.quit();
+            }
+        }
+    }
+}
+<% end %>
+
+<p>
+Here, we exposed the values named "myBackgroundColor" and "myText", which are then simply available in QML by the property name.
+</p>
+
+<p>
+We also exposed the view itself as "application" allowing us to quit the app. Note that this is just for the sake of an example! Normally we'd use <code>Qt.quit()</code>, but this demonstrates how to call slots from QML. We'll talk more about exposing and using C++ objects in QML in the next chapter.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Context Objects
+<% end %>
+
+<p>
+To simplify binding and maintaining larger data sets, all the properties of an object can be exposed with <code>setContextObject</code>. All the properties of the context object are available by name in the context, as though they were all individually set with <code>setContextProperty</code>.
+</p>
+
+<p>
+Note that <em>this is distinct from exposing an object with <code>setContextProperty</code></em>. When you expose an object with <code>setContextProperty</code> the object itself is available in QML, like in the previous example with "application". When you expose an object with <code>setContextObject</code> only the properties of the context are available, as previously stated.
+</p>
+
+<p>
+Also note that all properties explicitly added with <code>setContextProperty</code> take precedence over the context object's properties.
+</p>
+
+<p>
+For example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// myclass.h
+#include &lt;QObject&gt;
+#include &lt;QColor&gt;
+class MyClass : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QColor myColor MEMBER m_color NOTIFY colorChanged)
+    Q_PROPERTY(QString myText MEMBER m_text NOTIFY textChanged)
+
+public:
+    explicit MyClass(QObject* parent = nullptr);
+
+signals:
+    void colorChanged();
+    void textChanged(const QString &amp;newText);
+
+private:
+    QColor m_color;
+    QString m_text;
+};
+
+
+// main.cpp
+context-&gt;setContextObject(&amp;myClass);
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+Accessing C++ from QML
+<% end %>
+
+<p>
+In the last chapter we already saw a simple example about exposing a C++ object to QML using context properties. In this chapter we'll discuss that in more detail, by going through various ways you can use C++ objects in QML, and seeing what requirements that entails on the C++ side.
+</p>
+
+<p>
+When a <code>QObject</code> instance is exposed with <code>setContextProperty</code>, the objects properties, signals, slots, methods marked with <code>Q_INVOKABLE</code>, and enums registered with <code>Q_ENUM</code>, are accessible from QML. Let's look at an example.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// simpleclass.h
+#include &lt;QObject&gt;
+#include &lt;QColor&gt;
+
+class SimpleClass : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QColor backgroundColor MEMBER m_backgroundColor NOTIFY backgroundColorChanged)
+
+public:
+    explicit SimpleClass(QObject *parent = nullptr);
+    Q_INVOKABLE void usefulMethod();
+
+signals:
+    void backgroundColorChanged();
+
+public slots:
+    void reactToColorChange();
+
+private:
+    QColor m_backgroundColor;
+};
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// simpleclass.cpp
+#include "simpleclass.h"
+
+SimpleClass::SimpleClass(QObject *parent) :
+    QObject(parent),
+    m_backgroundColor(QColor(Qt::blue))
+{
+}
+
+void SimpleClass::usefulMethod()
+{
+    qDebug("I'm being useful :)");
+}
+
+void SimpleClass::reactToColorChange()
+{
+    qDebug("Color changed!");
+}
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// main.cpp
+#include "simpleclass.h"
+#include &lt;QGuiApplication&gt;
+#include &lt;QQmlApplicationEngine&gt;
+#include &lt;QQmlContext&gt;
+
+int main(int argc, char *argv[])
+{
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+    QQmlContext* context(engine.rootContext());
+    context-&gt;setContextProperty("simpleClass", new SimpleClass(&amp;engine));
+
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+    return app.exec();
+}
+
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// main.qml
+import QtQuick 2.6
+import QtQuick.Window 2.2
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Exposed QObject")
+
+    Rectangle {
+        id: rectangle
+        anchors.fill: parent
+        focus: true
+        color: simpleClass.backgroundColor
+        Text {
+            anchors.centerIn: parent
+            font.pixelSize: 18
+            text: "Hello World!"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                simpleClass.backgroundColor = Qt.rgba(1, 0, 0, 1)
+            }
+        }
+        Keys.onSpacePressed: simpleClass.usefulMethod()
+    }
+
+    Connections {
+        target: simpleClass
+        onBackgroundColorChanged: simpleClass.reactToColorChange()
+    }
+}
+<% end %>
+
+<p>
+Lot of this is familiar from the last chapter. As you can see after exposing the object with <code>setContextProperty</code> we can access the property <code>backgroundColor</code> by name. We can also access the method <code>usefulMethod()</code> because we declared it with the macro <code>Q_INVOKABLE</code>. We can also call the public slot <code>reactToColorChange()</code> from QML.
+</p>
+
+<p>
+The example above doesn't have enums, but the usage is simple. You declare the enums like you would normally, and then use the <code>Q_ENUM</code> macro to register it in the meta-object system.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+#include &lt;QObject&gt;
+
+class MyClass : public QObject
+{
+    Q_OBJECT
+
+public:
+    enum Status { Loading, Ready };
+    Q_ENUM(Status)
+    ...
+}
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Data Models
+<% end %>
+
+<p>
+Often we want to use data from C++ to show in a QML view. We talked about views in Part 4, but didn't go into C++ side yet. In the following chapters we're going to learn about making our own models, but let's see here how we can populate a simple <code>QStringList</code> with data in C++ and use it in QML by exposing it to the QML context.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+QStringList myList;
+myList.append("Dog");
+myList.append("Cat");
+myList.append("Mouse");
+myList.append("Dolphin");
+
+QQmlApplicationEngine engine;
+QQmlContext* context(engine.rootContext());
+context-&gt;setContextProperty("myModel", QVariant::fromValue(myList));
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+ListView {
+    width: 200; height: 200
+    anchors.fill: parent
+
+    model: myModel
+    delegate: Rectangle {
+        height: 30; width: 200
+        Text {
+            text: model.modelData
+        }
+    }
+}
+
+<% end %>
+<% partial 'partials/material_heading' do %>
+Adding New QML Types
+<% end %>
+
+<p>
+So far we've discussed how to expose an object instance to the QML context. Sometimes we want to register the class itself to be used in QML. The registration allows the class to be used as a data type from QML. Additionally registration can provide other features, such as allowing a class to be used as an instantiable QML object type from QML, or enabling a singleton instance fo the class to be imported and used from QML.
+</p>
+
+<p>
+Usually we register classes that derive from <code>QObject</code> that use the macro <code>Q_OBJECT</code>, but it is also possible to register a "lighter" version of <code>QObject</code>, declared with a <code>Q_GADGET</code> macro instead. In these lighter classes we have access to properties, enums, and invokable methods, but not to the signals and slots system. But more on that a little bit later.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Registration
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Instantiable Types
+<% end %>
+
+<p>
+To register a <code>QObject</code>-derived class as an instantiable QML object type, call <code>qmlRegisterType()</code> to register the class as QML type into a particular type namespace. Clients can then import that namespace in order to use that type.
+</p>
+
+<p>
+For example, suppose there is a <code>Message</code> class with <code>author</code> and <code>creationDate</code> properties:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+class Message : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString author READ author WRITE setAuthor NOTIFY authorChanged)
+    Q_PROPERTY(QDateTime creationDate READ creationDate WRITE setCreationDate NOTIFY creationDateChanged)
+public:
+    // ...
+};
+<% end %>
+
+<p>
+This type can be registered by calling <code>qmlRegisterType()</code> with an appropriate type namespace and version number. For example, to make the type available in the <code>com.mycompany.messaging</code> namespace with version 1.0:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+qmlRegisterType&lt;Message&gt;("com.mycompany.messaging", 1, 0, "Message");
+<% end %>
+
+<p>
+The type can be used in an object declaration from QML, and its properties can be read and written to, as per the example below:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import com.mycompany.messaging 1.0
+
+Message {
+    author: "Amelie"
+    creationDate: new Date()
+}
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Non-instantiable Types
+<% end %>
+
+<p>
+Sometimes a <code>QObject</code>-derived class may need to be registered with the QML type system but not as an instantiable type. For example, this is the case if a C++ class:
+</p>
+
+<ul>
+<li>
+	is an interface type that should not be instantiable
+</li>
+<li>
+	is a base class type that does not need to be exposed to QML
+</li>
+<li>
+	declares some enum that should be accessible from QML, but otherwise should not be instantiable
+</li>
+<li>
+	is a type that should be provided to QML through a singleton instance, and should not be instantiable from QML
+</li>
+
+<p>
+The Qt QML module provides several methods for registering non-instantiable types:
+</p>
+
+<li>
+	<code>qmlRegisterType()</code> (with no parameters) registers a C++ type that is not instantiable and cannot be referred to from QML. This enables the engine to coerce any inherited types that are instantiable from QML.
+</li>
+<li>
+	<code>qmlRegisterInterface()</code> registers a Qt interface type with a specific QML type name. The type is not instantiable from QML but can be referred to by its type name.
+</li>
+<li>
+	<code>qmlRegisterUncreatableType()</code> registers a named C++ type that is not instantiable but should be identifiable as a type to the QML type system. This is useful if a type's enums or attached properties should be accessible from QML but the type itself should not be instantiable.
+</li>
+<li>
+	<code>qmlRegisterSingletonType()</code> registers a singleton type that can be imported from QML.
+</li>
+</ul>
+
+<p>
+For example, let's talk about a Singleton type.
+</p>
+
+<p>
+A <code>QObject</code> singleton type can be interacted with in a manner similar to any other <code>QObject</code> or instantiated type, except that only one (engine constructed and owned) instance will exist, and it must be referenced by type name rather than id. <code>Q_PROPERTY</code>s of <code>QObject</code> singleton types may be bound to, and <code>Q_INVOKABLE</code> functions of <code>QObject</code> module APIs may be used in signal handler expressions. This makes singleton types an ideal way to implement styling or theming.
+</p>
+
+<p>
+Say we have a singleton type for theming registered into <code>MyThemeModule</code> namespace with version 1.0, where that <code>QObject</code> has a <code>QColor color</code> property. We can then use it simply with:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import MyThemeModule 1.0 as Theme
+
+Rectangle {
+    color: Theme.color // binding.
+}
+<% end %>
+
+<p>
+Another example would be a case where we have a class just for enumerations. As a side note, in this case we can use the lighter <code>Q_GADGET</code> macro mentioned before (as we won't be needing signals and slots):
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// modeclass.h
+#include &lt;QObject&gt;
+
+class ModeClass
+{
+    Q_GADGET
+public:
+    explicit ModeClass();
+    enum Mode { Slow, Normal, Fast, UsainBolt };
+    Q_ENUM(Mode)
+};
+<% end %>
+
+<p>
+and register it with:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+qmlRegisterUncreatableType&lt;ModeClass&gt;("com.mycompany.modes", 1, 0, "ModeClass", "Message");
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+Creating Custom QObjects
+<% end %>
+
+<p>
+Let's look at how to create a custom <code>QObject</code>-derived class for use in QML by starting with an example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// cppperson.h
+class CppPerson : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(int shoeSize READ shoeSize WRITE setShoeSize NOTIFY shoeSizeChanged)
+public:
+    CppPerson(QObject *parent = nullptr);
+
+    QString name() const;
+    void setName(const QString &amp;name);
+
+    int shoeSize() const;
+    void setShoeSize(int size);
+
+signals:
+    void nameChanged();
+    void shoeSizeChanged();
+
+private:
+    QString m_name;
+    int m_shoeSize;
+};
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// cppperson.cpp
+#include "cppperson.h"
+
+CppPerson::CppPerson(QObject *parent) :
+    QObject(parent), m_shoeSize(0)
+{
+}
+
+QString CppPerson::name() const
+{
+    return m_name;
+}
+
+void CppPerson::setName(const QString &amp;name)
+{
+    if (m_name != name) {
+        m_name = name;
+        emit nameChanged();
+    }
+}
+
+int CppPerson::shoeSize() const
+{
+    return m_shoeSize;
+}
+
+void CppPerson::setShoeSize(int size)
+{
+    if (m_shoeSize != size) {
+        m_shoeSize = size;
+        emit shoeSizeChanged();
+    }
+}
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// main.cpp
+...
+qmlRegisterType&lt;CppPerson&gt;("People", 1,0, "Person");
+...
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// main.qml
+import QtQuick 2.9
+import QtQuick.Window 2.3
+import People 1.0
+
+Window {
+    width: 640; height: 480
+    visible: true
+
+    Rectangle {
+        anchors.fill: parent
+
+        // Person is implemented in C++
+        Person {
+            id: person
+            name: "Bob Jones"
+            shoeSize: 12
+            onNameChanged: {
+                console.log("New name: " + name)
+            }
+            onShoeSizeChanged: {
+                console.log("New shoe size: " + shoeSize)
+            }
+        }
+
+        Column {
+            anchors.fill:  parent
+            spacing: 20
+            Text {
+                font.bold: true
+                font.pixelSize: 26
+                text: "Person name: " + person.name
+            }
+            Text {
+                font.bold: true
+                font.pixelSize: 26
+                text: "Person shoe size: " + person.shoeSize
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                person.name = "John Doe"
+                person.shoeSize = 9
+            }
+        }
+    }
+}
+
+<% end %>
+
+<p>
+The C++ side should be starting to look familiar by now, we declare the properties and their accessors and signals with <code>Q_PROPERTY</code> in the header file, and implement the getters and setters in <code>cppperson.cpp</code> (and not forgetting to emit those <code>xxxChanged</code> signals in the setters!).
+</p>
+
+<p>
+On QML we import the now-registered type, and then use it like we would any other QML type. Property bindings are done by name like usual, and slots for the signal automatically exists following the naming convention <code>onXxxChanged</code>.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+QStandardItemModel
+<% end %>
+
+<p>
+A common need is to implement a model in C++ to store data, which is then displayed in QML. More specialized usecases often require us to write our own model, for example in the next chapter we'll be implementing our own Table model by subclassing <code>QAbstractTableModel</code> (which itself inherits <code>QAbstractItemModel</code>). Qt also provides a simple general-purpose model for storing custom data, called <code>QStandardItemModel</code>.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// mymodel.h
+#include &lt;QStandardItemModel&gt;
+
+class MyModel : public QStandardItemModel
+{
+    Q_OBJECT
+public:
+    enum Roles {
+        BrandRole = Qt::UserRole + 1,
+        ModelRole
+    };
+
+    explicit MyModel(QObject *parent = nullptr);
+
+    QHash&lt;int, QByteArray&gt; roleNames() const Q_DECL_OVERRIDE;
+
+    Q_INVOKABLE void addCar(const QString &amp;brand, const QString &amp;model);
+};
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// mymodel.cpp
+#include "mymodel.h"
+
+MyModel::MyModel(QObject *parent) : QStandardItemModel(parent)
+{
+}
+
+QHash&lt;int, QByteArray&gt; MyModel::roleNames() const
+{
+    QHash&lt;int, QByteArray&gt; mapping = QStandardItemModel::roleNames();
+    mapping[BrandRole] = "brand";
+    mapping[ModelRole] = "model";
+    return mapping;
+}
+
+void MyModel::addCar(const QString &amp;brand, const QString &amp;model)
+{
+    QStandardItem *item = new QStandardItem;
+    item-&gt;setData(brand, BrandRole);
+    item-&gt;setData(model, ModelRole);
+    appendRow(item);
+}
+<% end %>
+
+<p>
+The most imporant part to note here is overriding of the <code>roleNames()</code> function, where the named roles are mapped to numbers (enums). This allows us to refer to the data in QML with the names "brand" and "model".
+</p>
+
+<p>
+Also, don't forget to declare <code>addCar</code> with <code>Q_INVOKABLE</code> to allow it's usage in QML.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// main.cpp
+qmlRegisterType&lt;MyModel&gt;("org.mooc.cars", 1, 0, "MyModel");
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// main.qml
+import QtQuick 2.9
+import QtQuick.Window 2.2
+import org.mooc.cars 1.0
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Cars")
+
+    MyModel {
+        id: cars
+    }
+
+    ListView {
+        anchors.fill: parent
+        model: cars
+        delegate: Text {
+            text: "The brand is " + brand + " and the model is " + model
+        }
+    }
+
+    // Some way to populate the model, cars.addCar("brand", "model")
+    ...
+}
+
+<% end %>
+
+<% partial 'partials/material_sub_heading' do %>
+QML Plugins
+<% end %>
+
+<p>
+When a custom QML component is imported it's loaded into memory at the start. To shorten start times you can make the component a plugin instead, in which case it's dynamically loaded once you create an object.
+</p>
+
+<p>
+To write a QML extension plugin we:
+</p>
+
+<ul>
+<li>
+	Subclass <code>QQmlExtensionPlugin</code>
+</li>
+<li>
+	Write a project file for the plugin
+</li>
+<li>
+	Create a <code>qmldir</code> file to describe the plugin
+</li>
+</ul>
+
+<p>
+Suppose we have a <code>TimeModel</code> C++ class that should be made available as a new QML type. It provides the current time through <code>hour</code> and <code>minute</code> properties.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+class TimeModel : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(int hour READ hour NOTIFY timeChanged)
+    Q_PROPERTY(int minute READ minute NOTIFY timeChanged)
+    ...
+<% end %>
+
+<p>
+Now we create a class called <code>QExampleQmlPlugin</code> which inherits <code>QmlExtensionPlugin</code>:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+class QExampleQmlPlugin : public QQmlExtensionPlugin
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid)
+
+public:
+    void registerTypes(const char *uri) override
+    {
+        Q_ASSERT(uri == QLatin1String("TimeExample"));
+        qmlRegisterType&lt;TimeModel&gt;(uri, 1, 0, "Time");
+    }
+};
+<% end %>
+
+<ul>
+<li>
+	We use the <code>Q_PLUGIN_METADATA()</code> macro to register the plugin with the meta object system with a unique identifier.
+</li>
+<li>
+	We override the <code>registerTypes()</code> method to register the <code>TimeModel</code> type with <code>qmlRegisterType</code>.
+</li>
+<li>
+	<code>Q_ASSERT</code> isn't mandatory here, but we can use it to ensure the type namespace is imported correctly by any QML components that use this plugin.
+</li>
+</ul>
+
+<p>
+Next, we need a <code>.pro</code> project file:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+TEMPLATE = lib
+CONFIG += qt plugin
+QT += qml
+
+DESTDIR = imports/TimeExample
+TARGET = qmlqtimeexampleplugin
+SOURCES += qexampleqmlplugin.cpp
+<% end %>
+
+<p>
+It defines the project as a plugin library, specifies the built directory, and register the plugin target name.
+</p>
+
+<p>
+Lastly, we need a <code>qmldir</code> file to describe the plugin:
+</p>
+
+<% end %>
+module TimeExample
+plugin qmlqtimeexampleplugin
+<% end %>
+
+<% partial 'partials/material_heading' do %>
+C++ Models in QML
+<% end %>
+
+<p>
+We've talked about making your own models to present data in QML few times now, and in the last chapter we saw basic example of <code>QStandardItemModel</code>. Often it's needed to implement your own model from the start for performance and functionality reasons. <code>QAbstactItemModel</code> class provides the abstract interface for item model classes, and it can be subclassed to create your own models. <code>QAbstractListModel</code> and <code>QAbstractTableModel</code> inherit <code>QAbstractItemModel</code> and can be subclassed instead when making list or table models. In this chapter we'll be taking a closer look at <code>QAbstractTableModel</code>.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+QAbstractTableModel
+<% end %>
+
+<p>
+When making your own table model by subclassing <code>QAbstractTableModel</code>, you must at the very least implement functions <code>rowCount()</code>, <code>columnCount()</code>, and <code>data()</code>.
+</p>
+
+<p>
+To make our model available in QML we also need to reimplement <code>roleNames</code> (like in the <code>QStandardItemModel</code> example in the last chapter).
+</p>
+
+<p>
+Editable models need to also implement <code>setData()</code> and <code>flags()</code>.
+</p>
+
+<p>
+Models that provide interfaces to resizable data structures can provide implementations for inserting and removing rows and columns as well, but if you do so it's important to remember to call appropriate functions so that all connected views are aware of any changes:
+</p>
+
+<ul>
+<li>
+	<code>beginInsertRows()</code> / <code>beginInsertColumns()</code> must be called before inserting new rows and/or columns into the data structure, and <code>endInsertRows()</code> / <code>endInsertColumns()</code> immediately afterwards.
+</li>
+<li>
+	<code>removeRows()</code>/ <code>removeColumns()</code> must be called before removing rows and/or columns from the data structure, and <code>endRemoveRows()</code> / <code>endRemoveColumsn()</code> immediately afterwards.
+</li>
+</ul>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Example
+<% end %>
+
+<p>
+In the header we define <code>Car</code> as the item we're storing in the table. Enums for roles are done in the same manner as we did in <code>QStandardItemModel</code>. When subclassing <code>QAbstractTableModel</code> we need to implement, at minimum, <code>rowCount()</code>, <code>columnCount()</code>, <code>data()</code>, and <code>roleNames()</code>:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// customtablemodel.h
+#include &lt;QAbstractTableModel&gt;
+
+struct Car
+{
+    QString manufacturer;
+    QString model;
+    qint16 year;
+};
+typedef QVector&lt;Car&gt; CarContainer;
+
+class CustomTableModel : public QAbstractTableModel
+{
+    Q_OBJECT
+public:
+    enum CarRoles {
+        ManufacturerRole = Qt::UserRole + 1,
+        ModelRole,
+        YearRole
+    };
+
+    explicit CustomTableModel(QObject *parent = nullptr);
+
+protected:
+    int rowCount(const QModelIndex &amp;parent) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &amp;parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &amp;index, int role) const Q_DECL_OVERRIDE;
+    QHash&lt;int, QByteArray&gt; roleNames() const Q_DECL_OVERRIDE;
+
+private:
+    CarContainer m_container;
+};
+<% end %>
+
+<p>
+The code in .cpp file is fairly self-explanatory. We're adding data in the constructor just for the example:
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// customtablemodel.cpp
+#include "customtablemodel.h"
+
+CustomTableModel::CustomTableModel(QObject *parent) :
+    QAbstractTableModel(parent)
+{
+    m_container = {
+        Car{"Mercedes", "E200D", 2014},
+        Car{"Toyota", "Corolla", 1998},
+        Car{"Audi", "A6", 2006},
+        Car{"Tesla", "Model 3", 2018},
+        Car{"Ford", "Fiesta", 2000},
+        Car{"Dodge", "Charger", 1968},
+    };
+}
+
+int CustomTableModel::rowCount(const QModelIndex &amp;parent) const
+{
+    Q_UNUSED(parent)
+    return m_container.count();
+}
+
+int CustomTableModel::columnCount(const QModelIndex &amp;parent) const
+{
+    Q_UNUSED(parent)
+    return 3;
+}
+
+QVariant CustomTableModel::data(const QModelIndex &amp;index, int role) const
+{
+    switch(role)
+    {
+    case ManufacturerRole:
+        return m_container[index.row()].manufacturer;
+    case ModelRole:
+        return m_container[index.row()].model;
+    case YearRole:
+        return m_container[index.row()].year;
+    }
+    return QVariant();
+}
+
+QHash&lt;int, QByteArray&gt; CustomTableModel::roleNames() const
+{
+    QHash&lt;int, QByteArray&gt; roles;
+    roles[ManufacturerRole] = "manufacturer";
+    roles[ModelRole] = "model";
+    roles[YearRole] = "year";
+    return roles;
+}
+<% end %>
+
+<p>
+Then we register it like before (Note that in this example the only data is from the constuctor, as we didn't implement functionality to add data from QML.):
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// main.cpp
+qmlRegisterType&lt;CustomTableModel&gt;("org.mooc.customtable", 1, 0, "CustomTableModel");
+<% end %>
+
+<p>
+On the QML side we are using the new <code>TableView</code> item that was introduced in Qt 5.12, so remember to import <code>QtQuick 2.12</code> (Note: Don't confuse it with the deprecated Quick Controls 1 TabelView). We also use the <code>DelegateChooser</code> here, that is still in labs as of Qt 5.12, so you need to <code>import Qt.labs.qmlmodels 1.0</code>
+</p>
+
+<p>
+The data from our model is available by the role names we defined in <code>roleNames()</code> function.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import org.mooc.customtable 1.0
+import Qt.labs.qmlmodels 1.0
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("CustomTableModel")
+
+    TableView {
+        anchors.fill: parent
+        columnSpacing: 0
+        rowSpacing: 1
+        clip: true
+
+        model: CustomTableModel {}
+
+        delegate: DelegateChooser {
+            DelegateChoice {
+                column: 0
+                Rectangle {
+                    implicitWidth: 80
+                    implicitHeight: 40
+                    color: {
+                        if (row % 2 == 0)
+                            "lightblue";
+                        else
+                            "white";
+                    }
+                    Text {
+                        anchors.centerIn: parent
+                        text: manufacturer
+                    }
+                }
+            }
+            DelegateChoice {
+                column: 1
+                Rectangle {
+                    implicitWidth: 80
+                    implicitHeight: 40
+                    color: {
+                        if (row % 2 == 0)
+                            "lightblue";
+                        else
+                            "white";
+                    }
+                    Text {
+                        anchors.centerIn: parent
+                        text: model
+                    }
+                }
+            }
+            DelegateChoice {
+                column: 2
+                Rectangle {
+                    implicitWidth: 80
+                    implicitHeight: 40
+                    color: {
+                        if (row % 2 == 0)
+                            "lightblue";
+                        else
+                            "white";
+                    }
+                    Text {
+                        anchors.centerIn: parent
+                        text: year
+                    }
+                }
+            }
+        }
+    }
+}
+<% end %>
+
+<img class="naytto" src="/img/part-5/tableview.png" />
+
+<% partial 'partials/material_heading' do %>
+Scene Graph Item
+<% end %>
+
+<p>
+Qt Quick 2 makes use of dedicated scene graph for its rendering. Using a scene graph for graphics rather than the traditional imperative painting systems (<code>QPainter</code> or similar), means the scene to be rendered can be retained between frames and the complete set of primitives to render is known before rendering starts. This means there is room for a number of optimizations, such as batch rendering to minimize state changes and discarding obscured primitives.
+</p>
+
+<p>
+For example, say a user-interface contains a list of ten items where each item has a background color, an icon and a text. Using the traditional drawing techniques, this would result in 30 draw calls and a similar amount of state changes. A scene graph, on the other hand, could reorganize the primitives to render such that all backgrounds are drawn in one call, then all icons, then all the text, reducing the total amount of draw calls to only 3. Batching and state change reduction like this can greatly improve performance on some hardware.
+</p>
+
+<p>
+The scene graph is closely tied to Qt Quick 2.0 and can not be used stand-alone. The scene graph is managed and rendered by the <code>QQuickWindow</code> class and custom <code>Item</code> types can add their graphical primitives into the scene graph through a call to <code>QQuickItem::updatePaintNode()</code>.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Scene Graph Structure
+<% end %>
+
+<p>
+The scene graph is composed of a number of predefined node types, each serving a dedicated purpose. Although we refer to it as a scene graph, a more precise definition is node tree. The tree is built from <code>QQuickItem</code> types in the QML scene and internally the scene is then processed by a renderer which draws the scene. The nodes themselves do not contain any active drawing code nor virtual <code>paint()</code> function.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Nodes
+<% end %>
+
+<p>
+The most important node for users is the <code>QSGGeometryNode</code>. It is used to define custom graphics by defining its geometry and material. The geometry is defined using <code>QSGGeometry</code> and describes the shape or mesh of the graphical primitive. It can be a line, a rectangle, a polygon, many disconnected rectangles, or complex 3D mesh. The material defines how the pixels in this shape are filled.
+</p>
+
+<p>
+A node can have any number of children and geometry nodes will be rendered so they appear in child-order with parents behind their children.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Materials
+<% end %>
+
+<p>
+The material describes how the interior of a geometry in a <code>QSGGeometryNode</code> is filled. It encapsulates an OpenGL shader program and provides ample flexibility in what can be achieved, though most of the Qt Quick items themselves only use very basic materials, such as solid color and texture fills.
+</p>
+
+<p>
+Available material classes are:
+</p>
+
+<ul>
+<li>
+	<code>QSGFlatColorMaterial</code> - Convenient way of rendering solid colored geometry in the scene graph
+</li>
+<li>
+	<code>QSGMaterial</code> - Encapsulates rendering state for a shader program
+</li>
+<li>
+	<code>QSGMaterialShader</code> - Represents an OpenGL shader program in the renderer
+</li>
+<li>
+	<code>QSGMaterialType</code> - Used as a unique type token in combination with <code>QSGMaterial</code>
+</li>
+<li>
+	<code>QSGOpaqueTextureMaterial</code> - Convenient way of rendering textured geometry in the scene graph
+</li>
+<li>
+	<code>QSGSimpleMaterial</code> - Template generated class used to store the state used with a <code>QSGSimpleMateralShader</code>
+</li>
+<li>
+	<code>QSGSimpleMaterialShader</code> - Convenient way of building custom OpenGL-based materials for the scene graph
+</li>
+<li>
+	<code>QSGTextureMaterial</code> - Convenient way of rendering textured geometry in the scene graph
+</li>
+<li>
+	<code>QSGVertexColorMaterial</code> - Convenient way of rendering per-vertex colored geometry in the scene graph
+</li>
+</ul>
+
+<% partial 'partials/material_sub_heading' do %>
+Example
+<% end %>
+
+<p>
+Now, let's look at a simple example where we use Scene Graph Item to draw a triangle.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+// triangleitem.h
+class TriangleItem : public QQuickItem
+{
+    Q_OBJECT
+
+public:
+    TriangleItem(QQuickItem *parent = nullptr);
+
+protected:
+    QSGNode <em>updatePaintNode(QSGNode </em>node, UpdatePaintNodeData *data);
+
+private:
+    QSGGeometry m_geometry;
+    QSGFlatColorMaterial m_material;
+};
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// triangleitem.cpp
+#include "triangleitem.h"
+#include &lt;QSGGeometryNode&gt;
+
+TriangleItem::TriangleItem(QQuickItem *parent)
+    : QQuickItem(parent),
+      m_geometry(QSGGeometry::defaultAttributes_Point2D(), 3)
+{
+    setFlag(ItemHasContents);
+    m_material.setColor(Qt::red);
+}
+
+QSGNode <em>TriangleItem::updatePaintNode(QSGNode </em>n, UpdatePaintNodeData *)
+{
+    QSGGeometryNode <em>node = dynamic_cast&lt;QSGGeometryNode </em>&gt;(n);
+    if (!node) {
+        node = new QSGGeometryNode();
+    }
+
+    QSGGeometry::Point2D *v = m_geometry.vertexDataAsPoint2D();
+    const QRectF rect = boundingRect();
+    v[0].x = rect.left();
+    v[0].y = rect.bottom();
+
+    v[1].x = rect.left() + rect.width()/2;
+    v[1].y = rect.top();
+
+    v[2].x = rect.right();
+    v[2].y = rect.bottom();
+
+    node-&gt;setGeometry(&amp;m_geometry);
+    node-&gt;setMaterial(&amp;m_material);
+
+    return node;
+}
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+// main.cpp
+...
+qmlRegisterType&lt;TriangleItem&gt;("ShapeObjects", 1, 0, "Triangle");
+...
+<% end %>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.9
+import QtQuick.Window 2.3
+import ShapeObjects 1.0
+
+Window {
+    width: 640; height: 480
+    visible: true
+
+    Item {
+        width: 300; height: 200
+
+        Triangle {
+            x: 50; y: 50
+            width: 200; height: 100
+        }
+    }
+}
+
+<% end %>
+
+<img class="naytto" src="/img/part-5/scenegraph.png" />
+
+<p>
+Few important points to notice in the example:
+</p>
+
+<ul>
+<li>
+	We are subclassing <code>QQuickItem</code> which is the base class for all visual items in Qt Quick.
+</li>
+<li>
+	We are using <code>QSGGeometryNode</code> as the node and <code>QSGFlatColorMaterial</code> as the material.
+</li>
+<li>
+	We are setting the flag <code>setFlag(ItemHasContents)</code> in the constructor to indicate that the item should be rendered by the scene graph.
+</li>
+<li>
+	We implement the <code>updatePaintNode</code> function to do the actual painting (Note: It is crucial that OpenGL operations and interaction with the scene graph happens exclusively on the render thread, primarily during the <code>updatePaintNode()</code> call. The rule of thumb is to only sue classes with teh <code>QSG</code>prefix inside the <code>QQuickItem::updatePaintNode()</code> function)
+</li>
+</ul>
+
+<% partial 'partials/material_heading' do %>
+QML Profiler
+<% end %>
+
+<p>
+Now that the course is drawing to a close, let's talk about something little different. QML Profiler is a tool to find typical performance problems in your applications, such as slowness and unresponsive, stuttering user interfaces. Typical causes include executing too much JavaScript in too few frames. All JavaScript must return before the GUI thread can proceed, and frames are delayed or dropped if the GUI thread is not ready.
+</p>
+
+<p>
+Another typical cause for similar performance problems is creating, painting, or updating invisible items, which takes time in the GUI thread.
+</p>
+
+<p>
+Triggering long-running C++ functions, such as paint methods and signal handlers, also takes time in the GUI thread, but is more difficult to see in the QML Profiler, because it does not profile C++ code.
+</p>
+
+<p>
+To find excessive use of JavaScript, check the frame rate in animations and Scene Graph events, look for gaps, and check whether the application behaves as expected. The JavaScript category displays the run time of functions, which you should try to keep below 16 ms per frame.
+</p>
+
+<p>
+To find problems caused by handling invisible items, look for dropped frames and check that you are not using too many short bindings or signal handlers that are updated per frame. You can also <a href="http://doc.qt.io/qt-5/qtquick-visualcanvas-scenegraph-renderer.html#visualizing-overdraw" title="visualize Scene Graph overdraw">visualize Scene Graph overdraw</a> to check scene layout and find items that are never visible to the users, because they are located outside the screen or hidden beneath other, visible elements.
+</p>
+
+<p>
+If frames get dropped even though JavaScript is not being run, and there are large, unexplained gaps in the timeline, check your custom <code>QQuickItem</code> implementations. You can use Valgrind or other general purpose profilers to analyze C++ code.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Using QML Profiler
+<% end %>
+
+<p>
+To use QML profiler you need to set up QML debugging for the project if you haven't already (see <a href="https://doc.qt.io/qtcreator/creator-debugging-qml.html#setting-up-qml-debugging" title="Setting up QML debugging">Setting up QML debugging</a> for more information) and use a kit with Qt  version 4.7.4 or later (you should be using Qt 5 for this course anyway, so this shouldn't be an issue).
+</p>
+
+<p>
+Select <strong>Analyze &gt; QML Profiler</strong> in the top menubar of Qt Creator. Start you application and start the data collection with the Start button, and click on Enable Profiling when you're done (do this before you exit the application).
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Analyzing Collected Data
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Timeline
+<% end %>
+
+<p>
+The Timeline view displays graphical representations of QML and JavaScript execution and a condensed view of all recorded events.
+</p>
+
+<img class="naytto" src="/img/part-5/profiler-timeline.png" />
+
+<p>
+Each row in the timeline (6) describes a type of QML events that were recorded. Move the cursor on an event on a row to see how long it takes and where in the source it is being called. To display the information only when an event is selected, disable the View Event Information on Mouseover button (4).
+</p>
+
+<p>
+The outline (10) summarizes the period for which data was collected. Drag the zoom range (8) or click the outline to move on the outline. You can also move between events by selecting the Jump to Previous Event and Jump to Next Event buttons (1).
+</p>
+
+<p>
+Select the Show Zoom Slider button (2) to open a slider that you can use to set the zoom level. You can also drag the zoom handles (9). To reset the default zoom level, right-click the timeline to open the context menu, and select Reset Zoom.
+</p>
+
+<p>
+Click the time ruler to add vertical orientation lines (5) to the timeline.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Statistics
+<% end %>
+
+<p>
+The Statistics view displays the number of times each binding, create, compile, JavaScript, or signal event is triggered and the average time it takes. This allows you to examine which events you need to optimize. A high number of occurrences might indicate that an event is triggered unnecessarily. To view the median, longest, and shortest time for the occurrences, select Extended Event Statistics in the context menu.
+</p>
+
+<p>
+Click on an event to move to it in the source code in the code editor.
+</p>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+Flame Graphs
+<% end %>
+
+<p>
+The Flame Graph view shows a more concise statistical overview of QML and JavaScript execution. In the Visualize Total Time view, the horizontal bars show the amount of time all invocations of a certain function took together, relative to the total runtime of all JavaScript and QML events. The nesting shows which functions were called by which other ones.
+</p>
+
+<img class="naytto" src="/img/part-5/profiler-flamegraph.png" />
+
+<p>
+To view the total amount of memory allocated by the functions in the Visualize Memory view, select Memory in the drop-down menu (1).
+</p>
+
+<p>
+To view the the number of memory allocations performed by the functions in the Visualize Allocations view, select Allocations in the drop-down menu.
+</p>
+
+<p>
+Double-click an item in a view to zoom into it. Double-click an empty area in the view to zoom out again.
+</p>
+
+<p>
+Unlike the Timeline view, the Flame Graph view does not show the time spans when no QML or JavaScript is running at all. Thus, it is not suitable for analyzing per frame execution times. However, it is very easy to see the total impact of the various QML and JavaScript events there.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Further reading
+<% end %>
+
+<p>
+To read more extensively on QML Profiler, <a href="https://doc.qt.io/qtcreator/creator-qml-performance-monitor.html" title="see documentation">see documentation</a>.
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'Image Application' } do %>
+
+<p>
+Exercise for Part 5 - Image Application
+</p>
+
+<p>
+Image application allows user to add and capture images for viewing. The application keeps images in memory and does not need to store images persistently. Many building blocks can be re-used from previous exercises and you are welcome to do so, if you wish. 
+</p>
+
+<ul>
+<li>
+	The image model must be derived from <code>QAsbtractListModel</code>. The model stories only image urls, which are used by the application. The model must be implemented in a QML extension plugin and registered as singleton. It may be easier to start with the QML model and then use a C++ model, which is instantiated in the main() function. 
+</li>
+
+<li>
+	The application itself must use Qt Quick Controls 2 and be based on the <code>StackView</code>. The main view shows the images from the model. Show image thumbnails e.g. in 100x100 pixel resolution. If the user clicks on the image, show it on the top of the view area in another view. 
+</li>
+
+<li>
+	Add a file dialog to add images to the model.
+</li>
+
+<li>
+	Add functionality to use camera to add images to the model.
+</li>
+
+<li>
+	Implement at least three views: the view to show the images (main view), the view to show one image, and a camera view. Add a <code>ToolBar</code>and <code>ToolButtons</code> to navigate between the views. Push a new view, e.g. a camera view to the stack view and pop it, when the user navigates back to the main view, using tool buttons.
+</li>
+</ul>
+<% end %>
