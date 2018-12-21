@@ -2,7 +2,7 @@
   title: Part 4
   exercise_page: true
   quiz_page: true
-  published: false
+  published: true
 ---
 
 <% partial 'partials/material_heading' do %>
@@ -154,7 +154,7 @@ To create new items, you can use JSON <code>{ "teamName": "Team Qt", "teamColor"
 <% partial 'partials/exercise', locals: { name: 'PictureFrame with add and remove actions (1/8)' } do %>
 
 <p>
-This exercise is first of many during Part 4 where you add functionality to the PictureFrame application. It will not be tested in TMC, instead just start a fresh QML application and add things there every time a PictureFrame exercise comes up. You can use the code from the last exercise as a starting point. The exercise will be returned to be peer-reviewed after the final part of it is done. You will then be graded based on which parts you did (i.e. if you get stuck you can skip one of the parts and continue).
+This exercise is first of many during Part 4 where you add functionality to the PictureFrame application. It will not be tested in TMC, instead just start a fresh QML application and add things there every time a PictureFrame exercise comes up (this is first of 8). You can use the code from the last exercise as a starting point. The exercise will be returned as a GitHub repository to be peer-reviewed after the final part of it is done. You will then be graded based on which parts you did (i.e. if you get stuck you can skip one of the parts and continue).
 </p>
 
 <p>
@@ -1043,7 +1043,6 @@ When using <code>Image</code> QML type in the <code>PathView</code> delegates, i
 </p>
 
 <% partial 'partials/exercise', locals: { name: 'PictureFrame with PathView (7/8)' } do %>
-<% end %>
 
 <p>
 Let's improve the photo browsing in the PictureFrame application. As images are hard-coded to be quite large, it's difficult to quickly find the right picture. Let's add a <code>PathView</code> to improve the browsing functionality.
@@ -1066,6 +1065,8 @@ Let's improve the photo browsing in the PictureFrame application. As images are 
 	Change the delegate opacity and size to 50 per cent in diagonal lines. 
 </li>
 </ul>
+
+<% end %>
 
 <% partial 'partials/material_sub_sub_heading' do %>
 Exhaustive reference material mentioned in this topic
@@ -1210,7 +1211,6 @@ Keep your delegates as simple as possible. This applies to size calculation as w
 </p>
 
 <% partial 'partials/exercise', locals: { name: 'PictureFrame with compound delegate (8/8)' } do %>
-<% end %>
 
 <p>
 Let's change the PictureFrame exercise from the previous chapter to have little bit more complicated delegate. This will not be the best way to implement the delegate, but it's used for learning purposes. The goal is the understand, how delegate size should be determined.
@@ -1237,6 +1237,18 @@ Let's change the PictureFrame exercise from the previous chapter to have little 
 	All other delegate objects must have either implicit size or the <code>width</code> and <code>height</code> properties bound to other properties. No hard-coded magic numbers are accepted. 
 </li>
 </ul>
+
+<p>
+<strong>This is the final part of Picture Frame exercise series.</strong> Now it's time to submit it to be peer-reviewed. This is done in the same manner as with the Directory Browser exerice at the end of Part 2. Create a GitHub repository for your project, and submit a link to it below.
+</p>
+
+<% end %>
+
+<%= partial 'partials/quiz', locals: { id: '5c1d1e8ba50dbe1223d1a78f' } %>
+
+<%= partial 'partials/quiz', locals: { id: '5c1d1f99a50dbe1223d1a794' } %>
+
+<%= partial 'partials/quiz', locals: { id: '5c1d207d5503db116e7276fb' } %>
 
 <% partial 'partials/material_sub_heading' do %>
 Clip
@@ -1364,7 +1376,7 @@ Let's compare, how grid view and table view manage the delegate lifetime.
 
 <ul>
 <li>
-	This exercise isn't really tested, so submit it when you've done what's asked. We'll do spot-checks on the submits, so please at least try and do the exercise. Completely empty submissions will not be tolerated.
+	This exercise isn't tested, so submit it when you've done what's asked. We'll do spot-checks on the submits, so please at least try and do the exercise. Completely empty submissions will not be tolerated.
 </li>
 
 <li>
@@ -1497,7 +1509,7 @@ In this part, we have concentrated on dynamic views. What are the static views t
 </li>
 
 <li>
-	Again, this isn't tested fully, so just submit it when you think you've done what's required. We'll do spot-checks to make sure that you've at least tried.
+	Again, this exercise isn't tested, so just submit it when you think you've done what's required. We'll do spot-checks to make sure that you've at least tried.
 </li>
 </ul>
 <% end %>
@@ -1520,6 +1532,10 @@ http://doc.qt.io/qt-5/qitemdelegate.html#details<br>
 
 <p>
 Exercise for Part 4 - TV Guide
+</p>
+
+<p>
+This is another peer-reviewed exercise. After you're done, create a repository for your solution on GitHub, and submit it to be peer-reviewed below. Please note that to get the points for this exercise, you're required to review another student's solution! You can download an example solution and do the peer-review after you've submitted your own solution.
 </p>
 
 <p>
@@ -1552,3 +1568,15 @@ Your task is to implement a TV Guide application. The application allows the use
 </li>
 </ul>
 <% end %>
+
+<%= partial 'partials/quiz', locals: { id: '5c1d220a054d71123e35cbdd' } %>
+
+<%= partial 'partials/quiz', locals: { id: '5c1d220a054d71123e35cbdc' } %>
+
+<%= partial 'partials/quiz', locals: { id: '5c1d220a054d71123e35cbdb' } %>
+
+<% partial 'partials/material_sub_heading' do %>
+    Feedback for Part 4
+<% end %>
+
+<%= partial 'partials/quiz', locals: { id: '5c1d20a78cd06a11e4c83c48' } %>
