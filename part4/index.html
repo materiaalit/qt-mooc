@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Qt MOOC | Part 4</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <link href="../stylesheets/styles-9fe27d3a.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/xcode.min.css">
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.1/cookieconsent.min.css" />
+
+    <link rel="stylesheet" href="https://materiaalit.github.io/code-states-visualizer-cdn/app.css" />
+    <link rel="stylesheet" href="https://materiaalit.github.io/typonator-cdn/app.css" />
+    <link rel="stylesheet" href="https://crowdsorcerer.testmycode.io/dist/app.css" />
+    <link rel="stylesheet" href="https://materiaalit.github.io/pdf-slideshow-cdn/app.css" />
+
+      <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-47575342-8', 'auto');
+  ga('set', 'anonymizeIp', true);
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <div class="header-wrapper">
+        <div class="browser-support-warning" id="browser-support-warning" style="display: none;">
+  All parts of this material don't necessarily support your current browser. Could you consider switching to <a href="https://www.google.com/chrome/browser/desktop/" target="_blank" rel="noopener">Chrome</a> or <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank" rel="noopener">Firefox</a>?
+  <span class="browser-support-warning__close">Okay!</span>
+</div>
+
+
+        <nav class="navbar navbar-light bg-white">
+  <a class="navbar-brand" href="http://mooc.fi" alt="MOOC" target="_blank" rel="noopener">
+    <span class="icon-mooc"></span>
+  </a>
+
+  <ul class="nav navbar-nav hidden-md-down">
+      <li class="nav-item ">
+        <a href="../" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=index.html&gt;')">Introduction</a>
+      </li>
+      <li class="nav-item ">
+        <a href="../part1/" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=part1.html&gt;')">Part 1</a>
+      </li>
+      <li class="nav-item ">
+        <a href="../part2/" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=part2.html&gt;')">Part 2</a>
+      </li>
+      <li class="nav-item ">
+        <a href="../part3/" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=part3.html&gt;')">Part 3</a>
+      </li>
+      <li class="nav-item active">
+        <a href="./" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=part4.html&gt;')">Part 4</a>
+      </li>
+      <li class="nav-item ">
+        <a href="../userguide/" class="nav-link" onclick="ga('send', 'event', 'navigation_topic_link', 'click', '#&lt;Middleman::Sitemap::Resource path=userguide.html&gt;')">User Guide</a>
+      </li>
+  </ul>
+
+  <div class="float-xs-right navbar__buttons">
+    <div class="dropdown" id="mobile-nav-dropdown">
+      <button class="btn btn-secondary dropdown-toggle navbar__mobile-nav-toggle" data-toggle="dropdown">
+        <i class="fa fa-bars"></i>
+      </button>
+
+      <div class="dropdown-menu">
+      </div>
+    </div>
+
+    <a href="https://tmc.mooc.fi" target="_blank" rel="noopener" class="btn btn-secondary">
+      <span class="hidden-md-down">Submissions</span>
+      <i class="fa fa-arrow-circle-up hidden-lg-up"></i>
+    </a>
+
+    <button class="btn btn-secondary" id="table-of-contents-toggle">
+      <span class="hidden-md-down">Table of Contents</span>
+      <i class="fa fa-ellipsis-h hidden-lg-up"></i>
+    </button>
+
+    <button class="btn btn-primary" id="tmc-login-toggle">Login</button>
+  </div>
+</nav>
+
+      </div>
+
+      <div class="content-wrapper">
+        <div class="container material" id="material">
+            <div class="exercise-list">
+  <div class="exercise-list__header">
+    Exercises
+  </div>
+
+  <div class="exercise-list__content" id="exercise-list"></div>
+
+    <div class="exercise-list__quiznator">
+      <div class="quiznator-dashboard"></div>
+
+    </div>
+</div>
+
+
+          <h1 class="material-heading">
+  Model/view framework
+
+</h1>
+
+<p>
+Many applications need to display data to the user. Applications may even allow user to manipulate and create new data. Qt model/view framework makes it easy for the developer to create such applications. The model is separated from the view, allowing several views to share the same model or one view to change the model on the on-the-fly. 
+</p>
+
+<img class="naytto" src="http://doc.qt.io/qt-5/images/modelview-overview.png" />
+
+<ul>
+<li>
+    Model is an adapter to the data and its structure. The actual data may be stored anywhere, for example in the database or some data center in the cloud. In trivial cases, the model itself can contain the data. QML contains several types for creating models, but for efficiency reasons a 'QAbstractItemModel' subclass is more frequently used. 
+</li>
+<li>
+    View displays the data in any kind of a visual structure, such as a list, table or path. There are views for stacking items <a href="http://doc.qt.io/qt-5/qml-qtquick-controls-stackview.html" title="StackView">StackView</a> or scrolling large content <a href="http://doc.qt.io/qt-5/qml-qtquick-controls-scrollview.html" title="ScrollView">ScrollView</a>, but these views use internal models and provide a specialised API, so they are not covered here. Developers can create custom views as well to structure the UI in any way, they want.
+</li>
+<li>
+    Delegate dictates how the data should appear in the view. The delegate takes each data item in the model and encapsulates it. The model data is accessible through the delegate.
+</li>
+</ul>
+
+<h2 class="material-heading">
+  Essential concepts
+
+</h2>
+
+<p>
+Dynamic views, like <a href="http://doc.qt.io/qt-5/qml-qtquick-listview.html" title="ListView">ListView</a>, have a model and create and destroy delegate items dynamically to display data items. Any variant type can be assigned to the view's <code>model</code> property. In the following example, an integer 5 is assigned to the model, resulting that the view will create five delegates. As the model may be any variant type, it is possible to assign a JavaScript, <code>QList</code>, a QML model type or <code>QAbstractItemModel</code> subclass, which will be covered in the next phase. 
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    anchors.fill: parent
+    model: 5
+    delegate: Component {
+        Text {
+            text: index
+        }
+    }
+}
+</code></pre>
+
+<p>
+The delegate type is <code>Component</code>. Components define re-usable, well-defined QML types similarly to QML files, but the type is defined as an inline file. The view manages the delegate item life time. Different views use different strategies to manage the life time and we will return to this in Chapter Views. Note that <code>delegate</code> is a default property in <code>ListView</code> and often omitted in the declaration. 
+</p>
+
+<p>
+An <code>index</code> value is assigned to the <code>text</code> property. Where did the index come from. The view exposes several properties to all delegate items. The <code>ìndex</code> property is a context property, which means that each delegate item will have a different index value, even though the property name is the same. The first index is 0, the next one 1 and so on. This is a useful way to identify each delegate object. 
+</p>
+
+<h3 class="material-heading">
+  Basic QML models  
+
+</h3>
+
+<p>
+A simple and commonly used QML model type is <a href="https://doc.qt.io/qt-5/qml-qtqml-models-listmodel.html" title="ListModel">ListModel</a>, which is a container for <a href="https://doc.qt.io/qt-5/qml-qtqml-models-listelement.html" title="ListElement">ListElement</a> definitions. In <a href="https://doc.qt.io/qt-5/qml-qtqml-models-listelement.html" title="ListElement">ListElement</a>, the data is defined with <strong>named role definitions</strong> instead of properties, even though the syntax is the same.  Note that the role names must be common with all other elements in a given model. 
+</p>
+
+<p>
+In the following example there are two roles, the name of a person and a color representing their team. 
+</p>
+
+<pre class="code-highlight"><code>ListModel {
+    id: teamModel
+    ListElement { name: "Lars Knoll"; teamColor: "red" }
+    ListElement { name: "Alan Kay"; teamColor: "lightBlue" }
+    ListElement { name: "Trygve Reenskaug"; teamColor: "red" }
+    ListElement { name: "Adele Goldberg"; teamColor: "yellow" }
+    ListElement { name: "Ole-Johan Dahl"; teamColor: "red" }
+    ListElement { name: "Kristen Nygaard"; teamColor: "lightBlue" }
+}
+</code></pre>
+
+<p>
+The type of a role is fixed the first time the role is used. All roles in the previous example are string types. Dynamic roles allow assigning different types to roles as well. To enable dynamic roles, the 'ListModel' property 'dynamicRoles' must be set to true. The data that is statically defined, like in the previous example, cannot have dynamic roles. The data items with dynamic roles must be added with JavaScript.
+</p>
+
+<p>
+The view exposes roles to delegate items, which can refer to roles by just using the role names as in the following example. If <code>Text</code> QML type contained a property called <code>name</code>, <code>model</code> qualifier must be used as a prefix to the role to avoid a name clash. An additional property <code>modelData</code> is exposed to delegates, if the model is a list. 
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    anchors.fill: parent
+    model: teamModel
+    delegate: Text {
+        text: name
+        // text: modelData.name // in case there is a clash between roles and properties
+    }
+}
+</code></pre>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Picture Frame (01_PictureFrame)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Create an empty Qt Quick Controls application.
+</p>
+
+<ul>
+<li>
+	Add a <code>ListModel</code> and add at least one <code>ListElement</code>. The list element should have a fileUrl role, which refers to image file URLs. 
+</li>
+
+<li>
+	Add a <code>ListView</code> filling the whole window area.
+</li>
+
+<li>
+	Use a <code>BorderImage</code> delegate to show the images. All images can have a fixed size, e.g. 400 x 300 pixels. 
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  Model manipulation
+
+</h2>
+
+<p>
+Creating and manipulating model data statically, as we did in earlier examples, is not scalable in real world applications. Data items can be manipulated in JavaScript, but more frequently C++ models are used as we will see in Phase 5. 'ListModel' has methods to <a href="https://doc.qt.io/qt-5/qml-qtqml-models-listmodel.html#append-method" title="append()">append()</a>, <a href="https://doc.qt.io/qt-5/qml-qtqml-models-listmodel.html#insert-method" title="insert()">insert()</a>, <a href="https://doc.qt.io/qt-5/qml-qtqml-models-listmodel.html#move-method" title="move()">move()</a>, and <a href="https://doc.qt.io/qt-5/qml-qtqml-models-listmodel.html#remove-method" title="remove()">remove()</a>.
+</p>
+
+<p>
+The following example shows, how to data to a <code>ListModel</code> with <code>append</code>:
+</p>
+
+<pre class="code-highlight"><code>ListModel {
+    id: teamModel
+    ListElement {
+        name: "Team C++"
+    }
+}
+
+MouseArea {
+    anchors.fill: parent
+    onClicked: {
+        teamModel.append({ name: "Team Quick" })
+    }
+}
+</code></pre>
+
+<p>
+To create new items, you can use JSON <code>{ "teamName": "Team Qt", "teamColor": "green" }</code> or JavaScript notation <code>{ teamName: "Team Qt", teamColor: "green" }</code>. It should be noted that the first item inserted or declared to the model will determine the roles available to any views. In other words, if the model is empty and an item is added, only roles defined in that item are bound and used in subsequent added items. To reset the roles, the model needs to be emptied with the <a href="https://doc-snapshots.qt.io/qt5-dev/qml-qtqml-models-listmodel.html#clear-method" title="ListModel::clear()">ListModel::clear()</a> method.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with add and remove actions (1/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+This exercise is first of many during Part 4 where you add functionality to the PictureFrame application. It will not be tested in TMC, instead just start a fresh QML application and add things there every time a PictureFrame exercise comes up (this is first of 8). You can use the code from the last exercise as a starting point. The exercise will be returned as a GitHub repository to be peer-reviewed after the final part of it is done. You will then be graded based on which parts you did (i.e. if you get stuck you can skip one of the parts and continue).
+</p>
+
+<p>
+Instructions: Add an action to menu to add and remove images from the model.
+</p>
+
+<ul>
+<li>
+	The add image action should open a file dialog, where the user can choose multiple image files to be added to the model.
+</li>
+
+<li>
+	The remove action should remove the last image from the model. Do not try to remove any image from an empty model.
+</li>
+
+<li>
+	Hint: Adding actions and a menu bar is easy, if you change <code>Window</code> to <code>ApplicationWindow</code>.
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h3 class="material-heading">
+  Threaded model manipulation
+
+</h3>
+
+<p>
+Modifying the model can be computationally expensive in some cases, and because we are doing it inside the UI thread, it can end up being blocked for quite a while. Consider a trivial case of creation 1,000,000 items into the model. Computationally heavy updates should preferably be done inside a background thread. For example, if we were to implement a Twitch chat client, we would run into performance problems very fast if we were to use the main thread for updating the message model:
+</p>
+
+<pre class="code-highlight"><code>TwitchChat {
+    // signal messageReceived(string user, string message)
+    onMessageReceived: {
+        // Massage the received message data inside the signal handler ...
+        // Remove old messages from backlog ...
+        if (messageModel.count &gt; 2147483647)
+           messageModel.remove(0, 1337)
+        // Append the message data to the model
+        messageModel.append({"user": user, "message": message})
+    }
+}
+</code></pre>
+
+<p>
+Qt provides a QML type <a href="https://doc.qt.io/qt-5/qml-workerscript.html" title="WorkerScript">WorkerScript</a> to offload any heavy data and model manipulation out of the main thread. Messages are passed between the parent thread and new child thread with the <code>sendMessage()</code> method and <code>onMessage()</code> handler:
+</p>
+
+<pre class="code-highlight"><code>TwitchChat {
+    // signal messageReceived(string user, string message)
+    onMessageReceived: {
+        worker.sendMessage({"user": user, "message": message, "model": messageModel)
+    }
+}
+
+WorkerScript {
+    id: worker
+    source: 'script.js'
+}
+</code></pre>
+
+<p>
+The <code>onMessage</code> handler is implemented in the <code>script.js</code> file which is invoked when <code>sendMessage()</code> is called:
+</p>
+
+<pre class="code-highlight"><code>// script.js
+WorkerScript.onMessage = function(msg) {
+    // Massage the received message data ...
+    // Remove old messages from backlog ...
+    if (msg.model.count &gt; 2147483647)
+        msg.model.remove(0, 1337)
+    // Append the message data to the model
+    msg.model.append({"user": user, "message": message});
+    msg.model.sync();    // Needs to be called!
+}
+</code></pre>
+
+<p>
+Notice that the <code>script.js</code> file is not imported anywhere! This brings in the restrictions of this threading model: the <code>source</code> property is evaluated on its own outside of QML. This means any properties or methods, and all data needs to be passed to <code>sendMessage()</code>. The <code>sendMessage()</code> supports all JavaScript types and objects. Arbitrary <code>QObject</code> types are not supported, only the <code>ListModel</code> type. Also, if you want your modifications to take effect in the <code>ListModel</code>, you must call <code>sync()</code> on it on the worker thread.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with background model manipulation (2/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Add yet another action to the menu. When triggered, the action should add 10,000 copies of one of the model fileUrls to the model. 
+</p>
+
+<ul>
+<li>
+	Obviously, the UI must be kept responsive all the time.
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h3 class="material-heading">
+  Exhaustive reference material mentioned in this topic
+
+</h3>
+
+<p>
+https://doc.qt.io/qt-5/qtquick-modelviewsdata-modelview.html<br>
+https://qmlbook.github.io/en/ch06/index.html<br>
+http://doc.qt.io/qt-5/qml-qtqml-models-listmodel.html<br>
+</p>
+
+<h1 class="material-heading">
+  QML Models
+
+</h1>
+
+<p>
+There are several other QML model types inn addition to <code>ListModel</code>. <code>XmlistModel</code> allows construction of a model from an XML data source. It provides a very convenient way to parse XML data. ÒbjectModel<code> contains the visual items to be used in a view. No delegate is required as the model already contains visual items. </code>DelegateModel<code> is useful in cases, where ´QAbstractItemModel</code> index is used to access data items. The typical use case are hierarchical tree models, where the user needs to navigate up and down the subtree. 
+</p>
+
+<p>
+It is possible to use an object instance as a model as well. In this case, object properties are provided as roles as in the following example.
+</p>
+
+<pre class="code-highlight"><code>Text {
+    id: myText
+    text: "Hello"
+    visible: false // we want to show the text in the view 
+}
+
+Component {
+    id: myDelegate
+    Text { text: model.text } // the qualifier needed 
+}
+
+ListView {
+    anchors.fill: parent
+    model: myText
+    delegate: myDelegate
+}
+</code></pre>
+
+<h2 class="material-heading">
+  XmlListModel
+
+</h2>
+
+<p>
+<a href="https://doc.qt.io/qt-5/qml-qtquick-xmllistmodel-xmllistmodel.html" title="XmlListModel">XmlListModel</a> is used to create a read-only model from XML data. It's a very convenient way to read data from RSS feeds and create a data model from relevant XML elements. 
+</p>
+
+<p>
+A simple XML structure could be the following:
+</p>
+
+<pre class="code-highlight"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;rss version="2.0"&gt;
+    &lt;channel&gt;
+        &lt;item&gt;
+            &lt;title&gt;A blog post&lt;/title&gt;
+            &lt;pubDate&gt;Sat, 07 Sep 2010 10:00:01 GMT&lt;/pubDate&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;title&gt;Another blog post&lt;/title&gt;
+            &lt;pubDate&gt;Sat, 07 Sep 2010 15:35:01 GMT&lt;/pubDate&gt;
+        &lt;/item&gt;
+    &lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+
+<p>
+The XML document contains <strong>tags</strong> (<code>&lt;rss&gt;</code>), which can have <strong>attributes</strong> (<code>version="2.0"</code>). Start tag <code>&lt;item&gt;</code> and end tag <code>&lt;/item&gt;</code> form an <strong>element</strong>, and an element can have child elements. This basically means we have a tree of nodes, and we need to traverse the tree to extract data.
+</p>
+
+<p>
+The following example shows, how to create a model from XML data.
+</p>
+
+<pre class="code-highlight"><code>import QtQuick 2.0
+import QtQuick.XmlListModel 2.0
+
+XmlListModel {
+    id: xmlModel
+    source: "http://www.mysite.com/feed.xml"
+    query: "/rss/channel/item"
+
+    XmlRole { name: "title"; query: "title/string()" }
+    XmlRole { name: "pubDate"; query: "pubDate/string()" }
+}
+</code></pre>
+
+<p>
+The <code>source</code> property defines the location for the XML document, which can be either local or remote resource.
+</p>
+
+<p>
+The <code>query</code> property value should contain a valid <a href="https://en.wikipedia.org/wiki/XPath" title="XPath (XML Path Language)">XPath (XML Path Language)</a> selector. Among other things, XPath is used to select nodes from the XML document tree that match a given path expression. 
+</p>
+
+<p>
+With the query of <code>/rss/channel/item</code> we select any <code>&lt;item&gt;</code> that are children of <code>&lt;channel&gt;</code> that are children of the document root element <code>&lt;rss&gt;</code> to be the items for the model. See <a href="https://en.wikipedia.org/wiki/XPath#Usage_examples" title="XPath usage examples">XPath usage examples</a> for more detailed usage.
+</p>
+
+<p>
+The roles are defined with <a href="https://doc.qt.io/qt-5/qml-qtquick-xmllistmodel-xmlrole.html" title="XmlRoles">XmlRoles</a>. Notice that the <code>&lt;item&gt;</code> elements contain other arbitrary elements, so we need a query to bind specific data. In the example, we query the <code>&lt;title&gt;</code> and <code>&lt;pubDate&gt;</code> elements inside the <code>&lt;item&gt;</code>, get their values with the <code>string()</code> function and bind the value to the aptly named roles <code>title</code> and <code>pubDate</code>. See <a href="https://doc.qt.io/qt-5/qml-qtquick-xmllistmodel-xmlrole.html#query-prop" title="XmlRole::query">XmlRole::query</a> for more examples.
+</p>
+
+<p>
+Using the generated models in <code>ListView</code> works as usual. The delegate can bind to model roles.  
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    width: 180; height: 300
+    model: xmlModel
+    delegate: Text { text: title + ": " + pubDate }
+}
+</code></pre>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">News reader (02_XMLModel)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Implement a news reader app. The news are available in http://feeds.bbci.co.uk/news/rss.xml. Any other feed may be used, but the feed must provide at least some text data + URLs to get further information.
+</p>
+
+<ul>
+<li>
+	Read all <code>items</code> tags from the feed.
+</li>
+
+<li>
+	Get the news <code>title</code> and <code>link</code> from the news items. 
+</li>
+
+<li>
+	The delegate should show the title and link in a column. 
+</li>
+
+<li>
+	When the user clicks on the delegate item, the link is opened in the Qt web engine.
+</li>
+
+<li>
+	Split the screen vertically between the view and web engine. Note that to be able to use the web engine in QML, you must call <code>QtWebEngine::initialize()</code> in C++. 
+</li>
+</ul>
+
+<p>
+The tests for this exercise don't actually test much, submit it when you've accomplished the task. We'll do spot-checks to make sure you don't just return an empty program, so, remember to actually try :)
+</p>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  Object Model
+
+</h2>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qml-qtqml-models-objectmodel.html" title="ObjectModel">ObjectModel</a> defines a set of items rather than non-visual list elements. This makes it unnecessary to use delegates. 
+</p>
+
+<pre class="code-highlight"><code>ObjectModel {
+    id: itemModel
+    Text { color: "red"; text: "Hello " }
+    Text { color: "green"; text: "World " }
+    Text { color: "blue"; text: "again" }
+}
+
+ListView {
+    anchors.fill: parent
+    model: itemModel
+    orientation: Qt.Horizontal
+}
+</code></pre>
+
+<h2 class="material-heading">
+  Delegate Model
+
+</h2>
+
+<p>
+<a href="https://doc.qt.io/qt-5/qml-qtquick-xmllistmodel-xmllistmodel.html" title="DelegateModel">DelegateModel</a> is similar to <code>ObjectModel</code> in that sense that it also encapsulates the model and delegate together. In addition, it is used in hierarchical models. Note that all QML model types are actually lists. Table, tree, and hierarchical models can be created by subclassing <code>QAbstractItemModel</code>. <code>DelegateModel</code> has a <code>rootIndex</code> property, which is a <code>QModelIndex</code> type. The model index allows navigating between child and parent items in the tree structure. This is covered in more detail in Phase 5. 
+</p>
+
+<p>
+<code>DelegateModel</code> is also useful for sharing data items to delegates in multiple views or for sorting and filtering items.
+</p>
+
+<h3 class="material-heading">
+  Sharing data items
+
+</h3>
+
+<p>
+<code>DelegateModel</code> uses a <code>Package</code> QML type to enable delegates with a shared context to be provided to multiple views. Any item within a <code>Package</code> may be assigned a name via the <code>Package.name</code> attached property, similarly to the following example. There are two items with different package names. The actual content <code>Text</code> is parented based on the delegate index to either a package, containing odd or to a package, containing even indices. The model <code>myModel</code> contains just list elements with a <code>display</code> role. 
+</p>
+
+<pre class="code-highlight"><code>DelegateModel {
+    id: visualModel
+    delegate: Package {
+        Item { id: odd; height: childrenRect.height; Package.name: "oddIndex" }
+        Item { id: even; height: childrenRect.height; Package.name: "evenIndex" }
+        Text {
+            parent: (index % 2) ? even : odd
+            text: display
+        }
+    }
+    model: myModel
+}
+</code></pre>
+
+<p>
+Now it is possible to use package names in different views. The <code>DelegateModel</code> property <code>parts</code> selects a <code>DelegateModel</code> which creates delegates from the part named. 
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    height: parent.height/2
+    width: parent.width
+    model: visualModel.parts.oddIndex
+}
+
+ListView {
+    y: parent.height/2
+    height: parent.height/2
+    width: parent.width
+    model: visualModel.parts.evenIndex
+}
+</code></pre>
+
+<h3 class="material-heading">
+  Sorting and filleting data items
+
+</h3>
+
+<p>
+Delegates may be sorted and filtered using groups in <code>DelegateView</code>. Each delegate belongs to an <code>items</code> group by default. Additional groups can be defined using <code>DelegateModelGroup</code> QML type. It provides methods to create and remove items in the group or move items to a different index position inside the group. 
+</p>
+
+<p>
+The first step to use groups is to add one or more groups to <code>DelegateModel</code>. In the following example, there are two groups and by default all the delegate items are added to the group <code>group1</code>. Note that items are also added to the default <code>items</code> group, so any delegate may belong to several groups. The <code>DelegateModel</code> property <code>filterOnGroup</code> determines, we are interested in delegates in <code>group1</code> only.
+</p>
+
+<pre class="code-highlight"><code>DelegateModel {
+    id: visualModel
+    model: myModel // contains ListElements with the display role 
+    filterOnGroup: "group1"
+
+    groups: [
+        DelegateModelGroup { name: "group1"; includeByDefault: true },
+        DelegateModelGroup { name: "group2" }
+     ]
+</code></pre>
+
+<p>
+For every group defined in <code>DelegateModel</code> two attached properties are added to each delegate item. The first of the form <code>DelegateModel.inGroupName</code> holds whether the item belongs to the group and the second <code>DelegateModel.groupNameIndex</code> holds the index of the item in that group.
+</p>
+
+<p>
+The attached properties are useful  in checking and changing the group, to which the delegate belongs to or to change the position of an item in that group. The following example shows, how the group can be changed by a mouse press.
+</p>
+
+
+<pre class="code-highlight"><code>delegate: Text {
+    id: item
+    text: display
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            if (item.DelegateModel.inGroup1) {
+                item.DelegateModel.inGroup1 = false;
+                item.DelegateModel.inGroup2 = true;
+            }
+            else {
+                item.DelegateModel.inGroup1 = true;
+                item.DelegateModel.inGroup2 = false;
+            }
+      }
+   }
+}
+</code></pre>
+The group filter can be changed to display delegates in any of the groups. Only one group can be displayed at the time time. 
+
+<pre class="code-highlight"><code>ListView {
+    anchors.fill: parent
+    model: visualModel
+    focus: true
+    Keys.onReturnPressed: {
+        visualModel.filterOnGroup = (visualModel.filterOnGroup === "group1") ? "group2" : "group1";
+    }
+}
+</code></pre>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with views for different image types (3/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+You have tons of pictures and your picture frame does not provide any support to organise images. Let's add support for at least viewing different image types in different views. 
+</p>
+
+<ul>
+<li>
+	Split the list view in PictureFrame to two list views horizontally.
+</li>
+
+<li>
+	Remove the delegate and create a new <code>DelegateModel</code>. 
+</li>
+
+<li>
+	Split images into two categories, e.g. .jpg and other images. 
+</li>
+
+<li>
+	One view should show .jpg files or whatever format you have chosen. The other view shows other images.
+</li>
+
+<li>
+	Identify the image type from the file name extension. 
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h3 class="material-heading">
+  Exhaustive reference material mentioned in this topic
+
+</h3>
+
+<p>
+https://doc.qt.io/qt-5/qtquick-modelviewsdata-modelview.html#xml-model<br>
+http://doc.qt.io/qt-5/qml-qtquick-xmllistmodel-xmllistmodel.html<br>
+https://qmlbook.github.io/en/ch06/index.html#a-model-from-xml<br>
+http://doc.qt.io/qt-5/xquery-introduction.html<br>
+http://doc.qt.io/qt-5/qml-qtqml-models-objectmodel.html<br>
+http://doc.qt.io/qt-5/qml-qtqml-models-delegatemodel.html<br>
+</p>
+
+<h1 class="material-heading">
+  Views 
+
+</h1>
+
+<p>
+For dynamic views QML provides four commonly used types, <code>ListView</code>, <code>GridView</code>, <code>TableView</code>, and <code>PathView. First three inherit </code>Flickable<code> type, which enables users to flick content either horizontally or vertically. Note that there is a </code>TableView<code> type in Qt Quick Controls, but those types are deprecated and not covered here. </code>PathView` allows organising data items in any path shape. 
+</p>
+
+<p>
+Each view may take any of the previously described QML model type and organise and decorate delegate items in the UI. All QML models are lists. <code>TableView</code> is the only type, which can directly show several columns from a C++ table model, i.e. <code>QAbstractItemModel</code> subclass. This is not any limitation though, as other views may use delegates, which display model columns, mapped to different roles. 
+</p>
+
+<p>
+In this chapter, we concentrate on use cases, where the view uses a QML model. C++ models are covered in Phase 5. 
+</p>
+
+<h2 class="material-heading">
+  ListView
+
+</h2>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qml-qtquick-listview.html" title="ListView">ListView</a> organises delegates in a horizontal or vertical list. <code>ListView</code> provides a variety of ways to decorate lists. Data items may be grouped into sections for better visualisation. The list may have a special header and footer item, and a highlight, indicating the current item.  
+</p>
+
+<p>
+In the following example, the <code>clip</code> property is set to <code>true</code>. In QML, parent items do not clip their children, so children may paint outside the bounding box of a parent. In most cases, this is ok. However, if there is, e.g. a tool bar and list view in the same UI window, quite likely we do not want the list view items to be painted on the top of the tool bar. Settings <code>clip</code> to <code>true</code> clips children, which paint outside the list view area. 
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    anchors.fill: parent
+    clip: true
+    model: 50
+    delegate: someNiceDelegate
+}
+</code></pre>
+
+<h3 class="material-heading">
+  Attached properties 
+
+</h3>
+
+<p>
+Each delegate gets an access to a number of attached properties, provided by the view. For example, <code>ListView</code> to which the delegate is bound is accessible from the delegate through the <code>ListView.view</code> property. Or a delegate can check, whether it is the current item by using <code>ListView.isCurrentItem</code>.
+</p>
+
+<p>
+Attach properties allow implementing clean, re-usable delegates, which do not have direct bindings to the view via an <code>id</code>, for example. 
+</p>
+
+<p>
+The attached properties are available to the root delegate item. Child objects must refer to attached properties using the root delegate identifier as in the following example. Sometimes a new custom var property, bound to an attached property, id declared. Remember however that each additional property increases the memory consumption.
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    width: 300; height: 200
+    model: contactsModel
+    delegate: contactsDelegate
+
+    Component {
+        id: contactsDelegate
+        Rectangle {
+            id: rootWrapper
+            width: 80
+            height: 80
+            // Rectangle is the root item, we can refer to the attached property directly
+            color: ListView.isCurrentItem ? "black" : "red"
+            Text {
+                id: contactInfo
+                text: name + ": " + number
+                // Attached property is not accessible in the child
+                color: rootWrapper.ListView.isCurrentItem ? "red" : "black"
+            }
+        }
+    }
+
+}
+</code></pre>
+
+<h3 class="material-heading">
+  Sections 
+
+</h3>
+
+<p>
+Grouping data items into sections improve readability in a list view. For example, albums grouped by artist names, or employees grouped by the department would easily show, which items are related.
+</p>
+
+<p>
+When using sections, two properties need to be considered. In <code>ListView</code> the property <code>section.property</code> defines which property is used to divide the data into sections. It's important to note that the model <em>needs to be sorted</em> so that each property forming a section is continuous. If a property forming the section appears in multiple non-continuos places in the model, the same section might appear multiple times in the view. The second property to be considered is <code>section.criteria</code>. It's set to <code>ViewSection.FullString</code> by default, which means that the whole property is used as the section. If set to <code>ViewSection.FirstCharacter</code> only the first character in the property is used for the section, for example when dividing up a list of names to sections based on the first letter of the last name.
+</p>
+
+<p>
+After the sections have been defined, they can be accessed from the items using the attached properties <code>ListView.section</code>, <code>ListView.previousSection</code>, and <code>ListView.nextSection</code>.
+</p>
+
+<p>
+We can also assign a special section delegate to create a header before each section, by assigning it to the property <code>section.delegate</code> in the <code>ListView</code>.
+</p>
+
+<p>
+In the following example, the data model has a list of artist and their albums, which are divided into sections by artist.
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    anchors.fill: parent
+    anchors.margins: 20
+    clip: true
+    model: albumsAndArtists
+    delegate: albumDelegate
+    section.property: "artist"
+    section.delegate: sectionDelegate
+}
+
+Component {
+    id: albumDelegate
+    Item {
+        width: ListView.view.width
+        height: 20
+        Text {
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 10
+            font.pixelSize: 12
+            text: album
+        }
+    }
+}
+
+Component {
+    id: sectionDelegate
+    Rectangle {
+        width: ListView.view.width
+        height: 20
+        color: "lightblue"
+        Text {
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 6
+            font.pixelSize: 14
+            text: section
+        }
+    }
+}
+
+ListModel {
+    id: albumsAndArtists
+    ListElement { album: "Crazy World"; artist: "Scorpions"; }
+    ListElement { album: "Love at First Sting"; artist: "Scorpions"; }
+    ListElement { album: "Agents of Fortune"; artist: "Blue Öyster Cult"; }
+    ListElement { album: "Spectres"; artist: "Blue Öyster Cult"; }
+    ListElement { album: "The Vale of Shadows"; artist: "Red Raven Down"; }
+    ListElement { album: "Definitely Maybe"; artist: "Oasis"; }
+}
+</code></pre>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with sections (4/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+This time continue the PictureFrame application by adding sections to it.
+</p>
+
+<ul>
+<li>
+	Organise images into groups using <code>ListView</code> sections. 
+</li>
+
+<li>
+	There is no need to group images in the model, so there may be any number of .tiff sections in the list view. 
+</li>
+
+<li>
+	Change the worker script as well to support sections. 
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h3 class="material-heading">
+  Headers and Footers
+
+</h3>
+
+<p>
+Views allow visual customisation through decoration properties such as the <code>header</code> and <code>footer</code>. By binding an object, usually another visual object, to these properties, the views are decoraable. As an example, a footer may include a <code>Rectangle</code> type showcasing borders, or a header that displays a logo on top of the list. It should be noted that headers and footers don't respect the <code>spacing</code> property in <code>ListView</code>, and thus any spacing needs to be a part of the header/footer itself.
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    anchors.fill: parent
+    anchors.margins: 20
+    clip: true
+    model: 4
+    delegate: numberDelegate
+    spacing: 2
+    header: headerComponent
+    footer: footerComponent
+}
+
+Component {
+    id: headerComponent
+    Rectangle {
+        width: ListView.view.width
+        height: 20
+        color: "lightBlue"
+        Text { text: 'Header'; anchors.centerIn: parent; }
+    }
+}
+
+Component {
+    id: footerComponent
+    Rectangle {
+        width: ListView.view.width
+        height: 20
+        color: "lightGreen"
+        Text { text: 'Footer'; anchors.centerIn: parent; }
+    }
+}
+
+Component {
+    id: numberDelegate
+    Rectangle {
+        width: ListView.view.width
+        height: 40
+        border.color: "black"
+        Text { text: 'Item ' + index; anchors.centerIn: parent; }
+    }
+}
+</code></pre>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with a footer (5/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Add a footer to the PictureFrame application. 
+</p>
+
+<ul>
+<li>
+	The footer should be always visible, if there are any items in the model. It should not go out of the view, when the list is scrolled. 
+</li>
+
+<li>
+	The footer must not be overpainted by the view and it must show the url of the current image in a <code>Label</code> Qt Quick Control. 
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h3 class="material-heading">
+  Keyboard navigation and highlighting
+
+</h3>
+
+<p>
+When using a keyboard to navigate in the ListView, some form of highlighting is necessary to tell which item is currently selected. Two things are necessary to allow keyboard navigation in the ListView. First, the view needs to be given keyboard focus with the property <code>focus: true</code>, and second a special highlight delegate needs to be defined. This is demonstrated in the following example:
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    id: view
+    anchors.fill: parent
+    anchors.margins: 20
+    clip: true
+    model: 20
+    delegate: numberDelegate
+    spacing: 5
+    highlight: highlightComponent
+    focus: true
+}
+
+Component {
+    id: highlightComponent
+    Rectangle {
+        color: "lightblue"
+        radius: 10
+    }
+}
+
+Component {
+    id: numberDelegate
+    Item {
+        width: ListView.view.width
+        height: 40
+        Text {
+            anchors.centerIn: parent
+            font.pixelSize: 10
+            text: index
+        }
+    }
+}
+</code></pre>
+
+<p>
+The highlight delegate is given the <code>x</code>, <code>y</code> and <code>height</code> of the current item. If the <code>width</code> is not specified, the width of the current item is used.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with the highlight (6/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Add a highlight into the PictureFrame application.
+</p>
+
+<ul>
+<li>
+	The highlight should be a red ellipse, shown in the middle, right border of the image. You may add small margin that the ellipse does not overlap the border.
+</li>
+
+<li>
+	The highlight size may be hard-coded, e.g. to 10 x 10 pixels. 
+</li>
+
+<li>
+	Animate the highlight position change using an out bounce easing curve. 
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  GridView and TableView
+
+</h2>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qml-qtquick-gridview.html" title="GridView">GridView</a> is largely similar to <code>ListView</code>, and it's used in almost the same way. The main difference is, that it doesn't rely on spacing and size of delegates, and instead <code>cellWidth</code> and <code>cellHeight</code> are defined in the view. Header, footers, keyboard navigation with highlighting are all available in <code>GridView</code>. Orientation is set in the <code>flow</code> property, options being <code>GridView.LeftToRight</code> (default) and <code>GridView.TopToBottom</code>. The following example showcases the usage of <code>GridView</code>.
+</p>
+
+<pre class="code-highlight"><code>GridView {
+    id: grid
+    anchors.fill: parent
+    cellWidth: 80;
+    cellHeight: 80
+    model: 100
+    delegate: numberDelegate
+    highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+    focus: true
+}
+
+Component {
+    id: numberDelegate
+    Item {
+        width: grid.cellWidth
+        height: grid.cellHeight
+        Text {
+            text: index
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+}
+</code></pre>
+
+<p>
+<a href="http://doc-snapshots.qt.io/qt5-5.12/qml-qtquick-tableview.html#" title="TableView">TableView</a> can display multiple columns, provided that the underlying model has multiple columns. There is no QML model type with multiple columns, so the model must inherit <code>QAbstractItemModel</code>. 
+</p>
+
+<p>
+The <code>GridView</code> and <code>TableView</code> exercise is postponed to Phase 4, where we compare how the views manage the lifetime of delegates. 
+</p>
+
+<h2 class="material-heading">
+  PathView
+
+</h2>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qml-qtquick-pathview.html" title="PathView">PathView</a> is the most powerful and customisable of the dynamic views provided by QML. <code>PathView</code> will display the model data on a <a href="http://doc.qt.io/qt-5/qml-qtquick-path.html" title="Path">Path</a> that can be arbitrarily defined with the <code>Path</code> QML type. <code>PathView</code> can be customised through a wide variety of properties, such as <code>pathItemCount</code>, which controls the numbers of visible items at once, and <code>preferredHighlightBegin</code> and <code>preferredHighlightEnd</code>, which are used to control where along the path the current item is shown. The properties expect real values between 0 and 1. Setting both of them to, for instance, 0.5 would display the current item at the location 50% along the path.
+</p>
+
+<p>
+A <code>Path</code> is the path that the delegates follow when the view is scrolled. It defines the path using <code>startX</code> and <code>startY</code> properties, alongside path segments that are defined types such as <a href="http://doc.qt.io/qt-5/qml-qtquick-pathquad.html" title="PathQuad">PathQuad</a> or <a href="http://doc.qt.io/qt-5/qml-qtquick-pathline.html" title="PathLine">PathLine</a>. All the different path segments can be found in the Qt documentation. Qt Quick Designer commercial version even has an editor to create and remove path segments and define their shapes.
+</p>
+
+<p>
+The following example shows items on a straight path.
+</p>
+
+<pre class="code-highlight"><code>PathView {
+    id: view
+    model: 20
+    anchors.fill: parent
+
+    path: Path {
+        startX: 0
+        startY: height
+
+        PathCurve {
+            x: view.width
+            y: 0
+        }
+    }
+    delegate: Text {
+        text: "Index " + index
+    }
+}
+</code></pre>
+
+<p>
+When the path has been defined, we can further tune it using <code>PathPercent</code> and <code>PathAttribute</code> types. These objects can be placed in between the path segments to provide a more fine grained control over the path and the delegates. The <code>PathPercent</code> allows you to manipulate the spacing between items on a PathView's path. You can use it to bunch together items on part of the path, and spread them out on other parts of the path. The <code>PathAttribute</code> object allows attributes consisting of a name and a value to be specified for various points along the path. The attributes are exposed to the delegate as Attached Properties, and can be used to control any property. The value of an attribute at any particular point along the path is interpolated from the <code>PathAttributes</code> bounding that point.
+</p>
+
+<p>
+Next we have a larger example of <code>PathView</code>, where the path is defined with <code>PathQuad</code> and the size and opacity of the items is changed with <code>PathAttribute</code>. We've also enabled keyboard navigation, which is not available by default. It can be done by giving the keyboard focus by setting the <code>focus</code> property to true, and defining what the keys should do (in this case <code>Keys.onLeftPressed: decrementCurrentIndex()</code> and <code>Keys.onRightPressed: incrementCurrentIndex()</code> to allow moving back and forth).
+</p>
+
+<pre class="code-highlight"><code>// ContactModel.qml
+ListModel {
+    ListElement { name: "Linus Torvalds"; icon: "pics/qtlogo.png"; }
+    ListElement { name: "Alan Turing"; icon: "pics/qtlogo.png"; }
+    ListElement { name: "Margaret Hamilton"; icon: "pics/qtlogo.png"; }
+    ListElement { name: "Ada Lovelace"; icon: "pics/qtlogo.png"; }
+    ListElement { name: "Tim Berners-Lee"; icon: "pics/qtlogo.png"; }
+    ListElement { name: "Grace Hopper"; icon: "pics/qtlogo.png"; }
+}
+</code></pre>
+
+<pre class="code-highlight"><code>Rectangle {
+    width: 250; height: 200
+
+    Component {
+        id: delegate
+        Item {
+            width: 80; height: 80
+            scale: PathView.iconScale
+            opacity: PathView.iconOpacity
+            Column {
+                Image { anchors.horizontalCenter: nameText.horizontalCenter; width: 64; height: 64; source: icon }
+                Text { id: nameText; text: name; font.pointSize: 12 }
+            }
+        }
+    }
+
+    PathView {
+        anchors.fill: parent
+        model: ContactModel {}
+        delegate: delegate
+        focus: true
+        Keys.onLeftPressed: decrementCurrentIndex()
+        Keys.onRightPressed: incrementCurrentIndex()
+        path: Path {
+            startX: 120
+            startY: 100
+            PathAttribute { name: "iconScale"; value: 1.0 }
+            PathAttribute { name: "iconOpacity"; value: 1.0 }
+            PathQuad { x: 120; y: 25; controlX: 260; controlY: 75 }
+            PathAttribute { name: "iconScale"; value: 0.3 }
+            PathAttribute { name: "iconOpacity"; value: 0.5 }
+            PathQuad { x: 120; y: 100; controlX: -20; controlY: 0 }
+        }
+    }
+}
+</code></pre>
+
+<p>
+When using <code>Image</code> QML type in the <code>PathView</code> delegates, it is useful to bind the <code>smooth</code> property to <code>PathView.view.moving</code>. Less processing power is spent on smooth transformations, when the view is in motion, while images are smoothly transformed when stationary. 
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with PathView (7/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Let's improve the photo browsing in the PictureFrame application. As images are hard-coded to be quite large, it's difficult to quickly find the right picture. Let's add a <code>PathView</code> to improve the browsing functionality.
+</p>
+
+<ul>
+<li>
+	Split the window horizontally into to equal size areas. Keep the list view on the left and add path view to the right. 
+</li>
+
+<li>
+	Implement the path view into its own file. 
+</li>
+
+<li>
+	Implement a U-shape path using three path lines. The first line goes diagonally down from the top left corner. The second path line goes horizontally to the right and the third line goes diagonally to the top right corner.
+</li>
+
+<li>
+	Change the delegate opacity and size to 50 per cent in diagonal lines. 
+</li>
+</ul>
+
+
+
+    </div>
+  </div>
+</div>
+
+<h3 class="material-heading">
+  Exhaustive reference material mentioned in this topic
+
+</h3>
+
+<p>
+https://qmlbook.github.io/en/ch06/index.html<br>
+https://doc.qt.io/qt-5/qml-qtquick-listview.html<br>
+https://doc.qt.io/qt-5/qml-qtquick-gridview.html<br>
+https://doc.qt.io/qt-5/qml-qtquick-pathview.html<br>
+https://doc.qt.io/qt-5/qml-qtquick-tableview.html<br>
+</p>
+
+<h1 class="material-heading">
+  Delegates
+
+</h1>
+
+<p>
+Delegates act as templates for instantiating the visual items inside the view. The data roles provided by the model are bound to visual item properties, such as the <code>Text.text</code> or <code>Image.source</code> property. Delegates can also be used to modify and update the data bound to the roles by simply assigning new values to roles. The model will notify all views about the changed data values. 
+</p>
+
+<p>
+In the following example, we have a <code>TeamDelegate</code> that updates the bound data when clicked:
+</p>
+
+<pre class="code-highlight"><code>ListModel {
+    id: teamModel
+    ListElement {
+        teamName: "Team C++"
+        teamColor: "blue"
+    }
+}
+
+ListView {
+    anchors.fill: parent
+    model: teamModel
+    delegate: TeamDelegate {}
+}
+
+// TeamDelegate.qml
+Component {
+    Text {
+        text: teamName
+        color: teamColor
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                    model.teamName = "Team Quick"
+                    model.teamColor = "red"
+                }
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>
+Within the delegate, it is possible to access the <a href="http://doc.qt.io/qt-5/qtquick-modelviewsdata-modelview.html#qml-data-models" title="data roles">data roles</a> as internal properties. Remember also the <code>model</code> qualifier, if the delegate item property names and model roles have a name clash. 
+</p>
+
+<h3 class="material-heading">
+  Delegate size
+
+</h3>
+
+<p>
+In most examples so far, we have used <code>Text</code> or <code>Image</code> QML types for delegates. These types have implicit size, so there has not been any need to define the size explicitly using the <code>Item::width</code> and <code>Item::height</code> properties. In fact, using the implicit size and setting the explicit size in <code>Text</code> incurs a performance penalty as the text must be laid out twice.
+</p>
+
+<p>
+In real application, delegates seldom contain just a text or an image. More often delegates are composed from a few other QML types. As delegates are components, they must contain exactly one root item. The <code>Item</code> QML type is a good candidate for the root item, as it's suitable for composing delegates from other items. However, <code>Item</code> has no explicit size, so it has to be explicitly declared. 
+</p>
+
+<p>
+One approach is to bind the root item size to the view size. In the following example, we bind the delegate height to the height available for one item, assuming the model has <code>n</code> items. To keep the text readable, we have used <code>FontMetrics</code> to calculate the minimum height for the delegate. 
+</p>
+
+<pre class="code-highlight"><code>ListView {
+    anchors.fill: parent
+    anchors.margins: 20
+    clip: true
+    model: 50
+    delegate: numberDelegate
+}
+
+FontMetrics {
+    id: fontMetrics
+    font { family: "Arial"; pixelSize: 14 }
+}
+
+Component {
+    id: numberDelegate
+    Item {
+        width: ListView.view.width
+        height: Math.max(ListView.view.height / ListView.view.count, fontMetrics.height)
+
+        Rectangle {
+            anchors.fill: parent
+            border.color: "black"
+            Text {
+                font { family: "Arial"; pixelSize: 14}
+                text: 'Item ' + index;
+                anchors.centerIn: parent;
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>
+Another approach is to let the delegate children determine its size. This is useful, if children have implicit size like the <code>Text</code> item in the following example. 
+</p>
+
+<pre class="code-highlight"><code>Component {
+    id: numberDelegate
+    Item {
+        id: rootItem
+        width: ListView.view.width
+        height: childrenRect.height
+
+<p>
+        Rectangle {
+</p>
+            width: rootItem.width
+            height: childrenRect.height + 2
+            border.color: "black"
+            Text {
+                font { family: "Arial"; pixelSize: 14}
+                text: 'Item ' + index;
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>
+Keep your delegates as simple as possible. This applies to size calculation as well. Avoid complex size calculations and dependencies between delegate objects.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">PictureFrame with compound delegate (8/8)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Let's change the PictureFrame exercise from the previous chapter to have little bit more complicated delegate. This will not be the best way to implement the delegate, but it's used for learning purposes. The goal is the understand, how delegate size should be determined.
+</p>
+
+<ul>
+<li>
+	Let's modify the path view delegate. The delegate root should be an <code>Item</code> QML type. 
+</li>
+
+<li>
+	The item should contain one child, which is <code>Column</code>, which is shown immediately below the border image. 
+</li>
+
+<li>
+	The column contains the border image and a rectangle, which has a label as a child. The rectangle should use the image width and label height. The label is entered in the rectangle.
+</li>
+
+<li>
+	The only hard-coded size can be the border image. It's totally acceptable to make the border image scalable as well, but it's not required in the exercise. 
+</li>
+
+<li>
+	All other delegate objects must have either implicit size or the <code>width</code> and <code>height</code> properties bound to other properties. No hard-coded magic numbers are accepted. 
+</li>
+</ul>
+
+<p>
+<strong>This is the final part of Picture Frame exercise series.</strong> Now it's time to submit it to be peer-reviewed. This is done in the same manner as with the Directory Browser exerice at the end of Part 2. Create a GitHub repository for your project, and submit a link to it below.
+</p>
+
+
+
+    </div>
+  </div>
+</div>
+
+<div class="quiznator-plugin" data-quiz-id="5c1d1e8ba50dbe1223d1a78f"></div>
+
+
+<div class="quiznator-plugin" data-quiz-id="5c1d1f99a50dbe1223d1a794"></div>
+
+
+<div class="quiznator-plugin" data-quiz-id="5c1d207d5503db116e7276fb"></div>
+
+
+<h2 class="material-heading">
+  Clip
+
+</h2>
+
+<p>
+The view <code>clip</code> property will ensure that any view items outside of the view will not be visible. If set to <code>false</code>, items will 'flow over' the view. Avoid using <code>clip</code> in delegates. If <code>clip</code> is enabled inside a delegate, each delegate will be batched separately. The QML renderer creates a scene graph of all the visible items. It tries to minimise the number of OpenGL state changes, by batching paint operations. One batch contains only operations, which do not require an OpenGL state changes. Less batches result to better rendering performance. 
+</p>
+
+<p>
+Clipping results that a scene graph node and its complete sub-tree will be put into one batch. If <code>clip</code> is used in the view, but not in the delegates, the whole tree of the view and delegates can be put into one batch. However, as soon as a delegate uses <code>clip</code>, a new scene graph sub-tree is created for each delegate. this will increase the number of batches and have negative impact on the performance.
+</p>
+
+<p>
+<a href="http://doc.qt.io/qt-5/qtquick-visualcanvas-scenegraph-renderer.html" title="Scenegraph renderer">Scenegraph renderer</a> describes batching in more detail. 
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Batch optimisation</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+This is a voluntary exercise that will not be graded. We still recommend you do it though, the goal is to get familiar with the utilities to find and optimise batches in QML application!
+</p>
+
+<ul>
+<li>
+	Define an environment variable <code>QSG_RENDERER_DEBUG=render</code> and run your PictureFrame application in Qt Creator in Debug Mode. You will see the number of batches sent to OpenGL in Debug Console. 
+</li>
+
+<li>
+	Use the <code>QSG_VISUALIZE</code> environment variable to visualise the batches. The variable may have one of the four values: <code>batches</code>, <code>clip</code>, <code>overdraw</code> or <code>changes</code>. Set the <code>clip</code> property to <code>true</code> in your view. Check, if this affects the number of batches in any way.
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  Memory management
+
+</h2>
+
+<p>
+Dynamic views create and destroy delegates dynamically. The only exception is <code>TableView</code>, which is able to re-use existing delegates from the pool as well. <code>TableView</code> has the <code>reuseItems</code> property to control this. 
+</p>
+
+<p>
+<code>ListView</code>, <code>GridView</code>, and <code>PathView</code> will create as many delegate items, as the view is able to show in its area. This allows Qt developers to use huge item models, consisting of millions of items, as only a small portion of items is visible and created at one time. When a user flicks the view, visible items go beyond the view are and they are destroyed. New items will be created and they become visible in the view. 
+</p>
+
+<p>
+Dynamic creation of items implies you must never store state information into a delegate. Always store the state information into the model, before the item is destroyed.
+</p>
+
+<pre class="code-highlight"><code>Component.onDestruction: {
+    someBooleanRole = (state === "false") ? false : true;
+}
+</code></pre>
+
+<p>
+Views provide caches to improve the performance, when the user is flicking the view. <code>ListView</code> and <code>GridView</code> use <code>cacheBuffer</code>, while <code>PathView</code> uses <code>cacheItemCount</code>. <code>PathView::pathItemCount</code> determines how many visible items are created and <code>PathView::cacheItemCount</code> determines how many additional items are created in the cache. Caching delegate items improves the performance, but increases the memory consumption.  
+</p>
+
+<p>
+The property <code>cacheBuffer</code> is an integer, determining how many delegate items are cached. If the value is 100 in a list view and the delegate height is 20, 5 items will be cached before and 5 items will be cached after the currently visible items. 
+</p>
+
+<p>
+In <code>GridView</code>, the caching principle is similar. If in a vertical view the delegate is 20 pixels high, there are 3 columns and <code>cacheBuffer</code> is set to 40, then up to 6 delegate items above and 6 delegate items below the visible area may be created or retained. 
+</p>
+
+<p>
+<code>TableView</code> can also reuse delegate items. When an item is flicked out, it moves to the reuse pool, which is an internal cache of unused items. When this happens, the <code>TableView::pooled</code> signal is emitted to inform the item about it. Likewise, when the item is moved back from the pool, the <code>TableView::reused</code> signal is emitted. 
+</p>
+
+<p>
+Any item properties that come from the model are updated when the item is reused. This includes index, row, and column, but also any model roles.
+</p>
+
+<p>
+Avoid storing any state inside a delegate. If you do, reset it manually on receiving the <code>TableView::reused</code> signal.
+</p>
+
+<p>
+If an item has timers or animations, consider pausing them on receiving the <code>TableView::pooled</code> signal. That way you avoid using the CPU resources for items that are not visible. Likewise, if an item has resources that cannot be reused, they could be freed up.
+</p>
+
+<p>
+The following example shows a delegate that animates a spinning rectangle. When it is pooled, the animation is temporarily paused.
+</p>
+
+<pre class="code-highlight"><code>Component {
+    id: tableViewDelegate
+    Rectangle {
+        implicitWidth: 100
+        implicitHeight: 50
+
+        TableView.onPooled: rotationAnimation.pause()
+        TableView.onReused: rotationAnimation.resume()
+
+        Rectangle {
+            id: rect
+            anchors.centerIn: parent
+            width: 40
+            height: 5
+            color: "green"
+
+            RotationAnimation {
+                id: rotationAnimation
+                target: rect
+                duration: (Math.random() * 2000) + 200
+                from: 0
+                to: 359
+                running: true
+                loops: Animation.Infinite
+            }
+        }
+    }
+}
+</code></pre>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Grid vs. Table view (03_MemoryManagement)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Let's compare, how grid view and table view manage the delegate lifetime.
+</p>
+
+<ul>
+<li>
+	This exercise isn't tested, so submit it when you've done what's asked. We'll do spot-checks on the submits, so please at least try and do the exercise. Completely empty submissions will not be tolerated.
+</li>
+
+<li>
+	Start from scratch, you're provided with an empty main.qml.
+</li>
+
+<li>
+	Split the window horizontally between a <code>GridView</code> and <code>TableView</code>. Use Qt Quick <code>TableView</code>, introduced in Qt 5.12.
+</li>
+
+<li>
+	Create an empty <code>ListModel</code>. Fill the list model with 100 element. Each element has two roles: "name" and "buttonChecked". The name value could be just an index and buttonChecked should be initially false. Assign to model to both views' <code>model</code> property. You may find <code>Component.onCompleted</code> signal handler very useful. After the window is created, use the handler to fill the model. 
+</li>
+
+<li>
+	Create two delegates: one for the grid view and another one for the table view. You can use similar delegate declaration in both cases. Add a <code>Row</code> of a <code>RadioButton</code> and <code>Text</code>. Set <code>RadioButton::autoExclusive</code> to false in both delegates. Otherwise. we cannot uncheck the checked radio button. The <code>Text::text</code> property should have the "name" role, defined in the model. <code>ButtonChecked</code> role is not used yet.
+</li>
+
+<li>
+	Add <code>Component::onCompleted</code> signal handler to both delegates and use <code>console.log</code> to notify about the delegate creation. Flick the grid view and table view up and down. What do you observe? How delegate creation differs between the views?
+</li>
+
+<li>
+	Check one radio button in the grid and one in the table. Scroll down the both views? What do you observe? 
+</li>
+
+<li>
+	We need to store the radio button state into the model. That's why we have the <code>buttonChecked</code> property. First, bind <code>RadioButton::checked</code> to <code>buttonChecked</code>. Now, you should see that checking a radio button in one view checks the radio button in other view, as they share the same model. 
+</li>
+
+<li>
+	Finally, save the radio button state changes to the model. If you now scroll down and up, you should observe that the radio button state does not change or the table view does not have any re-used radio buttons in the wrong state. 
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
+  Complex delegates
+
+</h2>
+
+<p>
+Keep your delegates as simple as possible. There are ways to manage complex delegates, but almost always the best solution performance and memory consumption wise is to declare simple delegates. 
+</p>
+
+<p>
+Why should delegates be so simple then? Problems arise when delegates contain, for example <a href="https://doc.qt.io/qt-5/qml-qtmultimedia-video.html" title="Video">Video</a> items all auto-playing video for some odd reason.
+</p>
+
+<pre class="code-highlight"><code>Item {
+    id: videoDelegate
+
+    Video {
+        id: video
+        width: 800
+        height: 600
+        source: model.videosrc
+        autoPlay: true
+    }
+}
+</code></pre>
+
+<p>
+The target platform is low-end devices, and loading all these items at startup will take an noticeable amount of time. Some devices might not be able to play multiple video sources at the same time.
+</p>
+
+<p>
+If there is a need to load resource intensive items inside a delegate, it is possible to create objects dynamically, as explained in <a href="https://doc.qt.io/qt-5/qtqml-javascript-dynamicobjectcreation.html" title="Dynamic object creation">Dynamic object creation</a>.
+</p>
+
+<p>
+QML has the <a href="https://doc.qt.io/qt-5/qml-qtquick-loader.html" title="Loader">Loader</a> type, which can be used to load different parts of the UI, like complicated parts of delegates, to improve performance. The following example has a delegate which has a <code>Component</code> where the video will be contained. We add a <code>Loader</code> and a <code>MouseArea</code> to the delegate, so when clicked the <code>sourceComponent</code> property will be set to the <code>videoComponent</code>. This change will trigger the <code>Loader</code> to load the <code>videoComponent</code> component.
+</p>
+
+<pre class="code-highlight"><code>Item {
+    id: lazyVideoDelegate
+
+    width: 200
+    height: 200
+
+    Component {
+        id: videoComponent
+
+        Video {
+            id: video
+            width: 800
+            height: 600
+            source: model.videosrc
+            autoPlay: true
+        }
+    }
+
+    Loader {
+        id: videoLoader
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: videoLoader.sourceComponent = videoComponent
+    }
+}
+</code></pre>
+
+<p>
+Notice that while a <code>Video</code> item declared by itself would be automatically rendered and displayed, this is not the case for the above as the item is defined inside a Component.
+</p>
+
+<p>
+This will reduce the load time considerably, as the delegate will only contain <code>Loader</code> and <code>MouseArea</code> objects initially. Note however that we have to create a <code>Loader</code> object, which is not free. It is lighter, but consumes memory anyway. The better way is to try to avoid <code>Loaders</code> in delegates. The best approach would be to add an <code>Image</code> which displays a thumbnail of the video or something similar.
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Memory intensive app (04_AsyncDelegates)</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+In this part, we have concentrated on dynamic views. What are the static views then? Positioners are static views. The <a href="http://doc.qt.io/qt-5/qml-qtquick-repeater.html" title="Repeater">Repeater</a> QML type is often used to statically create content for positioners. The idea is similar to the dynamic views. <code>Repeater</code> uses delegate templates to create objects, but all objects are created synchronously. 
+</p>
+
+<ul>
+<li>
+	You are given the <code>MemoryIntensiveElement</code> QML file. The <code>main.qml</code> empty, use to it to do the following:
+</li>
+
+<li>
+	Use <code>MemoryIntensiveElement::nofItems</code> property to create e.g. 150,000 delegates. The time required for the creation depends on your computer resources, so adjusted the number so that the startup time is at least several seconds.
+</li>
+
+<li>
+	Your task is simple. Reduce the startup time with asynchronous loading. You MUST not change anything in <code>MemoryIntensiveElement</code>. 
+</li>
+
+<li>
+	Again, this exercise isn't tested, so just submit it when you think you've done what's required. We'll do spot-checks to make sure that you've at least tried.
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<h3 class="material-heading">
+  Exhaustive reference material mentioned in this topic
+
+</h3>
+
+<p>
+http://doc.qt.io/qt-5/model-view-programming.html<br>
+https://qmlbook.github.io/en/ch06/index.html#delegate<br>
+https://www.quora.com/What-are-delegates-in-Qt<br>
+https://doc.qt.io/archives/qq/qq24-delegates.html<br>
+http://doc.qt.io/qt-5/qitemdelegate.html<br>
+https://www.ics.com/designpatterns/book/delegates.html<br>
+http://doc.qt.io/qt-5/qitemdelegate.html#details<br>
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">TV Guide</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Exercise for Part 4 - TV Guide
+</p>
+
+<p>
+This is another peer-reviewed exercise. After you're done, create a repository for your solution on GitHub, and submit it to be peer-reviewed below. Please note that to get the points for this exercise, you're required to review another student's solution! You can download an example solution and do the peer-review after you've submitted your own solution.
+</p>
+
+<p>
+Your task is to implement a TV Guide application. The application allows the user to browse TV programs from several channels. One source for the channel and program data is <a href="https://telkussa.fi/" title="Telkussa">Telkussa</a>, but obviously any other services can be used. 
+</p>
+
+<ul>
+<li>
+	The application should show TV programs of at least ten channels. 
+</li>
+
+<li>
+	Organise channels in a vertical list. 
+</li>
+
+<li>
+	Each row in the list should show at least the channel name and the current date's TV programs. Display the TV programs in a horizontal list, organised in a chronological order. 
+</li>
+
+<li>
+	If a TV program name is clicked on, show more detailed description of the program. QML dialogs could be used for this. 
+</li>
+
+<li>
+	Do not try to implement everything in a single source code file. Keep models and views in their own files. 
+</li>
+
+<ul>
+	Avoid hard-coded magic numbers. Make at least the view sizes scalable. The font and image sizes may be fixed.  
+</li>
+</ul>
+
+
+    </div>
+  </div>
+</div>
+
+<div class="quiznator-plugin" data-quiz-id="5c1d220a054d71123e35cbdd"></div>
+
+
+<div class="quiznator-plugin" data-quiz-id="5c1d220a054d71123e35cbdc"></div>
+
+
+<div class="quiznator-plugin" data-quiz-id="5c1d220a054d71123e35cbdb"></div>
+
+
+<h2 class="material-heading">
+      Feedback for Part 4
+
+</h2>
+
+<div class="quiznator-plugin" data-quiz-id="5c1d20a78cd06a11e4c83c48"></div>
+
+        </div>
+      </div>
+
+      <div class="footer-wrapper">
+        <footer class="footer">
+  <div>
+    This material has been licenced with Creative Commons BY-NC-SA-licence.
+  </div>
+  <div>
+    The course has been made by The Qt Company.
+  </div>
+  <div>
+    The site template has been made by University of Helsinki Agile Education Research research group.
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+    <div class="modal fade" id="tmc-login-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="tmc-login-form">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Login to mooc.fi</h4>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            Missing a mooc.fi account? <a href="https://tmc.mooc.fi/user/new" class="alert-link" target="_blank" rel="noopener">Register!</a>
+          </div>
+
+          <div class="alert alert-danger" id="tmc-login-error" style="display: none;"></div>
+
+          <div class="form-group">
+            <label>Username or email</label>
+            <input type="text" id="tmc-login-username" class="form-control" placeholder="Username or email"/>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="tmc-login-password" class="form-control" placeholder="Password"/>
+          </div>
+
+          <div class="form-group">
+            <label>Course</label>
+
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="tmcLoginCourse" value="hy-qt-mooc-new-year">
+                UI Application Development with Qt and QML, new year edition
+              </label>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+    <div class="table-of-contents-layer" id="table-of-contents-layer">
+</div>
+
+<div class="table-of-contents" id="table-of-contents">
+  <h1 class="table-of-contents__heading">
+    Table of Contents
+  </h1>
+
+  <div class="table-of-contents__content">
+    <ul id="table-of-contents-list"></ul>
+  </div>
+</div>
+
+
+    <script>
+  window._QUIZNATOR_ENABLED = true;
+</script>
+
+<script src="https://quiznator.mooc.fi/javascripts/plugin-loader.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+	    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	    crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="../javascripts/scripts-0f290aff.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.1/cookieconsent.min.js"></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js'></script>
+
+    <script>window.cookieconsent.initialise({"palette":{"popup":{"background":"#000"},"button":{"background":"#f1d600"}}, "position": "bottom-left"});</script>
+
+    <script src='https://materiaalit.github.io/code-states-visualizer-cdn/app.js'></script>
+    <script src='https://materiaalit.github.io/typonator-cdn/app.js'></script>
+    <script src='https://crowdsorcerer.testmycode.io/dist/app.js'></script>
+    <script src='https://materiaalit.github.io/pdf-slideshow-cdn/app.js'></script>
+    <script>
+      window.initPdfSlideshow('../pdf.worker.min.js');
+    </script>
+  </body>
+</html>
