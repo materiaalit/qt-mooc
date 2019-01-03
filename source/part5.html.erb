@@ -383,8 +383,8 @@ ListView {
         }
     }
 }
-
 <% end %>
+
 <% partial 'partials/material_heading' do %>
 Adding New QML Types
 <% end %>
@@ -466,11 +466,13 @@ Sometimes a <code>QObject</code>-derived class may need to be registered with th
 <li>
 	is a type that should be provided to QML through a singleton instance, and should not be instantiable from QML
 </li>
+</ul>
 
 <p>
 The Qt QML module provides several methods for registering non-instantiable types:
 </p>
 
+<ul>
 <li>
 	<code>qmlRegisterType()</code> (with no parameters) registers a C++ type that is not instantiable and cannot be referred to from QML. This enables the engine to coerce any inherited types that are instantiable from QML.
 </li>
@@ -856,7 +858,7 @@ It defines the project as a plugin library, specifies the built directory, and r
 Lastly, we need a <code>qmldir</code> file to describe the plugin:
 </p>
 
-<% end %>
+<% partial 'partials/code_highlight' do %>
 module TimeExample
 plugin qmlqtimeexampleplugin
 <% end %>
