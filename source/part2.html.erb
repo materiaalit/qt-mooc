@@ -343,7 +343,7 @@ Connected to the property system is an additional macro, <code>Q_CLASSINFO()</co
 Like other meta-data, class information is accessible at run-time through the meta-object; see <code>QMetaObject::classInfo()</code> for details.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'TimeToReflect' } do %>
+<% partial 'partials/exercise', locals: { name: 'TimeToReflect (4p)' } do %>
 
 <p>
 In this exercise you'll get familiar with accessing QObject's properties. You'll find the instuctions in <code>reflection.cpp</code>.
@@ -355,7 +355,7 @@ Hint: <code>QVariant</code> will be useful.
 
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'CustomContainer' } do %>
+<% partial 'partials/exercise', locals: { name: 'CustomContainer (3p)' } do %>
 
 <p>
 This exercise is tad bit larger. You'll create a custom class <code>Student</code>, as well as implement the functionality for <code>StudentRegistry</code>. You'll find the instuctions in <code>studentregistry.cpp</code>.
@@ -579,7 +579,7 @@ connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed(QObject*)));
 ...because the slot will be expecting a <code>QObject</code> that the signal will not send. This connection will report a runtime error. Note that signal and slot arguments are not checked by the compiler when using this <code>QObject::connect()</code> overload.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'SingalsSlots' } do %>
+<% partial 'partials/exercise', locals: { name: 'SingalsSlots (2p)' } do %>
 
 <p>
 In this exercise you'll create two classes to practise defining signals and slots. You'll find the exercise instructions in <code>main.cpp</code>.
@@ -703,7 +703,7 @@ The object tree does not solve the dangling pointer problem, but <a href="http:/
 Qt objects may also notify observers just before their destruction.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'BadParenting' } do %>
+<% partial 'partials/exercise', locals: { name: 'BadParenting (0p)' } do %>
 
 <p>
 This exercise will be mostly for the student to play around with the concept of parents and children. It is not tested in TMC, and doesn't award points. You'll find instructions in <code>parenting.cpp</code>.
@@ -711,7 +711,7 @@ This exercise will be mostly for the student to play around with the concept of 
 
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'Directory Browser' } do %>
+<% partial 'partials/exercise', locals: { name: 'Directory Browser (5p)' } do %>
 
 <p>
 Exercise for Part 2 - Directory Browser

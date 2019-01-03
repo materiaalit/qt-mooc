@@ -98,7 +98,7 @@ ListView {
 }
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'Picture Frame (01_PictureFrame)' } do %>
+<% partial 'partials/exercise', locals: { name: 'Picture Frame (01_PictureFrame) (1p)' } do %>
 
 <p>
 Create an empty Qt Quick Controls application.
@@ -154,7 +154,7 @@ To create new items, you can use JSON <code>{ "teamName": "Team Qt", "teamColor"
 <% partial 'partials/exercise', locals: { name: 'PictureFrame with add and remove actions (1/8)' } do %>
 
 <p>
-This exercise is first of many during Part 4 where you add functionality to the PictureFrame application. It will not be tested in TMC, instead just start a fresh QML application and add things there every time a PictureFrame exercise comes up (this is first of 8). You can use the code from the last exercise as a starting point. The exercise will be returned as a GitHub repository to be peer-reviewed after the final part of it is done. You will then be graded based on which parts you did (i.e. if you get stuck you can skip one of the parts and continue).
+This exercise is first of many during Part 4 where you add functionality to the PictureFrame application. It will not be tested in TMC, instead just start a fresh QML application and add things there every time a PictureFrame exercise comes up (this is first of 8, each part is worth 1 point, so total of 8 points are available). You can use the code from the last exercise as a starting point. The exercise will be returned as a GitHub repository to be peer-reviewed after the final part of it is done. You will then be graded based on which parts you did (i.e. if you get stuck you can skip one of the parts and continue).
 </p>
 
 <p>
@@ -370,7 +370,7 @@ ListView {
 }
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'News reader (02_XMLModel)' } do %>
+<% partial 'partials/exercise', locals: { name: 'News reader (02_XMLModel) (3p)' } do %>
 
 <p>
 Implement a news reader app. The news are available in http://feeds.bbci.co.uk/news/rss.xml. Any other feed may be used, but the feed must provide at least some text data + URLs to get further information.
@@ -1368,7 +1368,7 @@ Component {
 }
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'Grid vs. Table view (03_MemoryManagement)' } do %>
+<% partial 'partials/exercise', locals: { name: 'Grid vs. Table view (03_MemoryManagement) (2p)' } do %>
 
 <p>
 Let's compare, how grid view and table view manage the delegate lifetime.
@@ -1489,7 +1489,7 @@ Notice that while a <code>Video</code> item declared by itself would be automati
 This will reduce the load time considerably, as the delegate will only contain <code>Loader</code> and <code>MouseArea</code> objects initially. Note however that we have to create a <code>Loader</code> object, which is not free. It is lighter, but consumes memory anyway. The better way is to try to avoid <code>Loaders</code> in delegates. The best approach would be to add an <code>Image</code> which displays a thumbnail of the video or something similar.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'Memory intensive app (04_AsyncDelegates)' } do %>
+<% partial 'partials/exercise', locals: { name: 'Memory intensive app (04_AsyncDelegates) (2p)' } do %>
 
 <p>
 In this part, we have concentrated on dynamic views. What are the static views then? Positioners are static views. The <a href="http://doc.qt.io/qt-5/qml-qtquick-repeater.html" title="Repeater">Repeater</a> QML type is often used to statically create content for positioners. The idea is similar to the dynamic views. <code>Repeater</code> uses delegate templates to create objects, but all objects are created synchronously. 
@@ -1528,7 +1528,7 @@ https://www.ics.com/designpatterns/book/delegates.html<br>
 http://doc.qt.io/qt-5/qitemdelegate.html#details<br>
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'TV Guide' } do %>
+<% partial 'partials/exercise', locals: { name: 'TV Guide (5p)' } do %>
 
 <p>
 Exercise for Part 4 - TV Guide

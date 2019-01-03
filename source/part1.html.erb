@@ -449,7 +449,7 @@ Shadow builds
 After you've successfully built your first Qt project, you might be interested in the built binaries. By default, Qt Creator builds the project in to a separate directory (`build-ProjectName-*`) as a <a href="https://doc.qt.io/qtcreator/creator-glossary.html#glossary-shadow-build" title="shadow build">shadow build</a>, which is separated from the source directory. <code>qmake</code> can also generate an <strong>in-source</strong> build, but this is not recommended. The benefit in shadow builds is keeping that directory clean, which makes changing between Kits or build configurations faster.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'HelloWorld' } do %>
+<% partial 'partials/exercise', locals: { name: 'HelloWorld (1p)' } do %>
 
 <p>
 Hey! It's time for our first exercise. It's going to be a simple one, don't worry. Just download the exercise template from TMC, open the project, and head to <code>hello.cpp</code>.
@@ -653,7 +653,7 @@ DEFINES *= QT_USE_QSTRINGBUILDER
 and the '+' will automatically be performed as the QStringBuilder '%' everywhere.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'Strings' } do %>
+<% partial 'partials/exercise', locals: { name: 'Strings (5p)' } do %>
 
 <p>
 In this exercise you will implement several functions that handle strings. You'll find the exercise instructions in the exercise template, in the file <code>strings.cpp</code>.
@@ -708,7 +708,7 @@ Functions that perform conversions between numeric data types and strings are pe
 In QByteArray, the notion of uppercase and lowercase and of which character is greater than or less than another character is locale dependent. This affects functions that support a case insensitive option, or that compare, or lowercase or uppercase their arguments. Case insensitive operations and comparisons will be accurate if both strings contain only ASCII characters. (If $LC_CTYPE is set, most Unix systems do "the right thing".) This issue does not apply to <code>QString</code>s since they represent characters using Unicode.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'Bytes' } do %>
+<% partial 'partials/exercise', locals: { name: 'Bytes (3p)' } do %>
 
 <p>
 In this exercise you get to think a bit about bytes (Note: Laughing at bad puns is healthy for you). Exercise instructions can be found in the template as usual, in the file <code>bytes.cpp</code>.
@@ -916,7 +916,7 @@ Iterators for associative containers work slightly differently, but the idea is 
 </p>
 
 
-<% partial 'partials/exercise', locals: { name: 'Containers' } do %>
+<% partial 'partials/exercise', locals: { name: 'Containers (3p)' } do %>
 
 <p>
 In this exercise you'll get familiar with <code>QVector</code> and <code>QMap</code>, exercise instructions can be found in <code>containers.cpp</code>.

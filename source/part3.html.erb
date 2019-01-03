@@ -230,7 +230,7 @@ You can include the <code>L</code> modifier when you specify a parameter, e.g. <
 For more thorough information about internationalization, check out the official documentation about <a href="https://doc.qt.io/qt-5/qtquick-internationalization.html" title="Internationalization and Localization with Qt Quick">Internationalization and Localization with Qt Quick</a> and <a href="https://doc.qt.io/qt-5/linguist-manager.html" title="Qt Linguist Manger">Qt Linguist Manger</a>
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'qmlHelloWorld' } do %>
+<% partial 'partials/exercise', locals: { name: 'qmlHelloWorld (1p)' } do %>
 
 <p>
 Oh my, it's a second Hello World in the same course. This time things get graphical. We'll start off simple, just head to <code>HelloWorld.qml</code> and write some text inside a rectangle.
@@ -782,7 +782,7 @@ Rectangle {
 <% end %>
 Now, after the space key is pressed, the rectangle's height will continue auto-updating to always be three times its width.
 
-<% partial 'partials/exercise', locals: { name: 'PropertyBindings' } do %>
+<% partial 'partials/exercise', locals: { name: 'PropertyBindings (0p)' } do %>
 
 <p>
 This chapter was really theory-heavy, since we cannot really do much yet, but it's going to be really useful to have an understanding about the property system later on.
@@ -1035,7 +1035,7 @@ Rectangle {
 }
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'PictureFrame' } do %>
+<% partial 'partials/exercise', locals: { name: 'PictureFrame (3p)' } do %>
 
 <p>
 In this exercise you will modify the file <code>PictureFrame.qml</code> to create a nice frame for a cute cat. Exercise instructions are in the same file.
@@ -1186,7 +1186,7 @@ The <code>Rectangle</code> is created inside the <code>FocusScope</code>, and a 
 Note that, since the <code>FocusScope</code> type is not a visual type, the properties of its children need to be exposed to the parent item of the <code>FocusScope</code>. Layouts and positioning types will use these visual and styling properties to create the layout. In our example, the <code>Column</code> type cannot display the two widgets properly because the <code>FocusScope</code> lacks visual properties of its own. The <code>MyClickableWidget</code> component directly binds to the rectangle properties to allow the <code>Column</code> type to create the layout containing the children of the <code>FocusScope</code>.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'FocusBoundary' } do %>
+<% partial 'partials/exercise', locals: { name: 'FocusBoundary (1p)' } do %>
 
 <p>
 Your company hired an UX consultant who informs you that the "important" text input here should be focused by default. Your task is to edit <code>LineInput.qml</code> to make this possible. See <code>main.qml</code> for more information.
@@ -1421,14 +1421,14 @@ Rectangle {
 }
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'HocusFocus' } do %>
+<% partial 'partials/exercise', locals: { name: 'HocusFocus (2p)' } do %>
 
 <p>
 In this exercise you'll be passing focus between items. File you need to edit is <code>FocusGrid.qml</code>, where you'll also find the exercise instructions.
 </p>
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'KeyHandling' } do %>
+<% partial 'partials/exercise', locals: { name: 'KeyHandling (2p)' } do %>
 
 <p>
 In this exercise we move a box with arrow keys and change its color with the tab-key. File you need to edit is <code>MovableBox.qml</code>, and again you'll find the exercise instructions there.
@@ -1562,7 +1562,7 @@ In some UIs, it is beneficial to make some elements draggable, like volume slide
 <li><code>drag.minimum</code> and <code>drag.maximum</code>: how far the target can be dragged along the specified axes.</li>
 </ul>
 
-<% partial 'partials/exercise', locals: { name: 'MouseHandling' } do %>
+<% partial 'partials/exercise', locals: { name: 'MouseHandling (1p)' } do %>
 
 <p>
 Simple exercise where we change the size of the text by clicking. File you need to edit is <code>MouseHandling.qml</code>.
@@ -1570,7 +1570,7 @@ Simple exercise where we change the size of the text by clicking. File you need 
 
 <% end %>
 
-<% partial 'partials/exercise', locals: { name: 'ImageViewer' } do %>
+<% partial 'partials/exercise', locals: { name: 'ImageViewer (3p)' } do %>
 
 <p>
 In this exercise we create a mouse area to scale and drag an image. File you need to edit is <code>ImageViewer.qml</code>.
@@ -2015,7 +2015,7 @@ Note: Anchor margins only apply to anchors; they are not a generic means of appl
 </p>
 
 
-<% partial 'partials/exercise', locals: { name: 'AnchoringShips' } do %>
+<% partial 'partials/exercise', locals: { name: 'AnchoringShips (3p)' } do %>
 
 <p>
 The file you're editing is <code>WheelAnchors.qml</code>.
@@ -2830,7 +2830,7 @@ Components are typically added to a root <a href="https://doc.qt.io/qt-5/qml-qtq
 As previously discussed with making generic <code>Component</code>s, it is not preferable to reference the id of the application root item as this creates dependencies to other items. <code>ApplicationWindow</code> provides these generic properties to create an interface to itself without creating a dependency to a certain window id.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'CustomSignals' } do %>
+<% partial 'partials/exercise', locals: { name: 'CustomSignals (2p)' } do %>
 
 <p>
 You'll be editing <code>CustomCheckbox.qml</code>.
