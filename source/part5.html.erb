@@ -2,7 +2,7 @@
   title: Part 5
   exercise_page: true
   quiz_page: true
-  published: false
+  published: true
 ---
 
 <% partial 'partials/material_heading' do %>
@@ -308,6 +308,46 @@ public:
     Q_ENUM(Status)
     ...
 }
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'BindingsAndSignals (2p)' } do %>
+
+<p>
+    Use context properties to expose Gizmo to the QML engine in main.cpp
+</p>
+
+<p>
+    In main.qml:
+</p>
+
+<ul>
+    <li>Create a Rectangle that fills the window, get the background color from Gizmo.</li>
+    <li>Inside the rectangle there should be text, which is the Gizmo's userText.</li>
+    <li>Clicking the Rectangle should change Gizmo's background color to red.</li>
+    <li>Doubleclicking the Rectangle should call Gizmos invokable function frobnicate().</li>
+    <li>Signal onBackgroundColorChanged should change Gizmo's userText to "Background colour changed to [Gizmo's background color]".</li>
+</ul>
+
+<p>
+    This exercise isn't currently tested, just submit it when you're ready. We'll do spot checks to make sure nobody submits empty "solutions".
+</p>
+
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'MultiContext (2p)' } do %>
+
+<p>
+    You can copy the main.qml solution from the last exercise for this one.
+</p>
+
+<p>
+    This time, intead of just exposing Gizmo to the root context property, you'll implement <code>ContextApplication::createWindow</code> in <code>contextapplication.cpp</code> to allow the application to start up multiple independent windows. You'll find specific instructions on what to do in the <code>contextapplication.cpp</code> file.
+</p>
+
+<p>
+    This exercise isn't currently tested, just submit it when you're ready. On this one, if the exercise seems too confusing, just submit it and check the model solution. Be sure to give us feedback if the exercise does seem poorly guided!
+</p>
+
 <% end %>
 
 <% partial 'partials/material_sub_heading' do %>
@@ -1054,6 +1094,30 @@ Window {
 
 <img class="naytto" src="/img/part-5/tableview.png" />
 
+<% partial 'partials/exercise', locals: { name: 'New Type (3p)' } do %>
+
+<p>
+    In this exercise you'll create your own data model, AnimalModel, by subclassing <code>QAbstractListModel</code>. You'll get animalmodel.h provided, impelement the functions declared in it in animalmodel.cpp. The <code>activate()</code> function should remove the clicked animal from the list and add it to the top.
+</p>
+
+<p>
+    Again, this exercise isn't tested. Submit it when you're done.
+</p>
+
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'Album List (4p)' } do %>
+
+<p>
+    In this exercise you'll subclass <code>QAbstractTableModel</code> to create an AlbumModel. You get <code>album.h</code> and <code>main.qml</code> provided. Look at them to see what requirements there are for the model. The end result should be a table with the artist name, album name, and star rating that can be changed by clicking.
+</p>
+
+<p>
+    Again, this exercise isn't tested. Submit it when you're done. Please also remember to leave feedback! Is this type of exercise clear enough to accomplish?
+</p>
+
+<% end %>
+
 <% partial 'partials/material_heading' do %>
 Scene Graph Item
 <% end %>
@@ -1361,10 +1425,14 @@ Further reading
 To read more extensively on QML Profiler, <a href="https://doc.qt.io/qtcreator/creator-qml-performance-monitor.html" title="see documentation">see documentation</a>.
 </p>
 
-<% partial 'partials/exercise', locals: { name: 'Image Application' } do %>
+<% partial 'partials/exercise', locals: { name: 'Image Application (5p)' } do %>
 
 <p>
 Exercise for Part 5 - Image Application
+</p>
+
+<p>
+This is another peer-reviewed exercise. After you're done, create a repository for your solution on GitHub, and submit it to be peer-reviewed below. Please note that to get the points for this exercise, you're required to review another student's solution! You can download an example solution and do the peer-review after you've submitted your own solution.
 </p>
 
 <p>
@@ -1393,3 +1461,15 @@ Image application allows user to add and capture images for viewing. The applica
 </li>
 </ul>
 <% end %>
+
+<%= partial 'partials/quiz', locals: { id: '5c2e8023ddb6b814af31c801' } %>
+
+<%= partial 'partials/quiz', locals: { id: '5c2e8023ddb6b814af31c800' } %>
+
+<%= partial 'partials/quiz', locals: { id: '5c2e8023ddb6b814af31c7ff' } %>
+
+<% partial 'partials/material_sub_heading' do %>
+    Feedback for Part 5
+<% end %>
+
+<%= partial 'partials/quiz', locals: { id: '5c2e80eb14524713f959baf4' } %>
