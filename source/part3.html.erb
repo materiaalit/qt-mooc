@@ -2877,11 +2877,23 @@ Optional extra: you can use these states to animate the visual change of the che
 <% end %>
 
 <% partial 'partials/material_heading' do %>
-Shape
+Eye Candy
 <% end %>
 
 <p>
-As the final subject of Part 3, let's look at the <code>Shape</code> type, which is used to render arbitary shapes (as opposed to types like <code>Rectangle</code> that we already saw). <code>Shape</code> renders a path either by generating geometry via <code>QPainterPath</code> and manual triangulation or by using a GPU vendor extension.
+Qt Quick and QML provides developers with a variety of ways to add eye candy to user interfaces. Qt Quick Shapes allow creation of arbitrary shapes and their fill patterns. QML has a large number of animation types, which makes it easy to animate any object with even non-linear timeline. Graphical effects are ready-made OpenGL shader programs, making it super easy to blend or blur items or create drop shadows and non-linear gradients. 
+</p>
+
+<p>
+Let’s have a peek, how to add eye candy to your applications.
+</p>
+
+<% partial 'partials/material_sub_heading' do %>
+Shapes
+<% end %>
+
+<p>
+<code>Shape</code> type, is used to render arbitary shapes (as opposed to types like <code>Rectangle</code> that we already saw). <code>Shape</code> renders a path either by generating geometry via <code>QPainterPath</code> and manual triangulation or by using a GPU vendor extension.
 </p>
 
 <p>
@@ -2962,6 +2974,404 @@ Window {
 <p>
 What's happening here is that in <code>ShapePath</code> we've defined the shape with straight lines, and fill it with a radial gradient that repeats. If you have trouble following the code (and even if you don't), go ahead and play around with it a bit! Try commenting out some of the <code>PathLine</code>s and see what happens. Change the gradient's <code>spread</code> property to <code>ShapeGradient.ReflectSpread</code> and to see what that looks like.
 </p>
+
+<% partial 'partials/material_sub_heading' do %>
+Animations
+<% end %>
+
+<p>
+Qt Quick is targeted at creating dynamic user interfaces with fluid user experience. Obviously, It is possible to create traditional, more static user interfaces as well. One way to achieve a fluid UX is animations. Developers can pick up an animation type from a variety of QML types, such as <code>PropertyAnimation</code>, <code>SequentialAnimation</code>, <code>SpringAnimation</code>, <code>Behavior</code>, <code>AnimatedSprite</code> etc. (see <a href="http://doc.qt.io/qt-5/qtquick-statesanimations-animations.html">documentation</a> for a full listing). Most animation types extend Animation, which provides methods to control the animations state: <code>start()</code>, <code>stop()</code>, <code>pause()</code>. In addition, there are properties to set the number of times, the animation is executed - loops or to check, whether the animation is running - running. 
+</p>
+
+<p>
+Animations interpolate property values, which may vary a lot between types. <code>AnimatedSprite</code> shows image frames and <code>PathAnimation</code> animates item’s position and rotation along a defined path. Most animations are by default linear, but Qt provides a lot of easing curves for non-linear animations (full list of the easing curves can be found <a href="http://doc.qt.io/qt-5/qeasingcurve.html#Type-enum">here</a>). You may right click on the animation object in Qt Creator and use the context menu to show a “Qt Quick Toolbar”. The toolbar is an easy way to study, how different easing curves work with different property settings, as it animates all the changes.
+</p>
+
+<p>
+The very basic animation can be achieved with a property animation. The code snippet below moves the red rectangle to the right using an <code>OutBounce</code> easing curve. It is possible to define, which object’s properties are defined using properties target or targets. In the example, the target is the parent, so there’s no need to define that. Similarly, properties property or properties can be used to define, which property or properties are animated. The example uses another nice notation <code>PropertyAnimation on x</code>, which obviously defines that the <code>x</code> property of the rectangle is animated. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    width: 50; height: 50
+    color: "red"
+
+    PropertyAnimation on x {
+        from: 50; to: 150
+        duration: 1000;
+        easing.type: Easing.OutBounce;
+        loops: Animation.Infinite
+    }
+}
+<% end %>
+
+<p>
+The previous animation runs an infinite number of times. Animation can be stopped by setting the running property to false or by simply calling <code>stop()</code> as in the following example.  
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    width: 50; height: 50
+    color: "red"
+
+    PropertyAnimation on x {
+        id: animation
+        running: false
+        from: 50; to: 150
+        duration: 1000;
+        easing.type: Easing.OutBounce;
+        loops: Animation.Infinite
+    }
+
+    TapHandler {
+        onTapped: animation.running ? animation.stop() : animation.start();
+    }
+}
+<% end %>
+
+<p>
+<code>Behavior</code> type is very elegant way to define animations. Whenever a property value changes, <code>Behavior</code> animates the change. Modifying the previous example so that the rectangle move to a mouse click position is animated could be done as in the next example. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    id: rect
+    width: 50; height: 50
+    color: "red"
+
+    Behavior on x { 
+        PropertyAnimation { 
+            easing.amplitude: 2.9; easing.type: Easing.InElastic; duration: 500 
+        } 
+    }
+    Behavior on y { 
+        PropertyAnimation { duration: 500 } 
+    }
+}
+
+MouseArea {
+    anchors.fill: parent
+    onClicked: { rect.x = mouse.x; rect.y = mouse.y }
+}
+<% end %>
+
+<p>
+Note that it is not necessary define all the properties in the animation. For example, a very simple animation object could be just <code>NumberAnimation { }</code>. This would animate the defined property using a linear curve in 250 ms, which are the default values. 
+</p>
+
+<p>
+Qt provides many convenience QML types to make use of animations very simple. For example, <code>PathAnimation</code> animates an item along a pre-defined path. The path is defined with a <code>Path</code> type, which may consist of any number of line, arc, Svg or quadratic, and cubic Bezier curves. (See <a href="http://doc.qt.io/qt-5/qml-qtquick-path.html">Path</a> documentation).
+</p>
+
+<p>
+The following example shows quite random path, consisting of two cubic Bezier curves. The rocket is an image, which is animated along the path.
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Path {
+    startX: rocket.width/2; startY: rocket.height/2
+
+    PathCubic {
+        x: window.width - rocket.width/2
+        y: window.height - rocket.height/2
+
+        control1X: x; control1Y: rocket.height/2
+        control2X: rocket.width/2; control2Y: y
+    }
+    PathCubic {
+        x: window.width - rocket.width/2
+        y: window.height - rocket.height/2
+
+        control1X: x; control1Y: rocket.height/2
+        control2X: rocket.width/2; control2Y: y
+    }
+}
+<% end %>
+
+<p>
+After we have defined the path, we can use the same path in other types. If we want to draw the path, we can use the <code>Shape</code> item. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Shape {
+    anchors.fill: parent
+    ShapePath {
+        strokeWidth: 4
+        strokeColor: "white"
+        fillColor: "transparent"
+
+        // The path definition goes here
+    }
+}
+<% end %>
+
+<p>
+Finally, we can use the animated item and use the path animation to move the item. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Item {
+    id: rocket
+    x: 0; y: 0
+    width: 128; height: 96
+
+    Image {
+        source: "qrc:/images/rocket.png"
+        anchors.centerIn: parent
+        rotation: 90
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: pathAnim.running ? pathAnim.stop() : pathAnim.start()
+    }
+}
+
+PathAnimation {
+    id: pathAnim
+    duration: 2000
+    easing.type: Easing.InOutQuad
+
+    target: rocket
+    orientation: PathAnimation.RightFirst
+    anchorPoint: Qt.point(rocket.width/2, rocket.height/2)
+
+    path: Path {
+        // The path definition goes here
+        }
+    }
+}
+<% end %>
+
+<img class="naytto" src="/img/part-3/qt-rocket.gif" />
+
+<p>
+&nbsp;
+</p>
+
+<p>
+In addition to <code>PropertyAnimation</code> and its sub-types, there are animations, which extend <code>Item</code> rather than the <code>Animation</code> type. <code>AnimatedSprite</code> and <code>AnimatedImage</code> make it easy to animated images, containing several frames or animated gifs. <code>AnimatedSprite</code> lets the frames be horizontally or vertically organized, like in the image below. The image consists of 51 snowflake frames organized horizontally. 
+</p>
+
+<p>
+The only thing needed is to determine, how long is frame will be visible in the frame sequence. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+AnimatedSprite {
+    id: animSprite
+    width: parent.width * 0.25
+    height: parent.height * 0.25
+    running: true
+    source: "qrc:/images/snowflake.png"
+    frameCount: 51  // Frame width automatically calculated
+    frameDuration: 10
+}
+<% end %>
+
+<% partial 'partials/exercise', locals: { name: 'Bouncing Ball' } do %>
+
+<p>
+Animate a ball image.
+</p>
+
+<p>
+When the ball is tapped, animate its x coordinate from "20" to the "window width - ball width" in 1250 ms using a <code>OutQuad</code> easing curve.
+</p>
+
+<p>
+At the same time, animate the ball's y coordinate so that the ball goes from the position of 70 % of the "scene height - ball height" to "20" in 250 ms using an <code>OutQuad</code> easing curve and comes back to 20 in 1000 ms using the <code>OutBounce</code> easing curve. 
+</p>
+
+<p>
+Rotate the ball 360 degrees in 1000 ms and after that 20 degrees in 250 ms. The rotation must take place at the same time the ball x and y coordinates are changed. 
+</p>
+
+<p>
+Your end results should look something like this:
+</p>
+
+<img class="naytto" src="/img/part-3/bouncing-ball.gif" />
+
+<% end %>
+
+<% partial 'partials/material_sub_sub_heading' do %>
+States and Animated State Transitions
+<% end %>
+
+<p>
+Animations are often used together with states and transitions. Each Qt Quick item has a state property. The property defines, in which state the item is. Additional states may be defined as a state list in the states property. Each state is identified by a string name. The default state name is just an empty string <code>“”</code>. 
+</p>
+
+<p>
+In the next example, we have two rectangles. In the default state, we want to show view1, or the red rectangle, only. The blue rectangle is on the right side of the red one and actually the whole parent. So, it may not be visible, if the parent clips it out. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Rectangle {
+    id: view1
+    color: "red"
+    width: parent.width
+    height: parent.height
+}
+
+Rectangle {
+    id: view2
+    color: "blue"
+    width: parent.width
+    height: parent.height
+    x: parent.width
+}
+<% end %>
+
+<p>
+When adding more states, the <code>PropertyChanges</code> type is used to define, which properties change to which values in this state. Note that we do not have to define more than one state, as the default state defines the rectangle positions at the beginning. When the state changes to “inView2”, the red rectangle’s position is on the left outside the parent, and the blue rectangle will fill the parent are. Optional when property is useful to define, when the state occurs without explicitly assigning a new state name to the item’s state property. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+states: [
+    State {
+        name: "inView2"
+        when: myMouse.pressed
+        PropertyChanges {
+            target: view1
+            x: -root.width
+        }
+        PropertyChanges {
+            target: view2
+            x: 0
+        }
+    }
+]
+<% end %>
+
+<p>
+Note that there are no animations yet in the example. Animations are defined in the transition list. When the state changes, there can be a state transition, which animates the properties changed with <code>PropertyChanges</code>. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+transitions: [
+    Transition {
+        from: ""
+        to: "inView2"
+        NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+    },
+    Transition {
+        from: "inView2"
+        to: ""
+        NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+    }
+]
+<% end %>
+
+<p>
+Here's our example in action:
+</p>
+
+<img class="naytto" src="/img/part-3/transition-example.gif" />
+
+<p>
+In our example, both transitions from the default state to the state “inView2” and vice versa are similar. In this case, we would need only one transition, what we can set reversible by setting the corresponding property to true. [Jan: Is this actually the case?]
+</p>
+
+<% partial 'partials/code_highlight' do %>
+Transition {
+    from: ""
+    to: "inView2"
+    reversible: true
+    NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+}
+<% end %>
+
+<p>
+Behavior is the same as previously, but the code is much cleaner and easier to read. 
+</p>
+
+<% partial 'partials/exercise', locals: { name: 'Light Switch' } do %>
+<p>
+Implement a light switch. You have some freedom here on what the end result will look like, but there needs to be a smaller rectangle within a larger one to represent the switch, and another item outside the switch area to represent a lamp.
+</p>
+
+<p>
+When the switch area is clicked, the smaller rectangle needs to be transitioned to the other end, and the lamp area needs to change color. You should end up with something similar to this:
+</p>
+
+<img class="naytto" src="/img/part-3/lightswitch.gif" />
+
+<% end %>
+
+
+<% partial 'partials/material_sub_heading' do %>
+Graphical Effects
+<% end %>
+
+<p>
+Graphical effects are visual items, which are used to apply the effect to other QML items. Each effect has its own effect-specific properties. The effects are using OpenGL vertex and fragment shaders to modify vertex positions or fragment, pixel, colours to get the effect. In HW platforms with the a graphics processor, the effects are very efficient. In embedded platforms, where SW rendering is used, effects should be typically avoided to save CPU resources for more important tasks. 
+</p>
+
+<p>
+It is trivial to create rectangles and even ellipses in Qt using the <code>Rectangle</code> type and its radius property. The rectangle can be painted with a gradient color, but how to create non-linear gradients. One solution is <code>RadialGradient</code>. 
+</p>
+
+<p>
+In the example below, we have created a radial gradient in the middle of the window. It uses two colors. The yellow colour is used from the central point to the gradient, which changes to black and back to yellow. 
+</p>
+
+<% partial 'partials/code_highlight' do %>
+import QtQuick 2.12
+import QtGraphicalEffects 1.12
+import QtQuick.Window 2.12
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Radial gradient")
+
+    RadialGradient {
+        anchors.fill: parent
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "yellow" }
+            GradientStop { position: 0.5; color: "black" }
+            GradientStop { position: 1.0; color: "yellow" }
+
+        }
+    }
+}
+<% end %>
+
+<p>
+Any other gradient is as easy to use.
+</p>
+
+<table class="table">
+    <tr>
+        <th>Gradient</th>
+        <th>Example</th>
+    </tr>
+    <tr>
+        <td><a href="http://doc.qt.io/qt-5/qml-qtgraphicaleffects-lineargradient.html">LinearGradient</a></td>
+        <td><img class="naytto" src="/img/part-3/lineargradient.png" /></td>
+    </tr>
+    <tr>
+        <td><a href="http://doc.qt.io/qt-5/qml-qtgraphicaleffects-conicalgradient.html">ConicalGradient</a></td>
+        <td><img class="naytto" src="/img/part-3/conicalgradient.png" /></td>
+    </tr>
+    <tr>
+        <td><a href="">RadialGradient</a></td>
+        <td><img class="naytto" src="/img/part-3/radialgradient.png" /></td>
+    </tr>
+</table>
+
+<% partial 'partials/exercise', locals: { name: 'Graphical Effects' } do %>
+
+<p>
+Mask the Qt logo into the shape of the ball using the ball image. Blur the result so that it looks like the logo is moving to the left. Your end result should look something like this:
+</p>
+
+<img class="naytto" src="/img/part-3/graphicaleffects.png" />
+
+<% end %>
 
 <% partial 'partials/material_heading' do %>
     Feedback for Part 3

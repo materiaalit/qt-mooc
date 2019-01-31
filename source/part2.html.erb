@@ -926,7 +926,7 @@ Thread Synchronization
 <% end %>
 
 <p>
-Qt provides several lock types for mutual exclusion and thread synchronization. <code>QMutex</code> provides a recursive mutual exclusion lock. There are also <code>QReadLocker</code> and <code>QReadWriteLocker</code> to optimize locking in cases, where most shared data accesses will be read only. <code>QSemaphore</code> provides a counting semaphore between threads in a single process and <code>QSystemSemaphore</code> between threads in multiple processes. <code>QWaitCondition</code> can be used to synchronize threads, waiting for a condition to become true. Please read further information from <a href="http://doc.qt.io/qt-5/threads-synchronizing.html">here</a>
+Qt provides several lock types for mutual exclusion and thread synchronization. <code>QMutex</code> provides a recursive mutual exclusion lock. There are also <code>QReadLocker</code> and <code>QReadWriteLocker</code> to optimize locking in cases, where most shared data accesses will be read only. <code>QSemaphore</code> provides a counting semaphore between threads in a single process and <code>QSystemSemaphore</code> between threads in multiple processes. <code>QWaitCondition</code> can be used to synchronize threads, waiting for a condition to become true. Please read further information from <a href="http://doc.qt.io/qt-5/threads-synchronizing.html">here</a>.
 </p>
 
 <% partial 'partials/exercise', locals: { name: 'Multitasking' } do %>
