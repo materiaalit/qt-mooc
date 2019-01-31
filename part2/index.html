@@ -922,6 +922,219 @@ For more detailed information about Signals and Slots, see the official <a href=
 </p>
 
 <h1 class="material-heading">
+  Multitasking
+
+</h1>
+
+<p>
+In an event-based system, it is important to keep the GUI thread as responsive as possible and do all time-consuming tasks in worker threads. Time-consuming tasks may take just a few dozens of milliseconds or they may execute an infinite loop. In any case, blocking functions should not delay event handling in the GUI thread. 
+</p>
+
+<h2 class="material-heading">
+  QThread
+
+</h2>
+
+<p>
+<code>QThread</code> is a class to manage threads in a platform-independent way. The threads themselves are platform-specific kernel objects. <code>QThread</code> provides an API to set the priority with a platform-independent enumeration - <code>setPriority(QThread::Priority)</code>, start the thread - <code>start(QThread::Priority)</code>, and exit from the thread event loop - <code>exit(int returnCode)</code>. The <code>start()</code> function results that <code>QThread::run()</code> will be executed in a new thread after the new thread is scheduled. The <code>run()</code> function starts a thread-specific event loop by calling <code>QThread::exec()</code>. The signals <code>started()</code> amd <code>finished()</code> notify, when the thread is going to be started, i.e. the <code>run()</code> function is not yet started and after the thread has finished executing the event loop, respectively.
+</p>
+
+<p>
+Note that there is also a <code>terminate()</code> function to kill the thread. The use of this function is not encouraged, as it terminates the thread immediately possibly in the middle of data handling or holding a locked mutex object. This may break the data integrity or result to deadlocks. The best practise is always nicely return from the event loop and then thread <code>run()</code> function.
+</p>
+
+<p>
+If there is no need to control thread execution, it is much easier to use <code>QRunnable</code> objects. Using runnables requires a re-implementation of the <code>run()</code> function, but runnables will be executed in threads, provided by the thread pool and there is no need to create and cleanup threads manually. 
+</p>
+
+<h2 class="material-heading">
+  Thread Affinity
+
+</h2>
+
+<p>
+Thread affinity defines to which thread a <code>QObject</code> instance belongs to. This information is needed to decide, whether a signal between two objects should be queued or not, if automatic connection type is used. In practise, the thread affinity is just <code>QThread *QObject::thread()</code> return value. If the value is 0, the thread cannot receive signals or posted events. 
+</p>
+
+<p>
+Developers should pay extra attention to have a correct thread affinity in their Qt programs. Although the concept is rather straightforward, it’s easy to create nasty errors, which seem to happen randomly and are challenging to debug and test. For example, in the class declaration below, it is easily possible to have wrong thread affinity for the timer member. <code>MyThread</code> is instantiated in the calling thread, which means that its <code>QObject</code> members will be instantiated in the calling thread as well. If we try to start or stop the timer in the <code>run()</code> function, there will be a run-time error: “Timers cannot be started from another thread”.
+</p>
+
+<pre class="code-highlight"><code>class MyThread : public QThread
+{
+public:
+   explicit MyThread();
+
+protected:
+   void run() override;
+
+private:
+   QTimer m_timer;
+};
+</code></pre>
+
+<p>
+To fix the problem, you need to change the timer thread affinity before it will be used in the <code>run()</code> function. <code>QObject::moveToThread(QThread *)</code> changes the object’s thread affinity. The effect is the same, as the timer had been created in the <code>run()</code> function. Pay attention to the base call in the <code>run()</code> function to start the thread event loop. 
+</p>
+
+<pre class="code-highlight"><code>MyThread::MyThread()
+{
+   m_timer.moveToThread(this);
+
+   connect(&amp;m_timer, &amp;QTimer::timeout, [] () {
+       qDebug() &lt;&lt; "Timer expired";
+   });
+}
+
+void MyThread::run()
+{
+   m_timer.start(1000);
+   QThread::run();
+}
+</code></pre>
+
+<p>
+Usually, there is no need to subclass <code>QThread</code> at all. The recommendation is that you create a worker <code>QObject</code> and then change the thread affinity of that object. Typically, this results to less error-prone code.
+</p>
+
+
+<h2 class="material-heading">
+  Background Tasks
+
+</h2>
+
+<p>
+Let’s see, how to create background tasks with worker objects without subclassing <code>QThread</code>. A trivial worker object should have a function, which is executed in the thread. In the following example, it is the <code>run()</code> function. The worker is finished after the timer expires, which results that the thread gets a notification that it can quit the event loop. Note that the timer is a pointer member and in the worker constructor, the timer parent is set to the worker itself. This is convenient, as when we change the worker thread affinity, all its children thread affinity will change as well. The parent and its children cannot have different thread affinity. 
+</p>
+
+<pre class="code-highlight"><code>class WorkerObject : public QObject
+{
+   Q_OBJECT
+public:
+   explicit WorkerObject(QObject *parent = nullptr);
+   virtual void run();
+
+Q_SIGNALS:
+   void finished();
+
+private:
+   QTimer *m_timer;
+};
+
+WorkerObject::WorkerObject(QObject *parent)
+   : QObject(parent)
+   , m_timer(new QTimer(this))
+{
+}
+</code></pre>
+
+<p>
+The code needed to start the worker becomes quite trivial boilerplate code. We create the worker and thread objects, and change the worker thread affinity to the new thread. We must not start the worker before the thread is running. Otherwise the worker is executed by the main thread. After the worker is finished it notifies the main thread and the new thread to quit from the event loops. After the thread has finished the event loop, we cleanup the heap. 
+</p>
+
+<pre class="code-highlight"><code>int main(int argc, char *argv[])
+{
+   QCoreApplication a(argc, argv);
+
+   auto *thread = new QThread;
+   auto *worker = new WorkerObject;
+   worker-&gt;moveToThread(thread);
+   // Start the worker after the thread has been started
+   QObject::connect(thread, &amp;QThread::started, worker, &amp;WorkerObject::run);
+   // Worker finsihed. Stop the thread and main thread event loops
+   QObject::connect(worker, &amp;WorkerObject::finished, thread, &amp;QThread::quit);
+   QObject::connect(worker, &amp;WorkerObject::finished, &amp;a, &amp;QCoreApplication::quit);
+   // Cleanup
+   QObject::connect(thread, &amp;QThread::finished, thread, &amp;QThread::deleteLater);
+   QObject::connect(thread, &amp;QThread::finished, worker, &amp;WorkerObject::deleteLater);
+
+   thread-&gt;start();
+
+   return a.exec();
+}
+</code></pre>
+
+<h2 class="material-heading">
+  Graceful Death
+
+</h2>
+
+<p>
+If the worker object is running a busy loop, how we should nicely finish the thread. Remember that we should avoid using <code>QThread::terminate()</code>. <code>QThread</code> provides nice functions to request thread - interruption <code>requestInterruption()</code> and to check, whether the interruption has been requested - <code>isInterruptionrequested()</code>. These functions can be even used in threads, which are not running an event loop. When the timer expires, our worker stops the timer and notifies the thread to be stopped. Any event or signal can be used to interrupt the thread. 
+</p>
+
+<pre class="code-highlight"><code>void WorkerObject::run()
+{
+   m_timer-&gt;start(1000);
+   connect(m_timer, &amp;QTimer::timeout, [this] () {
+       m_timer-&gt;stop();
+       thread()-&gt;requestInterruption();
+   });
+
+   while (!thread()-&gt;isInterruptionRequested()) {
+       qDebug() &lt;&lt; "Still running";
+       QThread::currentThread()-&gt;eventDispatcher()-&gt;processEvents(QEventLoop::AllEvents);
+   }
+
+   qDebug() &lt;&lt; "Thread finished";
+
+   Q_EMIT finished();
+}
+</code></pre>
+
+<p>
+Our worker object is running a busy loop, as long as the timer expires. While in the busy loop, the thread does not handle any events, so we need to check occasionally, if there are any events to be handled. The event dispatcher function <code>processEvents()</code> allows us to handle any pending events. Without this function, our busy loop would run forever.
+</p>
+
+<p>
+We have used signals and slots heavily to communicate between the threads. They are thread safe and make the inter-thread communication between threads rather straightforward. In addition to signals and slots, you may use <code>QMetaObbject::invokeMethod()</code>. This is useful to notify, for example state changes from a worker thread to a GUI thread. Never use direct connections or direct function calls, when notifying the GUI thread from worker threads.
+</p>
+
+
+<h2 class="material-heading">
+  Thread Synchronization
+
+</h2>
+
+<p>
+Qt provides several lock types for mutual exclusion and thread synchronization. <code>QMutex</code> provides a recursive mutual exclusion lock. There are also <code>QReadLocker</code> and <code>QReadWriteLocker</code> to optimize locking in cases, where most shared data accesses will be read only. <code>QSemaphore</code> provides a counting semaphore between threads in a single process and <code>QSystemSemaphore</code> between threads in multiple processes. <code>QWaitCondition</code> can be used to synchronize threads, waiting for a condition to become true. Please read further information from <a href="http://doc.qt.io/qt-5/threads-synchronizing.html">here</a>
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Multitasking</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Implement a WorkerObject, which is executed in a separate thread from the GUI thread.
+</p>
+
+<ul>
+    <li>The worker object should calculate Fibonacci numbers up to a requested number (e.g. if 5 numbers are requested, you should get 0,1,1,2,3)</li>
+    <li>The worker object should have a timer to interrupt calculations.</li>
+    <li>The worker object thread should call the slot in FibonacciApplication to show fibonacci values from 0 to the requested number.</li>
+    <li>The worker finishes, if all Fibonacci values up to the requested number have been calculated OR the timer expires. In both cases you should nicely exit from the application.</li>
+</ul>
+
+<p>
+Create a FibonacciApplication by subclassing QCoreApplication and add a slot, which prints out a number into the debug console.
+</p>
+
+
+
+    </div>
+  </div>
+</div>
+
+<h1 class="material-heading">
   Parent-Child relationship
 
 </h1>
