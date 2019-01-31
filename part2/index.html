@@ -758,6 +758,161 @@ It tells Qt not to define the moc keywords <code>signals</code>, <code>slots</co
 </p>
 
 <h2 class="material-heading">
+  Object Communication with Events
+
+</h2>
+
+<p>
+While it is typically preferred to use signals and slots in object communication, there are cases, where the needed functionality is easier to handle with <a href="http://doc.qt.io/qt-5/eventsandfilters.html" title="The Event System">events</a>. If we liked to emit several signals, for example, we can subclass the corresponding QObject and re-implement the event handler. The event handler can emit the signals without connecting a signal to a slot, which then emits several signals. 
+</p>
+
+<p>
+Qt is an event-based system. The GUI thread enters the event loop, when <code>QCoreApplication::exec()</code> is called. <code>QCoreApplication</code> can handle each event in the GUI thread and forward events to <code>QObject</code>s. The receiving <code>QObject</code> may handle or just ignore the corresponding event. 
+</p>
+
+<p>
+Events may be spontaneous or synthetic. Spontaneous events are created outside the application process, e.g. by the window manager, and sent to the application. In case of GUI events, a Platform Abstraction Plugin (QPA) receives the events and converts those to Qt event types. Qt events are value types, derived from <code>QEvent</code>, which provides a type enumeration for each event. If we like to modify the timer event handling, it could be done by re-implementing <code>QObject::event()</code> function as shown below.
+</p>
+
+<p>
+First, the event type will be checked. If the event type is a <code>QEvent::Timer</code>, we downcast <code>QEvent</code> to <code>QTimerEvent</code> to access the event-specific data. In case of a timer, it is a <code>timerId</code>. The function returns a boolean value to tell the event system, if the event is propagated further to a next receiving object, if one exists. All events, which are not handled in this function, are handled by the base class. 
+</p>
+
+<pre class="code-highlight"><code>bool QObjectSubclass::event(QEvent *event)
+{
+   // Check the event type
+   if (event-&gt;type() == QEvent::Timer) {
+       QTimerEvent *timerEvent = static_cast&lt;QTimerEvent *&gt;(event);
+       if (timerEvent-&gt;timerId()) {
+           // Do something      
+       }
+   }
+   // Base call for all unhandled events
+   return QObject::event(event);
+}
+</code></pre>
+
+<p>
+Normally, there is no need to re-implement the <code>event()</code> function, but some event-specific handler function (See: <a href="http://doc.qt.io/qt-5/eventsandfilters.html#event-handlers">Event Handlers</a>). For example, timer events can be handled in <code>void CustomObject::timerEvent(QTimerEvent *event)</code>. Note that these functions do not return a boolean value, but they either accept or ignore the event with <code>QEvent::accept()</code> and <code>QEvent::ignore()</code> to tell the event system, if the event should be propagated further or not. 
+</p>
+
+<pre class="code-highlight"><code>void QObjectSubclass::timerEvent(QTimerEvent *event)
+{
+   // No need to check the event type or downcast, as the argument is QTimerEvent type
+   if (event-&gt;timerId() == m_timerId) {
+         // Do something   
+   }
+   return QObject::timerEvent(event);
+}
+</code></pre>
+
+<h3 class="material-heading">
+  Event Filters 
+
+</h3>
+
+<p>
+If there is a need to handle the same event in several different classes in the same way, it is easier to use event filters rather than sub-classing many types. Event filter is nothing more but a <code>QObject</code> member function, which may be called before the actual event handling functions <code>QObject::eventFilter(QObject *watched, QEvent *event)</code>. Similarly to the <code>QObject::event()</code> function, the boolean return value tells, if the event is filtered out (true) or whether it should be propagated further (false). Only installed event filters will be actually called <code>void QObject::installEventFilter(QObject *filterObject)</code>.
+</p>
+
+<p>
+There are two kinds of event filters: application-wide and object local event filters. The only difference is to which object the event filter is installed. If it is installed to <code>QCoreApplication</code> object, all events in the main thread will go through the event filter. If it is installed to some other <code>QObject</code> subclass, only events sent to that object will go through the event filter. 
+</p>
+
+<p>
+Application-wide event filters are useful for debugging to check, if for example the window manager gives the expected events to the Qt application. In general, avoid application wide event filters, as calling an extra functions for each event in the application may affect the event handling performance. 
+</p>
+
+<p>
+In most cases, it is sufficient to handle the event in an event handler, but as we have seen, it is possible to capture the event earlier in the propagation. For example, for touch events, there is no touch-specific event handlers, so they must be handled in <code>QObject::event()</code> function. Event filters are useful, if you want to have similar kind of event handling for several different types. 
+</p>
+
+<pre class="code-highlight"><code>(( KUVA ))
+QObject::eventHandler / QObject::customEvent
+QObject::event
+QObject::eventFilter
+QCoreApplication::eventFilter
+QCoreApplication::QAbstractEventDispatcher
+</code></pre>
+
+<h3 class="material-heading">
+  Custom Events
+
+</h3>
+
+<p>
+Sometimes there is no Qt event type, which is suitable for notifying about a specific action. In those cases, it is possible to create custom events. Those can be easily drived from <code>QEvent</code>. Each (custom) event contains event-specific data, so you need to add a member data and implement accessor functions to get and set the data. Finally, the event must be recognized by Qt event system, so you need a unique event type for you event. You may just extend the existing event enumeration, as shown in the example below.
+</p>
+
+<pre class="code-highlight"><code>const QEvent::Type customEventType = QEvent::Type(QEvent::User + 1);
+
+class CustomEvent : public QEvent
+{
+public:
+   CustomEvent();
+   int value() const;
+   void setValue(int value);
+
+private:
+   int m_m_value;
+};
+</code></pre>
+
+<h3 class="material-heading">
+  Synchronous and asynchronous events
+
+</h3>
+
+<p>
+In Qt, events can be sent either synchronously and asynchronously. Asynchronous events are queued in the event queue <code>QCoreApplication::postEvent()</code>, which is managed by one of the platform-specific sub-classes of <code>QAbstractEventDispatcher</code>. Synchronous events are never queued <code>QCoreApplication::sendEvent()</code>. Note also that asynchronous events are managed by the event system, which means that they must be allocated in the heap and never deleted by the developer code. 
+</p>
+
+<p>
+Asynchronous events are thread-safe. In fact, cross-thread signals and slots are based on asynchronous event. When a signal is emitted from an object in one thread to an object in another thread, there will be actually an event sent between the threads, assuming that the connection type is either automatic or queued. When the event is handled in another thread, the handler code calls the slot automatically. 
+</p>
+
+<p>
+As any thread in Qt can have its own event loop, it is important not to interrupt the event handling by calling slots or any functions directly from another thread. It is safe to use queued connections or asynchronous events. The event is queued as long as the receiving thread returns to the event loop and starts handling the new event. Also, when you for example notify from a worker thread to the GUI thread that new data is available, you should always do this asynchronously. 
+</p>
+
+<div class="exercise">
+  <div class="exercise__header">
+    <a data-toggle="collapse" class="exercise__toggle">
+      <i class="fa fa-pencil-alt exercise__icon"></i>
+      <h1 class="exercise__heading">Event Handling</h1>
+
+      <i class="fa fa-caret-down exercise__arrow"></i>
+    </a>
+  </div>
+
+  <div class="collapse">
+    <div class="exercise__body">
+      
+<p>
+Implement <code>CustomObject</code> by subclassing QObject, and: 
+</p>
+
+<ul>
+    <li>Start a timer in the constructor (e.g. 3 sec).</li>
+    <li>Re-implement the <code>event()</code> function. Check if there's a <code>CustomEvent</code> and print to the debug console: "Custom event handled: Event data "<the event data>""</li>
+    <li>Re-implement the <code>timerEvent()</code> function. When your timer expires, quit the application.</li>
+</ul>
+
+<p>
+Implement a CustomEvent class with a string member.
+</p>
+
+<p>
+With the code provided in <code>main.cpp</code> the program should print two messages to the debug console and then exit the application after the timer runs out.
+</p>
+
+
+
+    </div>
+  </div>
+</div>
+
+<h2 class="material-heading">
   Further Reading
 
 </h2>
@@ -969,6 +1124,7 @@ The UI is heavily based on signals.
 
 <div class="quiznator-plugin" data-quiz-id="5c18c43664cf001162cb8d81"></div>
 
+
         </div>
       </div>
 
@@ -1062,7 +1218,7 @@ The UI is heavily based on signals.
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-    <script src="../javascripts/scripts-0f290aff.js"></script>
+    <script src="../javascripts/scripts-9ceb416e.js"></script>
 
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
 
