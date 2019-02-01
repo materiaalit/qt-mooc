@@ -3476,7 +3476,7 @@ When adding more states, the <code>PropertyChanges</code> type is used to define
 <pre class="code-highlight"><code>states: [
     State {
         name: "inView2"
-        when: myMouse.pressed
+        when: tapHandler.pressed
         PropertyChanges {
             target: view1
             x: -root.width
@@ -3497,31 +3497,31 @@ Note that there are no animations yet in the example. Animations are defined in 
     Transition {
         from: ""
         to: "inView2"
-        NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+        NumberAnimation { properties: "x"; duration: 1000 }
     },
     Transition {
         from: "inView2"
         to: ""
-        NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+        NumberAnimation { properties: "x"; duration: 1000 }
     }
 ]
 </code></pre>
 
 <p>
-Here's our example in action:
+Here's our example in action: (the ungraceful motion is due to .gif, not Qt :) )
 </p>
 
-<img class="naytto" src="../img/part-3/transition-example-aa435065.gif" />
+<img class="naytto" src="../img/part-3/transition-example-d7323c79.gif" />
 
 <p>
-In our example, both transitions from the default state to the state “inView2” and vice versa are similar. In this case, we would need only one transition, what we can set reversible by setting the corresponding property to true. [Jan: Is this actually the case?]
+In our example, both transitions from the default state to the state “inView2”, and vice versa, are similar. In this case, we would need only one transition, what we can set reversible by setting the corresponding property to true.
 </p>
 
 <pre class="code-highlight"><code>Transition {
     from: ""
     to: "inView2"
     reversible: true
-    NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+    NumberAnimation { properties: "x"; duration: 1000 }
 }
 </code></pre>
 
