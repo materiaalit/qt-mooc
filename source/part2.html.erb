@@ -673,14 +673,7 @@ Application-wide event filters are useful for debugging to check, if for example
 In most cases, it is sufficient to handle the event in an event handler, but as we have seen, it is possible to capture the event earlier in the propagation. For example, for touch events, there is no touch-specific event handlers, so they must be handled in <code>QObject::event()</code> function. Event filters are useful, if you want to have similar kind of event handling for several different types. 
 </p>
 
-<% partial 'partials/code_highlight' do %>
-(( KUVA ))
-QObject::eventHandler / QObject::customEvent
-QObject::event
-QObject::eventFilter
-QCoreApplication::eventFilter
-QCoreApplication::QAbstractEventDispatcher
-<% end %>
+<img class="naytto" src="/img/part-2/event-propagation.png" />
 
 <% partial 'partials/material_sub_sub_heading' do %>
 Custom Events

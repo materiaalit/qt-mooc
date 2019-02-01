@@ -3232,7 +3232,7 @@ When adding more states, the <code>PropertyChanges</code> type is used to define
 states: [
     State {
         name: "inView2"
-        when: myMouse.pressed
+        when: tapHandler.pressed
         PropertyChanges {
             target: view1
             x: -root.width
@@ -3254,24 +3254,24 @@ transitions: [
     Transition {
         from: ""
         to: "inView2"
-        NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+        NumberAnimation { properties: "x"; duration: 1000 }
     },
     Transition {
         from: "inView2"
         to: ""
-        NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+        NumberAnimation { properties: "x"; duration: 1000 }
     }
 ]
 <% end %>
 
 <p>
-Here's our example in action:
+Here's our example in action: (the ungraceful motion is due to .gif, not Qt :) )
 </p>
 
 <img class="naytto" src="/img/part-3/transition-example.gif" />
 
 <p>
-In our example, both transitions from the default state to the state “inView2” and vice versa are similar. In this case, we would need only one transition, what we can set reversible by setting the corresponding property to true. [Jan: Is this actually the case?]
+In our example, both transitions from the default state to the state “inView2”, and vice versa, are similar. In this case, we would need only one transition, what we can set reversible by setting the corresponding property to true.
 </p>
 
 <% partial 'partials/code_highlight' do %>
@@ -3279,7 +3279,7 @@ Transition {
     from: ""
     to: "inView2"
     reversible: true
-    NumberAnimation { properties: "x"; easing.type: Easing.OutBounce; duration: 1500 }
+    NumberAnimation { properties: "x"; duration: 1000 }
 }
 <% end %>
 
